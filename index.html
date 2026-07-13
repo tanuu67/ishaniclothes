@@ -60,6 +60,9 @@ header{position:sticky;top:0;z-index:30;display:grid;grid-template-columns:1fr a
 .shot img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
 .card:hover .shot img{transform:scale(1.05)}
 .flag{position:absolute;left:0;bottom:12px;background:var(--green);color:var(--gold-soft);padding:6px 12px;font-size:9px;letter-spacing:.16em;text-transform:uppercase}
+.flag.sold{background:var(--red);color:#fff}
+.card.sold .shot img{filter:grayscale(1);opacity:.75}
+.add:disabled{border-color:var(--line);color:var(--muted);background:transparent;cursor:not-allowed}
 .info{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
 .name{margin:0;font-size:14px;font-weight:400;line-height:1.5;min-height:42px}
 .prices{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
@@ -208,9 +211,10 @@ grid.innerHTML=Array.from({length:8}).map(()=>'<div class="skel"><div class="sho
 function card(p){
   const inCart=getCart().some(i=>String(i.id)===String(p.id));
   const img=p.image_url||"https://placehold.co/600x800/ece7dd/09261d?text=Yashni";
-  return `<article class="card">
+  const sold=p.in_stock===false;
+  return `<article class="card ${sold?"sold":""}">
     <a href="product.html?id=${encodeURIComponent(p.id)}" aria-label="View ${esc(p.title)}">
-      <div class="shot"><img src="${esc(img)}" alt="${esc(p.title)}" loading="lazy"><span class="flag">Buy 2 get 1 free</span></div>
+      <div class="shot"><img src="${esc(img)}" alt="${esc(p.title)}" loading="lazy"><span class="flag ${sold?"sold":""}">${sold?"Sold out":"Buy 2 get 1 free"}</span></div>
     </a>
     <div class="info">
       <a href="product.html?id=${encodeURIComponent(p.id)}"><h3 class="name">${esc(p.title)}</h3></a>
@@ -219,7 +223,9 @@ function card(p){
         <span class="was">${wasOf(p.price)}</span>
         <span class="off">${CONFIG.DISCOUNT_PERCENT}% off</span>
       </div>
-      <button class="add ${inCart?"in":""}" type="button" data-id="${esc(p.id)}">${inCart?"Go to cart":"Add to cart"}</button>
+      ${sold
+        ? `<button class="add" type="button" disabled>Sold out</button>`
+        : `<button class="add ${inCart?"in":""}" type="button" data-id="${esc(p.id)}">${inCart?"Go to cart":"Add to cart"}</button>`}
     </div>
   </article>`;
 }
@@ -265,12 +271,13 @@ document.getElementById("q").addEventListener("input",e=>{query=e.target.value.t
   const db=supabase.createClient(CONFIG.SUPABASE_URL,CONFIG.SUPABASE_ANON_KEY);
   const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
   if(error){grid.innerHTML='<div class="note">The catalogue could not load right now. Please refresh in a moment.</div>';return}
-  ALL=data||[];
+  ALL=(data||[]).sort((a,b)=>(a.in_stock===false)-(b.in_stock===false));
   if(!ALL.length){grid.innerHTML='<div class="note">No products are live yet.<br>Add your first piece from the <a href="admin.html">admin portal</a>.</div>';return}
   chips();render();
-  if(ALL[0].image_url){
+  const heroPick=ALL.find(p=>p.in_stock!==false&&p.image_url)||ALL[0];
+  if(heroPick&&heroPick.image_url){
     document.getElementById("hero").style.backgroundImage=
-      `linear-gradient(88deg,rgba(9,38,29,.92),rgba(9,38,29,.55) 52%,rgba(9,38,29,.2)),url("${ALL[0].image_url}")`;
+      `linear-gradient(88deg,rgba(9,38,29,.92),rgba(9,38,29,.55) 52%,rgba(9,38,29,.2)),url("${heroPick.image_url}")`;
   }
 })();
 </script>
