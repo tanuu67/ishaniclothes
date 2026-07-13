@@ -1,3 +1,12 @@
+Main samajh sakta hoon ki bina kisi error message ke jab button kaam nahi karta toh bahut confusion hoti hai.
+
+Agar button click par kuch nahi ho raha hai, toh iska sabse bada reason yeh hota hai ki aapki `admin.html` file aapki `config.js` file ko sahi se "read" (link) nahi kar pa rahi hai, jiski wajah se code pehle hi crash ho jata hai.
+
+Is problem ko hamesha ke liye khatam karne ke liye, **hum `config.js` file ka use hi hata dete hain.** Maine aapki saari details (URL, Key, Categories) directly is naye `admin.html` code ke andar hi daal di hain. Ab link fail hone ka koi chance hi nahi bachega.
+
+### Is code ko copy karein aur apni `admin.html` mein paste kar dein (Puraana sab hata dein):
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -383,4 +392,126 @@ $("publish").addEventListener("click",async()=>{
 
 /* ---------- edit ---------- */
 function openEdit(id){
-  const r=ROWS
+  const r=ROWS.find(x=>String(x.id)===String(id));
+  if(!r)return;
+  editing=r;
+  $("eTitle").value=r.title||"";
+  $("ePrice").value=r.price||"";
+  $("eOffer").value=r.offer_tag||"";
+  $("eCat").value=r.category||CONFIG.CATEGORIES[0];
+  $("eStock").value=(r.in_stock===false)?"out":"in";
+  $("eDesc").value=r.description||"";
+  $("eFile").value="";
+  
+  $("ePreviewContainer").innerHTML="";
+  if(r.images && r.images.length > 0){
+    r.images.forEach(img => {
+      const el = document.createElement("img"); el.src = img.url; $("ePreviewContainer").appendChild(el);
+    });
+  } else if (r.image_url) {
+    const el = document.createElement("img"); el.src = r.image_url; $("ePreviewContainer").appendChild(el);
+  }
+  
+  $("eDropText").textContent="Tap to choose new photos (Overwrites existing)";
+  hide($("editMsg"));
+  $("sheet").classList.add("on");
+}
+
+$("cancelEdit").addEventListener("click",()=>$("sheet").classList.remove("on"));
+$("sheet").addEventListener("click",e=>{if(e.target===$("sheet"))$("sheet").classList.remove("on")});
+
+$("saveEdit").addEventListener("click",async()=>{
+  const btn=$("saveEdit"),msg=$("editMsg");
+  const title=$("eTitle").value.trim();
+  const price=parseInt($("ePrice").value,10);
+  const offer_tag=$("eOffer").value.trim()||null;
+  
+  if(!title||!Number.isFinite(price)||price<=0){say(msg,"Enter a valid product name and price.","bad");return}
+  
+  const newFiles=$("eFile").files;
+  if(newFiles.length>4){say(msg,"You can only upload a maximum of 4 photos.","bad");return}
+
+  btn.disabled=true;btn.textContent="Saving...";
+  try{
+    const patch={title,price,offer_tag,description:$("eDesc").value.trim()||null,category:$("eCat").value,in_stock:$("eStock").value==="in"};
+    let oldPaths=[];
+    
+    if(newFiles.length>0){
+      say(msg,"Uploading new photos...","");
+      const uploadedImages = [];
+      for(let i=0; i<newFiles.length; i++){
+        uploadedImages.push(await putImage(newFiles[i]));
+      }
+      
+      patch.image_url = uploadedImages[0].url;
+      patch.image_path = uploadedImages[0].path;
+      patch.images = uploadedImages;
+      
+      if(editing.images && editing.images.length > 0){
+        oldPaths = editing.images.map(i => i.path);
+      } else if (editing.image_path) {
+        oldPaths = [editing.image_path];
+      }
+    }
+    
+    const {error}=await db.from("products").update(patch).eq("id",editing.id);
+    if(error)throw new Error(error.message);
+    
+    if(oldPaths.length > 0) {
+       await db.storage.from(BUCKET).remove(oldPaths);
+    }
+    
+    say(msg,"Saved. The website is updated.","ok");
+    await load();
+    setTimeout(()=>$("sheet").classList.remove("on"),700);
+  }catch(e){
+    say(msg,e.message||"Could not save. Please try again.","bad");
+  }finally{
+    btn.disabled=false;btn.textContent="Save changes";
+  }
+});
+
+/* ---------- in stock / out of stock ---------- */
+async function toggleStock(id,btn){
+  const r=ROWS.find(x=>String(x.id)===String(id));
+  if(!r)return;
+  const next=!(r.in_stock!==false);
+  btn.disabled=true;btn.textContent="Saving...";
+  const {error}=await db.from("products").update({in_stock:next}).eq("id",id);
+  if(error){alert("Could not update stock: "+error.message);btn.disabled=false;return}
+  r.in_stock=next;
+  paint();
+}
+
+/* ---------- delete ---------- */
+async function remove(id,btn){
+  const r=ROWS.find(x=>String(x.id)===String(id));
+  if(!confirm("Remove this product from the website?"))return;
+  btn.disabled=true;btn.textContent="Removing";
+  
+  const {error}=await db.from("products").delete().eq("id",id);
+  if(error){alert("Could not remove the product: "+error.message);btn.disabled=false;btn.textContent="Delete";return}
+  
+  let pathsToDelete = [];
+  if (r && r.images && r.images.length > 0) {
+    pathsToDelete = r.images.map(i => i.path);
+  } else if (r && r.image_path) {
+    pathsToDelete = [r.image_path];
+  }
+  
+  if (pathsToDelete.length > 0) {
+    await db.storage.from(BUCKET).remove(pathsToDelete);
+  }
+  
+  ROWS=ROWS.filter(x=>String(x.id)!==String(id));
+  paint();
+}
+
+boot();
+</script>
+</body>
+</html>
+
+```
+
+Page ko save karke refresh kariye aur login try kijiye. Ab ye direct connect karega. Data load ho raha hai ab?
