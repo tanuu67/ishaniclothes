@@ -111,8 +111,6 @@ header.tight .logo-img{height:48px}
 .name{margin:0;font-family:"Cormorant Garamond",serif;font-weight:400;font-size:22px;line-height:1.25;color:var(--green)}
 .cost{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:2px}
 .now{font-size:14px;letter-spacing:.08em;color:var(--ink)}
-.was{font-size:12px;color:var(--muted);text-decoration:line-through}
-.off{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
 .add{margin-top:14px;align-self:flex-start;border:0;border-bottom:1px solid var(--green);background:transparent;color:var(--green);
   padding:0 0 5px;cursor:pointer;font-size:10px;letter-spacing:.26em;text-transform:uppercase;transition:.4s var(--ease)}
 .add:hover{color:var(--gold);border-color:var(--gold)}
@@ -287,9 +285,6 @@ let ALL=[],cat="All",query="";
 
 const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const inr=n=>"\u20B9"+Number(n||0).toLocaleString("en-IN");
-const DISC=Number(CONFIG.DISCOUNT_PERCENT)||0;
-const TAG=(CONFIG.OFFER_TAG||"").trim();
-const wasOf=p=>DISC>0?inr(Math.round(Number(p)/(1-DISC/100))):"";
 const getCart=()=>{try{return JSON.parse(localStorage.getItem(CART_KEY))||[]}catch{return[]}};
 const setCart=c=>{localStorage.setItem(CART_KEY,JSON.stringify(c));badge()};
 const badge=()=>{document.getElementById("cartBadge").textContent=getCart().reduce((s,i)=>s+(i.quantity||1),0)};
@@ -330,7 +325,7 @@ function card(p){
     <a href="${link}" aria-label="View ${esc(p.title)}">
       <div class="shot">
         <img src="${esc(img)}" alt="${esc(p.title)}" loading="lazy">
-        ${sold?'<span class="mark sold">Sold out</span>':(TAG?`<span class="mark">${esc(TAG)}</span>`:"")}
+        ${sold?'<span class="mark sold">Sold out</span>':""}
         <span class="veil"><span>View piece</span></span>
       </div>
     </a>
@@ -339,7 +334,6 @@ function card(p){
       <a href="${link}"><h3 class="name">${esc(p.title)}</h3></a>
       <div class="cost">
         <span class="now">${inr(p.price)}</span>
-        ${DISC>0?`<span class="was">${wasOf(p.price)}</span><span class="off">${DISC}% off</span>`:""}
       </div>
       ${sold
         ? `<button class="add" type="button" disabled>Sold out</button>`
