@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yashni Creations | Luxury Ethnic Wear</title>
+<meta name="description" content="Handpicked lehengas, sarees, suits and gowns. Order directly on WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--green:#09261d;--gold:#c9a227;--gold-soft:#e6d59a;--cream:#f7f3ec;--ivory:#fffdf9;--ink:#17221d;--muted:#6f776f;--line:rgba(9,38,29,.14);--red:#b3123f;--shadow:0 20px 50px rgba(9,38,29,.10)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:"Jost",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}button,input{font:inherit}img{display:block}
+.zari{height:2px;background:linear-gradient(90deg,transparent,var(--gold-soft),var(--gold),var(--gold-soft),transparent)}
+.strip{background:var(--green);color:var(--gold-soft);text-align:center;padding:9px 16px;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+header{position:sticky;top:0;z-index:30;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:10px clamp(14px,4vw,64px);background:rgba(247,243,236,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;gap:clamp(10px,2vw,24px)}
+.nav.right{justify-content:flex-end}
+.nav a{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+.nav a:hover{color:var(--gold)}
+.nav a.offer{color:var(--red)}
+.logo-img{height:64px;width:auto;mix-blend-mode:multiply}
+.logo-fallback{font-family:"Cormorant Garamond",serif;font-size:26px;font-weight:700;color:var(--green);white-space:nowrap}
+.icon-btn{position:relative;display:grid;place-items:center;width:40px;height:40px;border:1px solid var(--line);border-radius:999px;background:var(--ivory);font-size:16px}
+.badge{position:absolute;top:-6px;right:-7px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:var(--red);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:600}
+
+.hero{position:relative;min-height:clamp(440px,72vh,700px);display:grid;align-items:end;padding:clamp(28px,6vw,80px);color:#fff;background:linear-gradient(88deg,rgba(9,38,29,.92),rgba(9,38,29,.55) 52%,rgba(9,38,29,.2)),var(--green) center/cover no-repeat}
+.hero-copy{max-width:700px}
+.eyebrow{margin:0 0 16px;color:var(--gold-soft);font-size:11px;letter-spacing:.28em;text-transform:uppercase}
+.hero h1{margin:0;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(46px,8vw,96px);line-height:.98}
+.hero h1 em{font-style:italic;color:var(--gold-soft)}
+.hero p{max-width:520px;margin:22px 0 30px;color:rgba(255,255,255,.85);font-weight:300;font-size:clamp(15px,1.6vw,18px);line-height:1.75}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 26px;border-radius:2px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;border:1px solid transparent;transition:.25s}
+.btn-gold{background:var(--gold);color:var(--green)}
+.btn-gold:hover{background:var(--gold-soft)}
+.btn-ghost{border-color:rgba(255,255,255,.5);color:#fff}
+.btn-ghost:hover{background:rgba(255,255,255,.12)}
+
+.wrap{max-width:1480px;margin:0 auto;padding:0 clamp(12px,3vw,24px)}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin:clamp(44px,6vw,72px) 0 18px}
+.section-head h2{margin:0;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(30px,4.4vw,48px);color:var(--green);line-height:1.05}
+.section-head p{margin:8px 0 0;max-width:520px;color:var(--muted);font-weight:300;font-size:14px;line-height:1.65}
+.count{color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+.tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0 26px}
+.search{flex:1;min-width:220px;max-width:340px;display:flex;align-items:center;gap:8px;background:var(--ivory);border:1px solid var(--line);border-radius:2px;padding:0 12px}
+.search input{flex:1;border:0;outline:0;background:transparent;padding:12px 0;font-size:14px;font-weight:300}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:transparent;color:var(--green);border-radius:999px;padding:9px 16px;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:.2s}
+.chip:hover{border-color:var(--gold)}
+.chip.on{background:var(--green);color:var(--gold-soft);border-color:var(--green)}
+
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;padding-bottom:clamp(50px,7vw,84px)}
+.card{background:var(--ivory);border:1px solid var(--line);border-radius:3px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s ease,box-shadow .3s ease}
+.card:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.shot{position:relative;aspect-ratio:3/4;background:#ece7dd;overflow:hidden}
+.shot img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.card:hover .shot img{transform:scale(1.05)}
+.flag{position:absolute;left:0;bottom:12px;background:var(--green);color:var(--gold-soft);padding:6px 12px;font-size:9px;letter-spacing:.16em;text-transform:uppercase}
+.info{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.name{margin:0;font-size:14px;font-weight:400;line-height:1.5;min-height:42px}
+.prices{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.now{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:700;color:var(--green)}
+.was{color:var(--muted);font-size:12px;text-decoration:line-through}
+.off{color:var(--red);font-size:11px;font-weight:600}
+.add{width:100%;min-height:42px;border:1px solid var(--green);background:transparent;color:var(--green);border-radius:2px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:.2s;margin-top:auto}
+.add:hover{background:var(--green);color:#fff}
+.add.in{background:var(--gold);border-color:var(--gold);color:var(--green)}
+.note{grid-column:1/-1;min-height:200px;display:grid;place-items:center;text-align:center;color:var(--muted);font-weight:300;background:var(--ivory);border:1px dashed var(--line);border-radius:3px;padding:32px;line-height:1.8}
+.note a{color:var(--green);border-bottom:1px solid var(--gold)}
+.skel{background:var(--ivory);border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.skel .shot{background:linear-gradient(100deg,#ece7dd 30%,#f6f2ea 45%,#ece7dd 60%);background-size:300% 100%;animation:sh 1.3s infinite}
+@keyframes sh{0%{background-position:120% 0}100%{background-position:-40% 0}}
+.skel .bar{height:12px;margin:14px 16px;background:#ece7dd;border-radius:2px}
+.skel .bar.s{width:45%}
+
+.promise{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.promise div{background:var(--cream);padding:34px 24px;text-align:center}
+.promise h3{margin:0 0 8px;font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;color:var(--green)}
+.promise p{margin:0;color:var(--muted);font-size:13px;font-weight:300;line-height:1.7}
+
+footer{background:var(--green);color:var(--cream);padding:clamp(46px,7vw,72px) 20px 30px;text-align:center}
+footer h2{margin:0 0 6px;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:34px;color:var(--gold-soft)}
+footer p{margin:6px 0;color:rgba(247,243,236,.75);font-weight:300;font-size:14px}
+.socials{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:24px}
+.socials a{border:1px solid rgba(255,255,255,.28);border-radius:2px;padding:12px 22px;font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.socials a:hover{border-color:var(--gold);color:var(--gold-soft)}
+.credit{margin-top:36px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);color:rgba(247,243,236,.5);font-size:10px;letter-spacing:.18em;text-transform:uppercase}
+.credit a{color:var(--gold-soft)}
+.wa{position:fixed;left:18px;bottom:18px;z-index:40;width:54px;height:54px;display:grid;place-items:center;border-radius:999px;background:#25d366;box-shadow:0 12px 26px rgba(37,211,102,.4)}
+.wa svg{width:28px;height:28px;fill:#fff}
+@media (max-width:1100px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:820px){.promise{grid-template-columns:1fr}}
+@media (max-width:760px){
+  header{grid-template-columns:auto 1fr auto;padding:8px 12px;gap:8px}
+  .logo-img{height:48px}.logo-fallback{font-size:19px}
+  .nav{gap:10px}.nav a{font-size:10px;letter-spacing:.08em}
+  .nav a:nth-child(2){display:none}
+  .hero{min-height:520px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .info{padding:12px}.name{font-size:13px;min-height:38px}.now{font-size:19px}
+  .search{max-width:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="strip" id="strip"></div>
+
+<header>
+  <nav class="nav" aria-label="Primary">
+    <a href="#collection">Shop</a>
+    <a href="#collection">New in</a>
+    <a href="#collection" class="offer">Offers</a>
+  </nav>
+  <a href="index.html" aria-label="Yashni Creations home">
+    <img src="Untitled.jpg" class="logo-img" alt="Yashni Creations" onerror="this.outerHTML='<span class=&quot;logo-fallback&quot;>Yashni Creations</span>'">
+  </a>
+  <nav class="nav right" aria-label="Support and cart">
+    <a href="complaint.html">Support</a>
+    <a href="cart.html" class="icon-btn" aria-label="Cart"><span aria-hidden="true">&#128717;</span><span class="badge" id="cartBadge">0</span></a>
+  </nav>
+</header>
+<div class="zari"></div>
+
+<main>
+  <section class="hero" id="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Luxury ethnic wear &mdash; Made to be remembered</p>
+      <h1>Woven for<br><em>your moment</em></h1>
+      <p>Handpicked lehengas, sarees and suits for weddings, festivals and the evenings in between. Every piece is checked by us before it ships.</p>
+      <div class="hero-actions">
+        <a class="btn btn-gold" href="#collection">Shop the collection</a>
+        <a class="btn btn-ghost" id="heroWa" target="_blank" rel="noreferrer">Ask on WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="section-head" id="collection">
+      <div>
+        <h2>The latest collection</h2>
+        <p>Fresh from the studio. Tap any piece for fabric, fit and sizing details.</p>
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="tools">
+      <label class="search"><span aria-hidden="true">&#128269;</span><input type="search" id="q" placeholder="Search lehenga, saree, suit..." aria-label="Search products"></label>
+      <div class="chips" id="chips"></div>
+    </div>
+    <section class="grid" id="grid" aria-live="polite"></section>
+  </div>
+
+  <section class="promise">
+    <div><h3>Checked by hand</h3><p>Every order is inspected for stitching, fall and finish before dispatch.</p></div>
+    <div><h3>Sizing help on WhatsApp</h3><p>Send us your measurements and we will tell you exactly what to order.</p></div>
+    <div><h3>Easy exchange</h3><p>Size not right? Message us within 3 days of delivery and we will fix it.</p></div>
+  </section>
+</main>
+
+<footer>
+  <h2>Yashni Creations</h2>
+  <p id="fEmail"></p>
+  <p id="fPhone"></p>
+  <div class="socials">
+    <a id="fWa" target="_blank" rel="noreferrer">WhatsApp</a>
+    <a id="fIg" target="_blank" rel="noreferrer">Instagram</a>
+    <a href="complaint.html">Support</a>
+  </div>
+  <div class="credit">Designed by <a href="https://skywebsolutions.in/" target="_blank" rel="noreferrer">SkyWeb Solutions</a> | <a href="admin.html">Admin portal &#128274;</a></div>
+</footer>
+
+<a class="wa" id="floatWa" target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm5.8 14.06c-.24.68-1.42 1.31-1.96 1.36-.5.05-1.13.07-1.83-.11-.42-.13-.96-.31-1.66-.61-2.92-1.26-4.82-4.2-4.97-4.4-.14-.2-1.18-1.57-1.18-3s.75-2.13 1.02-2.42c.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.82 2.01.89 2.16.07.14.12.31.02.51-.1.2-.15.32-.29.49-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.45.29.15.46.12.63-.07.17-.2.73-.85.92-1.14.19-.29.39-.24.65-.15.27.1 1.69.8 1.98.94.29.15.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>
+</a>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const CART_KEY="yashni_cart";
+const grid=document.getElementById("grid");
+let ALL=[],cat="All",query="";
+
+const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const inr=n=>"\u20B9"+Number(n||0).toLocaleString("en-IN");
+const wasOf=p=>inr(Math.round(Number(p)/(1-CONFIG.DISCOUNT_PERCENT/100)));
+const getCart=()=>{try{return JSON.parse(localStorage.getItem(CART_KEY))||[]}catch{return[]}};
+const setCart=c=>{localStorage.setItem(CART_KEY,JSON.stringify(c));badge()};
+const badge=()=>{document.getElementById("cartBadge").textContent=getCart().reduce((s,i)=>s+(i.quantity||1),0)};
+
+/* config-driven bits */
+const wa="https://wa.me/"+CONFIG.WHATSAPP;
+document.getElementById("strip").textContent=CONFIG.ANNOUNCEMENT;
+document.getElementById("heroWa").href=wa;
+document.getElementById("floatWa").href=wa;
+document.getElementById("fWa").href=wa;
+document.getElementById("fIg").href=CONFIG.INSTAGRAM;
+document.getElementById("fEmail").textContent=CONFIG.EMAIL;
+document.getElementById("fPhone").textContent=CONFIG.PHONE_DISPLAY;
+badge();
+
+grid.innerHTML=Array.from({length:8}).map(()=>'<div class="skel"><div class="shot"></div><div class="bar"></div><div class="bar s"></div></div>').join("");
+
+function card(p){
+  const inCart=getCart().some(i=>String(i.id)===String(p.id));
+  const img=p.image_url||"https://placehold.co/600x800/ece7dd/09261d?text=Yashni";
+  return `<article class="card">
+    <a href="product.html?id=${encodeURIComponent(p.id)}" aria-label="View ${esc(p.title)}">
+      <div class="shot"><img src="${esc(img)}" alt="${esc(p.title)}" loading="lazy"><span class="flag">Buy 2 get 1 free</span></div>
+    </a>
+    <div class="info">
+      <a href="product.html?id=${encodeURIComponent(p.id)}"><h3 class="name">${esc(p.title)}</h3></a>
+      <div class="prices">
+        <span class="now">${inr(p.price)}</span>
+        <span class="was">${wasOf(p.price)}</span>
+        <span class="off">${CONFIG.DISCOUNT_PERCENT}% off</span>
+      </div>
+      <button class="add ${inCart?"in":""}" type="button" data-id="${esc(p.id)}">${inCart?"Go to cart":"Add to cart"}</button>
+    </div>
+  </article>`;
+}
+
+function render(){
+  const list=ALL.filter(p=>{
+    const okCat=cat==="All"||p.category===cat;
+    const hay=(p.title+" "+(p.description||"")).toLowerCase();
+    return okCat&&(!query||hay.includes(query));
+  });
+  document.getElementById("count").textContent=list.length+(list.length===1?" piece":" pieces");
+  if(!list.length){
+    grid.innerHTML=`<div class="note">Nothing matches that yet.<br>Try another word, or <a href="${wa}" target="_blank" rel="noreferrer">ask us on WhatsApp</a> &mdash; we may have it in store.</div>`;
+    return;
+  }
+  grid.innerHTML=list.map(card).join("");
+  grid.querySelectorAll(".add").forEach(b=>b.addEventListener("click",()=>{
+    if(b.classList.contains("in")){location.href="cart.html";return}
+    const p=ALL.find(x=>String(x.id)===b.dataset.id);
+    const c=getCart();
+    c.push({id:p.id,title:p.title,price:p.price,image:p.image_url,size:"",quantity:1});
+    setCart(c);
+    b.textContent="Go to cart";b.classList.add("in");
+  }));
+}
+
+function chips(){
+  const used=CONFIG.CATEGORIES.filter(c=>ALL.some(p=>p.category===c));
+  const box=document.getElementById("chips");
+  box.innerHTML=["All",...used].map(c=>`<button class="chip ${c===cat?"on":""}" type="button" data-c="${esc(c)}">${esc(c)}</button>`).join("");
+  box.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{
+    cat=b.dataset.c;
+    box.querySelectorAll(".chip").forEach(x=>x.classList.toggle("on",x===b));
+    render();
+  }));
+}
+document.getElementById("q").addEventListener("input",e=>{query=e.target.value.trim().toLowerCase();render()});
+
+(async()=>{
+  if(!CONFIG.SUPABASE_URL.startsWith("http")){
+    grid.innerHTML='<div class="note">Setup is not finished. Add your Supabase URL and key in config.js.</div>';return;
+  }
+  const db=supabase.createClient(CONFIG.SUPABASE_URL,CONFIG.SUPABASE_ANON_KEY);
+  const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
+  if(error){grid.innerHTML='<div class="note">The catalogue could not load right now. Please refresh in a moment.</div>';return}
+  ALL=data||[];
+  if(!ALL.length){grid.innerHTML='<div class="note">No products are live yet.<br>Add your first piece from the <a href="admin.html">admin portal</a>.</div>';return}
+  chips();render();
+  if(ALL[0].image_url){
+    document.getElementById("hero").style.backgroundImage=
+      `linear-gradient(88deg,rgba(9,38,29,.92),rgba(9,38,29,.55) 52%,rgba(9,38,29,.2)),url("${ALL[0].image_url}")`;
+  }
+})();
+</script>
+</body>
+</html>

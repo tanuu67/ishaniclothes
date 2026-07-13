@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support | Yashni Creations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--green:#09261d;--gold:#c9a227;--gold-soft:#e6d59a;--cream:#f7f3ec;--ivory:#fffdf9;--ink:#17221d;--muted:#6f776f;--line:rgba(9,38,29,.14);--red:#b3123f;--shadow:0 20px 50px rgba(9,38,29,.10)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:"Jost",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}button,input,textarea{font:inherit}img{display:block}
+.zari{height:2px;background:linear-gradient(90deg,transparent,var(--gold-soft),var(--gold),var(--gold-soft),transparent)}
+header{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:10px clamp(14px,4vw,64px);background:rgba(247,243,236,.92);border-bottom:1px solid var(--line)}
+header .back{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+header .back:hover{color:var(--gold)}
+.logo-img{height:58px;width:auto;mix-blend-mode:multiply}
+.logo-fallback{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:700;color:var(--green)}
+.spacer{}
+
+.panel{max-width:620px;margin:clamp(30px,5vw,60px) auto;padding:clamp(24px,4vw,44px);background:var(--ivory);border:1px solid var(--line);border-radius:4px;box-shadow:var(--shadow)}
+.panel-head{text-align:center;margin-bottom:28px}
+.panel-head h1{margin:0 0 10px;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(30px,4.6vw,40px);color:var(--green)}
+.panel-head p{margin:0;color:var(--muted);font-size:14px;font-weight:300;line-height:1.7}
+.f{margin-bottom:18px}
+label{display:block;margin-bottom:8px;color:var(--green);font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase}
+input,textarea{width:100%;border:1px solid var(--line);border-radius:2px;background:#fff;padding:12px 14px;font-weight:300;outline:0}
+textarea{min-height:120px;resize:vertical;line-height:1.7}
+input:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,162,39,.15)}
+.solid{width:100%;min-height:50px;margin-top:6px;border:0;border-radius:2px;background:var(--green);color:#fff;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.solid:hover{background:var(--gold);color:var(--green)}
+.solid:disabled{background:#cfcbc3;color:#6d6d6d;cursor:not-allowed}
+.err{display:none;margin-top:14px;text-align:center;color:var(--red);font-size:13px}
+.alt{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);text-align:center;color:var(--muted);font-size:13px;font-weight:300;line-height:1.8}
+.alt a{color:var(--green);border-bottom:1px solid var(--gold)}
+.done{display:none;text-align:center;padding:24px 6px}
+.done h2{margin:0 0 12px;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:30px;color:var(--green)}
+.done p{margin:0 0 26px;color:var(--muted);font-size:14px;font-weight:300;line-height:1.7}
+.tick{width:58px;height:58px;margin:0 auto 18px;color:var(--gold)}
+.btn-gold{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 26px;background:var(--gold);color:var(--green);border-radius:2px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+footer{background:var(--green);color:var(--cream);text-align:center;padding:44px 20px}
+footer h2{margin:0;font-family:"Cormorant Garamond",serif;font-weight:600;color:var(--gold-soft);font-size:30px}
+.credit{margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);color:rgba(247,243,236,.5);font-size:10px;letter-spacing:.18em;text-transform:uppercase}
+.credit a{color:var(--gold-soft)}
+@media (max-width:600px){header{padding:8px 12px}.logo-img{height:46px}.panel{margin:24px 14px}}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="index.html">&#8592; Back to shop</a>
+  <a href="index.html" aria-label="Yashni Creations home">
+    <img src="Untitled.jpg" class="logo-img" alt="Yashni Creations" onerror="this.outerHTML='<span class=&quot;logo-fallback&quot;>Yashni Creations</span>'">
+  </a>
+  <div class="spacer"></div>
+</header>
+<div class="zari"></div>
+
+<main class="panel">
+  <div id="formSection">
+    <div class="panel-head">
+      <h1>Customer support</h1>
+      <p>Order issue, size question or exchange request &mdash; tell us here and we will reply on your phone number.</p>
+    </div>
+
+    <form id="supportForm">
+      <input type="hidden" name="_subject" value="New support request - Yashni Creations">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+
+      <div class="f">
+        <label for="name">Full name</label>
+        <input type="text" id="name" name="Customer Name" placeholder="Your name" required>
+      </div>
+      <div class="f">
+        <label for="phone">Phone number</label>
+        <input type="tel" id="phone" name="Phone Number" inputmode="numeric" placeholder="10-digit mobile number" required>
+      </div>
+      <div class="f">
+        <label for="email">Email (optional)</label>
+        <input type="email" id="email" name="Email ID" placeholder="you@email.com">
+      </div>
+      <div class="f">
+        <label for="issue">What can we help with?</label>
+        <textarea id="issue" name="Message" placeholder="Share your order details and the issue you are facing." required></textarea>
+      </div>
+
+      <button type="submit" class="solid" id="send">Send message</button>
+      <p class="err" id="err"></p>
+    </form>
+
+    <p class="alt">Need a faster reply? <a href="https://wa.me/919779997768" target="_blank" rel="noreferrer">Message us on WhatsApp</a><br>+91 97799 97768 &nbsp;|&nbsp; +91 78890 71347</p>
+  </div>
+
+  <div id="done" class="done">
+    <svg class="tick" viewBox="0 0 16 16" fill="currentColor"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>
+    <h2>Message sent</h2>
+    <p>Thank you for writing to Yashni Creations. Our team will contact you shortly on the number you shared.</p>
+    <a class="btn-gold" href="index.html">Back to shop</a>
+  </div>
+</main>
+
+<footer>
+  <h2>Yashni Creations</h2>
+  <div class="credit">Designed by <a href="https://skywebsolutions.in/" target="_blank" rel="noreferrer">SkyWeb Solutions</a></div>
+</footer>
+
+<script>
+document.getElementById("supportForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  const btn=document.getElementById("send"),err=document.getElementById("err");
+  const phone=document.getElementById("phone").value.replace(/\D/g,"");
+  if(phone.length<10){
+    err.style.display="block";
+    err.textContent="Enter a 10-digit phone number so we can call you back.";
+    return;
+  }
+  err.style.display="none";
+  btn.textContent="Sending...";btn.disabled=true;
+
+  fetch("https://formsubmit.co/ajax/ishaniahuja.123@gmail.com",{
+    method:"POST",
+    headers:{Accept:"application/json"},
+    body:new FormData(this)
+  })
+  .then(r=>r.json())
+  .then(()=>{
+    document.getElementById("formSection").style.display="none";
+    document.getElementById("done").style.display="block";
+  })
+  .catch(()=>{
+    err.style.display="block";
+    err.textContent="The message did not go through. Try again, or reach us on WhatsApp.";
+    btn.textContent="Send message";btn.disabled=false;
+  });
+});
+</script>
+</body>
+</html>
