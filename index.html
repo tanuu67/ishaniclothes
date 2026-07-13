@@ -19,7 +19,7 @@
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:"Jost",system-ui,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
-button,input{font:inherit}
+button,input,select{font:inherit}
 img{display:block}
 ::selection{background:var(--gold-lt);color:var(--green)}
 body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;
@@ -97,7 +97,6 @@ header.tight .logo-img{height:48px}
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(20px,3vw,46px) clamp(16px,2.2vw,32px);padding-bottom:clamp(60px,9vw,120px)}
 .card{position:relative;display:flex;flex-direction:column}
 
-/* UPDATED IMAGE STYLES FOR HOVER EFFECT */
 .shot{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--paper-2)}
 .shot img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:transform 1.4s var(--ease), opacity .8s var(--ease)}
 .shot img.second-img{opacity:0; z-index:1}
@@ -116,7 +115,13 @@ header.tight .logo-img{height:48px}
 .name{margin:0;font-family:"Cormorant Garamond",serif;font-weight:400;font-size:22px;line-height:1.25;color:var(--green)}
 .cost{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:2px}
 .now{font-size:14px;letter-spacing:.08em;color:var(--ink)}
-.add{margin-top:14px;align-self:flex-start;border:0;border-bottom:1px solid var(--green);background:transparent;color:var(--green);
+
+.size-wrap {margin-top:8px;}
+.size-drop {width:100%; border:1px solid var(--hair); background:transparent; padding:8px 10px; font-size:12px; color:var(--ink); outline:none; transition:border .3s var(--ease);}
+.size-drop:focus {border-color:var(--gold);}
+.size-drop option {background:var(--paper); color:var(--ink);}
+
+.add{margin-top:8px;align-self:flex-start;border:0;border-bottom:1px solid var(--green);background:transparent;color:var(--green);
   padding:0 0 5px;cursor:pointer;font-size:10px;letter-spacing:.26em;text-transform:uppercase;transition:.4s var(--ease)}
 .add:hover{color:var(--gold);border-color:var(--gold)}
 .add.in{color:var(--gold);border-color:var(--gold)}
@@ -323,7 +328,6 @@ grid.innerHTML=Array.from({length:8}).map(()=>'<div class="card skel"><div class
 function card(p){
   const inCart=getCart().some(i=>String(i.id)===String(p.id));
   
-  /* Get the first and second image */
   let img1 = p.image_url || "https://placehold.co/800x1000/efe9de/08211a?text=Yashni";
   let img2 = null;
   if(p.images && p.images.length > 0) {
@@ -335,9 +339,18 @@ function card(p){
 
   const sold=p.in_stock===false;
   const link=`product.html?id=${encodeURIComponent(p.id)}`;
-  
-  /* Offer Tag Logic */
   const offerHtml = p.offer_tag ? `<span class="mark">${esc(p.offer_tag)}</span>` : "";
+  
+  /* DYNAMIC SIZES LOGIC */
+  let sizeOptions = `<option value="">Select Size</option>`;
+  if(p.sizes && p.sizes.length > 0) {
+    p.sizes.forEach(size => {
+      sizeOptions += `<option value="${esc(size)}">${esc(size)}</option>`;
+    });
+  } else {
+    // Agar koi old product hai jisme size add nahi kiya tha, toh ye default dikhega
+    sizeOptions += `<option value="Custom">Custom (WhatsApp us)</option>`;
+  }
 
   return `<article class="card reveal ${sold?"sold":""}">
     <a href="${link}" aria-label="View ${esc(p.title)}">
@@ -354,6 +367,14 @@ function card(p){
       <div class="cost">
         <span class="now">${inr(p.price)}</span>
       </div>
+      
+      ${sold ? "" : `
+      <div class="size-wrap">
+        <select class="size-drop" id="size-${esc(p.id)}">
+          ${sizeOptions}
+        </select>
+      </div>`}
+
       ${sold
         ? `<button class="add" type="button" disabled>Sold out</button>`
         : `<button class="add ${inCart?"in":""}" type="button" data-id="${esc(p.id)}">${inCart?"In your bag \u2014 view":"Add to bag"}</button>`}
@@ -374,12 +395,26 @@ function render(){
   }
   grid.innerHTML=list.map(card).join("");
   watch();
+  
   grid.querySelectorAll(".add[data-id]").forEach(b=>b.addEventListener("click",()=>{
     if(b.classList.contains("in")){location.href="cart.html";return}
-    const p=ALL.find(x=>String(x.id)===b.dataset.id);
+    
+    const pId = b.dataset.id;
+    const sizeSelect = document.getElementById(`size-${pId}`);
+    const selectedSize = sizeSelect.value;
+    
+    if(!selectedSize) {
+      alert("Please select a size before adding to the bag.");
+      sizeSelect.focus();
+      return;
+    }
+
+    const p=ALL.find(x=>String(x.id)===pId);
     const c=getCart();
-    c.push({id:p.id,title:p.title,price:p.price,image:p.image_url,size:"",quantity:1});
+    
+    c.push({id:p.id, title:p.title, price:p.price, image:p.image_url, size:selectedSize, quantity:1});
     setCart(c);
+    
     b.textContent="In your bag \u2014 view";b.classList.add("in");
   }));
 }
