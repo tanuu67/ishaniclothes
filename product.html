@@ -46,6 +46,9 @@ h1{margin:0 0 20px;color:var(--green);font-family:"Cormorant Garamond",serif;fon
 .btn-solid{border:1px solid var(--green);background:var(--green);color:#fff}
 .btn-solid.in{background:var(--gold);border-color:var(--gold);color:var(--green)}
 .btn-wa{border:1px solid #25d366;background:#25d366;color:#fff}
+.btn:disabled{border-color:var(--line);background:#efece5;color:var(--muted);cursor:not-allowed}
+.sold-note{margin:0 0 20px;background:#fbe8ee;color:var(--red);border-radius:2px;padding:12px 14px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-align:center}
+.shot.sold img{filter:grayscale(1);opacity:.8}
 .assure{margin:22px 0 0;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;font-weight:300;line-height:1.9}
 .note{grid-column:1/-1;min-height:280px;display:grid;place-items:center;text-align:center;background:var(--ivory);border:1px dashed var(--line);border-radius:3px;padding:32px;color:var(--muted);font-weight:300;line-height:1.8}
 .note a{color:var(--green);border-bottom:1px solid var(--gold)}
@@ -108,11 +111,14 @@ function paint(){
   const inCart=getCart().some(i=>String(i.id)===String(P.id));
   document.title=P.title+" | Yashni Creations";
 
+  const sold=P.in_stock===false;
+
   box.innerHTML=`
-    <div class="shot"><img src="${esc(img)}" alt="${esc(P.title)}"></div>
+    <div class="shot ${sold?"sold":""}"><img src="${esc(img)}" alt="${esc(P.title)}"></div>
     <section class="panel">
       <p class="kicker">${esc(P.category||"Yashni Creations")} exclusive</p>
       <h1>${esc(P.title)}</h1>
+      ${sold?'<p class="sold-note">Sold out &mdash; message us to check when it is back</p>':""}
       <div class="prices">
         <span class="now">${inr(P.price)}</span>
         <span class="was">${wasOf(P.price)}</span>
@@ -129,8 +135,8 @@ function paint(){
         <button type="button" id="plus" aria-label="Increase quantity">+</button>
       </div>
       <div class="actions">
-        <button class="btn btn-solid ${inCart?"in":""}" type="button" id="add">${inCart?"Go to cart":"Add to cart"}</button>
-        <button class="btn btn-wa" type="button" id="wa">Order on WhatsApp</button>
+        <button class="btn btn-solid ${inCart?"in":""}" type="button" id="add" ${sold?"disabled":""}>${sold?"Sold out":(inCart?"Go to cart":"Add to cart")}</button>
+        <button class="btn btn-wa" type="button" id="wa">${sold?"Ask availability on WhatsApp":"Order on WhatsApp"}</button>
       </div>
       <p class="assure">Not sure about the size? Send us your measurements on WhatsApp and we will confirm the right fit before you pay.<br>Exchange available within 3 days of delivery.</p>
     </section>`;
@@ -142,7 +148,7 @@ function paint(){
   document.getElementById("minus").onclick=()=>{qty=Math.max(1,qty-1);document.getElementById("qv").textContent=qty};
   document.getElementById("plus").onclick=()=>{qty=Math.min(10,qty+1);document.getElementById("qv").textContent=qty};
 
-  document.getElementById("add").addEventListener("click",e=>{
+  if(!sold)document.getElementById("add").addEventListener("click",e=>{
     const b=e.currentTarget;
     if(b.classList.contains("in")){location.href="cart.html";return}
     const c=getCart();
@@ -152,7 +158,9 @@ function paint(){
   });
 
   document.getElementById("wa").addEventListener("click",()=>{
-    const msg=`Hello Yashni Creations, I want to order:\n\n${P.title}\nSize: ${size}\nQuantity: ${qty}\nPrice: ${inr(P.price)}\n\nLink: ${location.href}`;
+    const msg=sold
+      ? `Hello Yashni Creations, is this piece available again?\n\n${P.title}\nPrice: ${inr(P.price)}\n\nLink: ${location.href}`
+      : `Hello Yashni Creations, I want to order:\n\n${P.title}\nSize: ${size}\nQuantity: ${qty}\nPrice: ${inr(P.price)}\n\nLink: ${location.href}`;
     window.open(`https://wa.me/${CONFIG.WHATSAPP}?text=${encodeURIComponent(msg)}`,"_blank");
   });
 }
