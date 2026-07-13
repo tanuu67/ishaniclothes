@@ -68,6 +68,10 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
 .pname{display:block;color:var(--green);font-size:14px;font-weight:500;line-height:1.4}
 .pmeta{display:block;margin-top:4px;color:var(--muted);font-size:12px;font-weight:300}
 .tagcat{display:inline-block;margin-left:6px;background:#eef1ec;color:var(--green);padding:2px 7px;border-radius:2px;font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+.tagout{display:inline-block;margin-left:6px;background:#fbe8ee;color:var(--red);padding:2px 7px;border-radius:2px;font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+.item.off .thumb{filter:grayscale(1);opacity:.55}
+.mini.stock{color:var(--muted)}
+.mini.stock.on{color:var(--green);border-color:rgba(9,38,29,.35)}
 .acts{display:flex;gap:6px}
 .mini{border:1px solid var(--line);background:#fff;border-radius:2px;padding:8px 11px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;color:var(--green)}
 .mini:hover{border-color:var(--gold)}
@@ -127,6 +131,12 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
         <div class="f"><label for="price">Price</label><div class="rupee"><input type="number" id="price" inputmode="numeric" placeholder="4500" min="0"></div></div>
         <div class="f"><label for="cat">Category</label><select id="cat"></select></div>
       </div>
+      <div class="f"><label for="stock">Availability</label>
+        <select id="stock">
+          <option value="in">In stock</option>
+          <option value="out">Out of stock</option>
+        </select>
+      </div>
       <div class="f"><label for="desc">Description</label><textarea id="desc" placeholder="Fabric, work, fit and care details"></textarea></div>
       <div class="f">
         <label for="file">Photo</label>
@@ -157,6 +167,12 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
     <div class="two">
       <div class="f"><label for="ePrice">Price</label><div class="rupee"><input type="number" id="ePrice" min="0"></div></div>
       <div class="f"><label for="eCat">Category</label><select id="eCat"></select></div>
+    </div>
+    <div class="f"><label for="eStock">Availability</label>
+      <select id="eStock">
+        <option value="in">In stock</option>
+        <option value="out">Out of stock</option>
+      </select>
     </div>
     <div class="f"><label for="eDesc">Description</label><textarea id="eDesc"></textarea></div>
     <div class="f">
@@ -272,21 +288,26 @@ function paint(){
   if(!ROWS.length){list.innerHTML='<p class="empty">No products yet.<br>Add your first piece using the form on the left.</p>';return}
   if(!rows.length){list.innerHTML='<p class="empty">No product matches that name.</p>';return}
 
-  list.innerHTML=rows.map(r=>`
-    <div class="item">
+  list.innerHTML=rows.map(r=>{
+    const live=r.in_stock!==false;
+    return `
+    <div class="item ${live?"":"off"}">
       <img class="thumb" src="${esc(r.image_url||"https://placehold.co/160x210/ece7dd/09261d?text=Yashni")}" alt="${esc(r.title)}" loading="lazy">
       <div>
-        <span class="pname">${esc(r.title)}${r.category?`<span class="tagcat">${esc(r.category)}</span>`:""}</span>
+        <span class="pname">${esc(r.title)}${r.category?`<span class="tagcat">${esc(r.category)}</span>`:""}${live?"":'<span class="tagout">Out of stock</span>'}</span>
         <span class="pmeta">${inr(r.price)}</span>
       </div>
       <div class="acts">
+        <button class="mini stock ${live?"on":""}" type="button" data-stock="${esc(r.id)}">${live?"In stock":"Out of stock"}</button>
         <button class="mini" type="button" data-edit="${esc(r.id)}">Edit</button>
         <button class="mini del" type="button" data-del="${esc(r.id)}">Delete</button>
       </div>
-    </div>`).join("");
+    </div>`;
+  }).join("");
 
   list.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>openEdit(b.dataset.edit)));
   list.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>remove(b.dataset.del,b)));
+  list.querySelectorAll("[data-stock]").forEach(b=>b.addEventListener("click",()=>toggleStock(b.dataset.stock,b)));
 }
 $("find").addEventListener("input",paint);
 
@@ -307,11 +328,12 @@ $("publish").addEventListener("click",async()=>{
     const img=await putImage(file);
 
     say(msg,"Publishing the product...","");
-    const {error}=await db.from("products").insert({title,price,description:description||null,category,...img});
+    const in_stock=$("stock").value==="in";
+    const {error}=await db.from("products").insert({title,price,description:description||null,category,in_stock,...img});
     if(error)throw new Error(error.message);
 
     say(msg,"Published. It is live on the website now.","ok");
-    $("title").value="";$("price").value="";$("desc").value="";$("file").value="";
+    $("title").value="";$("price").value="";$("desc").value="";$("file").value="";$("stock").value="in";
     $("preview").style.display="none";$("dropText").textContent="Tap to choose a photo (portrait works best)";
     load();
   }catch(e){
@@ -329,6 +351,7 @@ function openEdit(id){
   $("eTitle").value=r.title||"";
   $("ePrice").value=r.price||"";
   $("eCat").value=r.category||CONFIG.CATEGORIES[0];
+  $("eStock").value=(r.in_stock===false)?"out":"in";
   $("eDesc").value=r.description||"";
   $("eFile").value="";
   $("ePreview").src=r.image_url||"";
@@ -348,7 +371,7 @@ $("saveEdit").addEventListener("click",async()=>{
 
   btn.disabled=true;btn.textContent="Saving...";
   try{
-    const patch={title,price,description:$("eDesc").value.trim()||null,category:$("eCat").value};
+    const patch={title,price,description:$("eDesc").value.trim()||null,category:$("eCat").value,in_stock:$("eStock").value==="in"};
     const newFile=$("eFile").files[0];
     let oldPath=null;
     if(newFile){
@@ -370,6 +393,18 @@ $("saveEdit").addEventListener("click",async()=>{
     btn.disabled=false;btn.textContent="Save changes";
   }
 });
+
+/* ---------- in stock / out of stock ---------- */
+async function toggleStock(id,btn){
+  const r=ROWS.find(x=>String(x.id)===String(id));
+  if(!r)return;
+  const next=!(r.in_stock!==false);
+  btn.disabled=true;btn.textContent="Saving...";
+  const {error}=await db.from("products").update({in_stock:next}).eq("id",id);
+  if(error){alert("Could not update stock: "+error.message);btn.disabled=false;return}
+  r.in_stock=next;
+  paint();
+}
 
 /* ---------- delete ---------- */
 async function remove(id,btn){
