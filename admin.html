@@ -44,11 +44,15 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
 .drop input{display:none}
 .drop span{display:block;color:var(--muted);font-size:13px;font-weight:300}
 
-/* Update for Image Numbering */
+/* SIZE CHECKBOXES */
+.checks {display:flex; flex-wrap:wrap; gap:12px; margin-top:6px;}
+.checks label {display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:400; text-transform:none; letter-spacing:0; color:var(--ink); cursor:pointer;}
+.checks input {width:auto; margin:0; cursor:pointer;}
+
 .preview-grid{display:flex;gap:8px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
 .img-wrap {position:relative; display:inline-block;}
 .img-wrap img{width:70px;aspect-ratio:3/4;object-fit:cover;border-radius:2px; display:block;}
-.img-num {position:absolute; top:4px; left:4px; background:var(--red); color:#fff; font-size:11px; width:18px; height:18px; display:grid; place-items:center; border-radius:50%; font-weight:bold; z-index:2; box-shadow:0 2px 4px rgba(0,0,0,0.3);}
+.img-num {position:absolute; top:4px; left:4px; background:var(--red); color:#fff; font-size:10px; padding:2px 6px; display:grid; place-items:center; border-radius:10px; font-weight:bold; z-index:2; box-shadow:0 2px 4px rgba(0,0,0,0.3);}
 
 .solid{width:100%;min-height:48px;border:0;border-radius:2px;background:var(--green);color:#fff;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:.2s}
 .solid:hover{background:var(--gold);color:var(--green)}
@@ -139,6 +143,19 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
         </div>
       </div>
       
+      <div class="f">
+        <label>Available Sizes</label>
+        <div class="checks" id="sizes">
+          <label><input type="checkbox" value="XS"> XS</label>
+          <label><input type="checkbox" value="S"> S</label>
+          <label><input type="checkbox" value="M"> M</label>
+          <label><input type="checkbox" value="L"> L</label>
+          <label><input type="checkbox" value="XL"> XL</label>
+          <label><input type="checkbox" value="XXL"> XXL</label>
+          <label><input type="checkbox" value="Custom"> Custom</label>
+        </div>
+      </div>
+      
       <div class="f"><label for="desc">Description</label><textarea id="desc" placeholder="Fabric, work, fit and care details"></textarea></div>
       
       <div class="f">
@@ -182,6 +199,19 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
           <option value="in">In stock</option>
           <option value="out">Out of stock</option>
         </select>
+      </div>
+    </div>
+    
+    <div class="f">
+      <label>Available Sizes</label>
+      <div class="checks" id="eSizes">
+        <label><input type="checkbox" value="XS"> XS</label>
+        <label><input type="checkbox" value="S"> S</label>
+        <label><input type="checkbox" value="M"> M</label>
+        <label><input type="checkbox" value="L"> L</label>
+        <label><input type="checkbox" value="XL"> XL</label>
+        <label><input type="checkbox" value="XXL"> XXL</label>
+        <label><input type="checkbox" value="Custom"> Custom</label>
       </div>
     </div>
     
@@ -271,7 +301,10 @@ function preview(fileInput, containerEl, textEl, defaultText) {
         
         const num = document.createElement("div");
         num.className = "img-num";
-        num.textContent = index + 1; 
+        
+        if(index === 0) num.textContent = "1 (Main)";
+        else if (index === 1) num.textContent = "2 (Hover)";
+        else num.textContent = index + 1;
         
         const img = document.createElement("img");
         img.src = URL.createObjectURL(f);
@@ -364,6 +397,9 @@ $("publish").addEventListener("click",async()=>{
   const category=$("cat").value;
   const files=$("file").files;
   
+  // GET SELECTED SIZES
+  const selectedSizes = Array.from(document.querySelectorAll("#sizes input:checked")).map(cb => cb.value);
+  
   if(!title||!Number.isFinite(price)||price<=0||files.length===0){say(msg,"Add a product name, price, and at least 1 photo.","bad");return}
   if(files.length>4){say(msg,"You can only upload a maximum of 4 photos.","bad");return}
   
@@ -381,6 +417,7 @@ $("publish").addEventListener("click",async()=>{
 
     const {error}=await db.from("products").insert({
       title, price, offer_tag, description:description||null, category, in_stock,
+      sizes: selectedSizes,
       image_url: primaryImage.url,
       image_path: primaryImage.path,
       images: uploadedImages 
@@ -389,6 +426,7 @@ $("publish").addEventListener("click",async()=>{
     
     say(msg,"Published. It is live on the website now.","ok");
     $("title").value="";$("price").value="";$("offer").value="";$("desc").value="";$("file").value="";$("stock").value="in";
+    document.querySelectorAll("#sizes input").forEach(cb => cb.checked = false);
     $("previewContainer").innerHTML="";$("dropText").textContent="Tap to choose photos (1 to 4 allowed)";
     load();
   }catch(e){
@@ -410,6 +448,12 @@ function openEdit(id){
   $("eDesc").value=r.description||"";
   $("eFile").value="";
   
+  // POPULATE CHECKBOXES
+  const productSizes = r.sizes || [];
+  document.querySelectorAll("#eSizes input").forEach(cb => {
+    cb.checked = productSizes.includes(cb.value);
+  });
+  
   $("ePreviewContainer").innerHTML="";
   if(r.images && r.images.length > 0){
     r.images.forEach((img, index) => {
@@ -418,7 +462,9 @@ function openEdit(id){
       
       const num = document.createElement("div");
       num.className = "img-num";
-      num.textContent = index + 1;
+      if(index === 0) num.textContent = "1 (Main)";
+      else if (index === 1) num.textContent = "2 (Hover)";
+      else num.textContent = index + 1;
       
       const el = document.createElement("img"); 
       el.src = img.url; 
@@ -445,6 +491,9 @@ $("saveEdit").addEventListener("click",async()=>{
   const price=parseInt($("ePrice").value,10);
   const offer_tag=$("eOffer").value.trim()||null;
   
+  // GET SELECTED SIZES ON EDIT
+  const selectedSizes = Array.from(document.querySelectorAll("#eSizes input:checked")).map(cb => cb.value);
+  
   if(!title||!Number.isFinite(price)||price<=0){say(msg,"Enter a valid product name and price.","bad");return}
   
   const newFiles=$("eFile").files;
@@ -452,7 +501,13 @@ $("saveEdit").addEventListener("click",async()=>{
 
   btn.disabled=true;btn.textContent="Saving...";
   try{
-    const patch={title,price,offer_tag,description:$("eDesc").value.trim()||null,category:$("eCat").value,in_stock:$("eStock").value==="in"};
+    const patch={
+      title, price, offer_tag, 
+      description:$("eDesc").value.trim()||null, 
+      category:$("eCat").value, 
+      in_stock:$("eStock").value==="in",
+      sizes: selectedSizes
+    };
     let oldPaths=[];
     
     if(newFiles.length>0){
