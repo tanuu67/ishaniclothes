@@ -43,8 +43,13 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
 .drop:hover{border-color:var(--gold)}
 .drop input{display:none}
 .drop span{display:block;color:var(--muted);font-size:13px;font-weight:300}
+
+/* Update for Image Numbering */
 .preview-grid{display:flex;gap:8px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
-.preview-grid img{width:70px;aspect-ratio:3/4;object-fit:cover;border-radius:2px}
+.img-wrap {position:relative; display:inline-block;}
+.img-wrap img{width:70px;aspect-ratio:3/4;object-fit:cover;border-radius:2px; display:block;}
+.img-num {position:absolute; top:4px; left:4px; background:var(--red); color:#fff; font-size:11px; width:18px; height:18px; display:grid; place-items:center; border-radius:50%; font-weight:bold; z-index:2; box-shadow:0 2px 4px rgba(0,0,0,0.3);}
+
 .solid{width:100%;min-height:48px;border:0;border-radius:2px;background:var(--green);color:#fff;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:.2s}
 .solid:hover{background:var(--gold);color:var(--green)}
 .solid:disabled{background:#cfcbc3;color:#6d6d6d;cursor:not-allowed}
@@ -77,8 +82,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
 .sheet .card{width:100%;max-width:470px;max-height:90vh;overflow:auto}
 .row{display:flex;gap:10px;margin-top:8px}
 .row .solid{flex:1}
-.setup{max-width:640px;margin:60px auto;padding:30px;background:#fff;border:1px solid var(--red);border-radius:4px;font-size:14px;line-height:1.8}
-.setup code{background:#f3efe8;padding:2px 6px;border-radius:2px}
 @media (max-width:880px){
   .cols{grid-template-columns:1fr}
   .item{grid-template-columns:54px minmax(0,1fr)}
@@ -89,6 +92,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
 </style>
 </head>
 <body>
+
 <div id="lock">
   <div class="lock-box">
     <h1>Yashni Creations</h1>
@@ -202,7 +206,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// YAHAN HUMNE AAPKI CONFIGURATION DIRECTLY ADD KAR DI HAI
 const CONFIG = {
   SUPABASE_URL: "https://uhjebqveujolmorsxcvq.supabase.co",
   SUPABASE_ANON_KEY: "sb_publishable_VhlesphpBgbikJmdn-T_cg_CefF3w7z",
@@ -223,43 +226,59 @@ const catOptions=CONFIG.CATEGORIES.map(c=>`<option value="${esc(c)}">${esc(c)}</
 $("cat").innerHTML=catOptions;
 $("eCat").innerHTML=catOptions;
 
-/* ---------- login ---------- */
 async function boot(){
-  const {data}=await db.auth.getSession();
-  const on=Boolean(data.session);
-  $("lock").style.display=on?"none":"grid";
-  $("app").style.display=on?"block":"none";
-  if(on){
-    $("who").textContent="Logged in as "+data.session.user.email;
-    load();
+  try {
+    const {data}=await db.auth.getSession();
+    const on=Boolean(data.session);
+    $("lock").style.display=on?"none":"grid";
+    $("app").style.display=on?"block":"none";
+    if(on){
+      $("who").textContent="Logged in as "+data.session.user.email;
+      load();
+    }
+  } catch(err) {
+    alert("Supabase connect hone mein problem hai: " + err.message);
   }
 }
+
 $("loginBtn").addEventListener("click",async()=>{
   const btn=$("loginBtn"),msg=$("lockMsg");
   const email=$("email").value.trim(),password=$("pass").value;
   if(!email||!password){say(msg,"Enter both your email and password.","bad");return}
   btn.disabled=true;btn.textContent="Logging in...";
-  
-  const {error}=await db.auth.signInWithPassword({email,password});
-  
-  btn.disabled=false;btn.textContent="Log in";
-  if(error){say(msg, error.message || "That email or password is not correct.","bad");return}
-  hide(msg);boot();
+  try {
+    const {error}=await db.auth.signInWithPassword({email,password});
+    btn.disabled=false;btn.textContent="Log in";
+    if(error){say(msg, error.message || "That email or password is not correct.","bad");return}
+    hide(msg);boot();
+  } catch(err) {
+    alert("Login Error: " + err.message);
+    btn.disabled=false;btn.textContent="Log in";
+  }
 });
 $("pass").addEventListener("keydown",e=>{if(e.key==="Enter")$("loginBtn").click()});
 $("logout").addEventListener("click",async()=>{await db.auth.signOut();location.reload()});
 
-/* ---------- photo preview & compress ---------- */
 function preview(fileInput, containerEl, textEl, defaultText) {
   fileInput.addEventListener("change", e => {
     containerEl.innerHTML = "";
     const files = Array.from(e.target.files).slice(0, 4); 
     if(files.length > 0) {
       textEl.textContent = `${files.length} photo(s) selected`;
-      files.forEach(f => {
+      files.forEach((f, index) => {
+        const wrap = document.createElement("div");
+        wrap.className = "img-wrap";
+        
+        const num = document.createElement("div");
+        num.className = "img-num";
+        num.textContent = index + 1; 
+        
         const img = document.createElement("img");
         img.src = URL.createObjectURL(f);
-        containerEl.appendChild(img);
+        
+        wrap.appendChild(img);
+        wrap.appendChild(num);
+        containerEl.appendChild(wrap);
       });
     } else {
       textEl.textContent = defaultText;
@@ -294,7 +313,6 @@ async function putImage(file){
   return {url:data.publicUrl, path:path};
 }
 
-/* ---------- list ---------- */
 async function load(){
   const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
   if(error){$("list").innerHTML=`<p class="empty">Products could not load.<br>${esc(error.message)}</p>`;return}
@@ -337,7 +355,6 @@ function paint(){
 }
 $("find").addEventListener("input",paint);
 
-/* ---------- publish ---------- */
 $("publish").addEventListener("click",async()=>{
   const btn=$("publish"),msg=$("status");
   const title=$("title").value.trim();
@@ -381,7 +398,6 @@ $("publish").addEventListener("click",async()=>{
   }
 });
 
-/* ---------- edit ---------- */
 function openEdit(id){
   const r=ROWS.find(x=>String(x.id)===String(id));
   if(!r)return;
@@ -396,8 +412,20 @@ function openEdit(id){
   
   $("ePreviewContainer").innerHTML="";
   if(r.images && r.images.length > 0){
-    r.images.forEach(img => {
-      const el = document.createElement("img"); el.src = img.url; $("ePreviewContainer").appendChild(el);
+    r.images.forEach((img, index) => {
+      const wrap = document.createElement("div");
+      wrap.className = "img-wrap";
+      
+      const num = document.createElement("div");
+      num.className = "img-num";
+      num.textContent = index + 1;
+      
+      const el = document.createElement("img"); 
+      el.src = img.url; 
+      
+      wrap.appendChild(el);
+      wrap.appendChild(num);
+      $("ePreviewContainer").appendChild(wrap);
     });
   } else if (r.image_url) {
     const el = document.createElement("img"); el.src = r.image_url; $("ePreviewContainer").appendChild(el);
@@ -462,7 +490,6 @@ $("saveEdit").addEventListener("click",async()=>{
   }
 });
 
-/* ---------- in stock / out of stock ---------- */
 async function toggleStock(id,btn){
   const r=ROWS.find(x=>String(x.id)===String(id));
   if(!r)return;
@@ -474,7 +501,6 @@ async function toggleStock(id,btn){
   paint();
 }
 
-/* ---------- delete ---------- */
 async function remove(id,btn){
   const r=ROWS.find(x=>String(x.id)===String(id));
   if(!confirm("Remove this product from the website?"))return;
@@ -502,5 +528,3 @@ boot();
 </script>
 </body>
 </html>
-
-```
