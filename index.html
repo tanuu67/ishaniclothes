@@ -96,14 +96,19 @@ header.tight .logo-img{height:48px}
 
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(20px,3vw,46px) clamp(16px,2.2vw,32px);padding-bottom:clamp(60px,9vw,120px)}
 .card{position:relative;display:flex;flex-direction:column}
+
+/* UPDATED IMAGE STYLES FOR HOVER EFFECT */
 .shot{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--paper-2)}
-.shot img{width:100%;height:100%;object-fit:cover;transition:transform 1.4s var(--ease),filter .8s var(--ease)}
-.card:hover .shot img{transform:scale(1.06)}
-.veil{position:absolute;inset:0;display:grid;place-items:center;background:rgba(8,33,26,.28);opacity:0;transition:opacity .6s var(--ease)}
+.shot img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:transform 1.4s var(--ease), opacity .8s var(--ease)}
+.shot img.second-img{opacity:0; z-index:1}
+.card:hover .shot img.first-img{transform:scale(1.06)}
+.card:hover .shot img.second-img{opacity:1; transform:scale(1.06)}
+
+.veil{position:absolute;inset:0;display:grid;place-items:center;background:rgba(8,33,26,.28);opacity:0;transition:opacity .6s var(--ease); z-index:2;}
 .card:hover .veil{opacity:1}
 .veil span{border:1px solid rgba(255,255,255,.8);color:#fff;padding:12px 24px;font-size:9px;letter-spacing:.3em;text-transform:uppercase;transform:translateY(8px);transition:transform .6s var(--ease)}
 .card:hover .veil span{transform:none}
-.mark{position:absolute;top:0;left:0;background:var(--green);color:var(--gold-lt);padding:8px 14px;font-size:8px;letter-spacing:.26em;text-transform:uppercase}
+.mark{position:absolute;top:0;left:0;background:var(--gold);color:var(--green);padding:8px 14px;font-size:8px;letter-spacing:.26em;text-transform:uppercase; z-index:2; font-weight: 500;}
 .mark.sold{background:var(--ink);color:#fff}
 .card.sold .shot img{filter:grayscale(1) contrast(.95);opacity:.72}
 .body{padding:20px 2px 0;display:flex;flex-direction:column;gap:8px;flex:1}
@@ -298,7 +303,6 @@ document.getElementById("fEmail").textContent=CONFIG.EMAIL;
 document.getElementById("fPhone").textContent=CONFIG.PHONE_DISPLAY;
 badge();
 
-/* banner images come from config.js only — never from the product catalogue */
 const heroImg=(CONFIG.HERO_IMAGE||"").trim();
 if(heroImg)document.getElementById("heroBg").style.backgroundImage=`url("${heroImg}")`;
 
@@ -318,14 +322,29 @@ grid.innerHTML=Array.from({length:8}).map(()=>'<div class="card skel"><div class
 
 function card(p){
   const inCart=getCart().some(i=>String(i.id)===String(p.id));
-  const img=p.image_url||"https://placehold.co/800x1000/efe9de/08211a?text=Yashni";
+  
+  /* Get the first and second image */
+  let img1 = p.image_url || "https://placehold.co/800x1000/efe9de/08211a?text=Yashni";
+  let img2 = null;
+  if(p.images && p.images.length > 0) {
+    img1 = p.images[0].url;
+    if(p.images.length > 1) {
+      img2 = p.images[1].url;
+    }
+  }
+
   const sold=p.in_stock===false;
   const link=`product.html?id=${encodeURIComponent(p.id)}`;
+  
+  /* Offer Tag Logic */
+  const offerHtml = p.offer_tag ? `<span class="mark">${esc(p.offer_tag)}</span>` : "";
+
   return `<article class="card reveal ${sold?"sold":""}">
     <a href="${link}" aria-label="View ${esc(p.title)}">
       <div class="shot">
-        <img src="${esc(img)}" alt="${esc(p.title)}" loading="lazy">
-        ${sold?'<span class="mark sold">Sold out</span>':""}
+        <img src="${esc(img1)}" class="first-img" alt="${esc(p.title)}" loading="lazy">
+        ${img2 ? `<img src="${esc(img2)}" class="second-img" alt="${esc(p.title)} alternative" loading="lazy">` : ""}
+        ${sold?'<span class="mark sold">Sold out</span>':offerHtml}
         <span class="veil"><span>View piece</span></span>
       </div>
     </a>
