@@ -4,177 +4,274 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yashni Creations | Luxury Ethnic Wear</title>
-<meta name="description" content="Handpicked lehengas, sarees, suits and gowns. Order directly on WhatsApp.">
+<meta name="description" content="Handpicked lehengas, sarees and suits. Finished by hand, ordered on WhatsApp.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--green:#09261d;--gold:#c9a227;--gold-soft:#e6d59a;--cream:#f7f3ec;--ivory:#fffdf9;--ink:#17221d;--muted:#6f776f;--line:rgba(9,38,29,.14);--red:#b3123f;--shadow:0 20px 50px rgba(9,38,29,.10)}
+:root{
+  --green:#08211a; --green-2:#0f3427; --gold:#b98f2f; --gold-lt:#d8bd7a;
+  --paper:#f6f2ea; --paper-2:#efe9de; --ink:#1a231e; --muted:#7c837c;
+  --hair:rgba(8,33,26,.14);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--cream);color:var(--ink);font-family:"Jost",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}button,input{font:inherit}img{display:block}
-.zari{height:2px;background:linear-gradient(90deg,transparent,var(--gold-soft),var(--gold),var(--gold-soft),transparent)}
-.strip{background:var(--green);color:var(--gold-soft);text-align:center;padding:9px 16px;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
-header{position:sticky;top:0;z-index:30;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:10px clamp(14px,4vw,64px);background:rgba(247,243,236,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;gap:clamp(10px,2vw,24px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Jost",system-ui,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+img{display:block}
+::selection{background:var(--gold-lt);color:var(--green)}
+body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.caps{font-size:10px;font-weight:400;letter-spacing:.3em;text-transform:uppercase}
+.strip{position:relative;z-index:3;background:var(--green);color:var(--gold-lt);text-align:center;padding:11px 16px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;font-weight:300}
+
+header{position:sticky;top:0;z-index:40;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;
+  padding:20px clamp(16px,5vw,72px);background:rgba(246,242,234,.82);backdrop-filter:blur(18px) saturate(1.2);
+  border-bottom:1px solid transparent;transition:padding .5s var(--ease),border-color .5s var(--ease),background .5s var(--ease)}
+header.tight{padding:10px clamp(16px,5vw,72px);border-bottom-color:var(--hair);background:rgba(246,242,234,.95)}
+.nav{display:flex;align-items:center;gap:clamp(14px,2.4vw,32px)}
 .nav.right{justify-content:flex-end}
-.nav a{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
-.nav a:hover{color:var(--gold)}
-.nav a.offer{color:var(--red)}
-.logo-img{height:64px;width:auto;mix-blend-mode:multiply}
-.logo-fallback{font-family:"Cormorant Garamond",serif;font-size:26px;font-weight:700;color:var(--green);white-space:nowrap}
-.icon-btn{position:relative;display:grid;place-items:center;width:40px;height:40px;border:1px solid var(--line);border-radius:999px;background:var(--ivory);font-size:16px}
-.badge{position:absolute;top:-6px;right:-7px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:var(--red);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:600}
+.nav a{position:relative;font-size:10px;font-weight:400;letter-spacing:.24em;text-transform:uppercase;color:var(--green);padding:4px 0}
+.nav a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--gold);transition:width .5s var(--ease)}
+.nav a:hover::after{width:100%}
+.logo-img{height:72px;width:auto;mix-blend-mode:multiply;transition:height .5s var(--ease)}
+header.tight .logo-img{height:48px}
+.logo-fallback{font-family:"Cormorant Garamond",serif;font-size:26px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--green);white-space:nowrap}
+.bag{display:inline-flex;align-items:center;gap:8px;color:var(--green)}
+.bag b{font-weight:400;color:var(--gold)}
 
-.hero{position:relative;min-height:clamp(440px,72vh,700px);display:grid;align-items:end;padding:clamp(28px,6vw,80px);color:#fff;background:linear-gradient(88deg,rgba(9,38,29,.92),rgba(9,38,29,.55) 52%,rgba(9,38,29,.2)),var(--green) center/cover no-repeat}
-.hero-copy{max-width:700px}
-.eyebrow{margin:0 0 16px;color:var(--gold-soft);font-size:11px;letter-spacing:.28em;text-transform:uppercase}
-.hero h1{margin:0;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(46px,8vw,96px);line-height:.98}
-.hero h1 em{font-style:italic;color:var(--gold-soft)}
-.hero p{max-width:520px;margin:22px 0 30px;color:rgba(255,255,255,.85);font-weight:300;font-size:clamp(15px,1.6vw,18px);line-height:1.75}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 26px;border-radius:2px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;border:1px solid transparent;transition:.25s}
-.btn-gold{background:var(--gold);color:var(--green)}
-.btn-gold:hover{background:var(--gold-soft)}
-.btn-ghost{border-color:rgba(255,255,255,.5);color:#fff}
-.btn-ghost:hover{background:rgba(255,255,255,.12)}
+.hero{position:relative;min-height:clamp(520px,88vh,880px);display:grid;align-items:center;overflow:hidden;background:var(--green)}
+.hero-bg{position:absolute;inset:0;transform:scale(1.06);animation:drift 22s ease-in-out infinite alternate;
+  background:
+    radial-gradient(circle at 22% 30%,rgba(185,143,47,.22),transparent 52%),
+    radial-gradient(circle at 78% 72%,rgba(216,189,122,.12),transparent 46%),
+    linear-gradient(150deg,var(--green-2),var(--green) 62%);
+  background-size:cover;background-position:center;background-repeat:no-repeat}
+@keyframes drift{to{transform:scale(1.14) translate3d(-1.5%,-1%,0)}}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(92deg,rgba(8,33,26,.94),rgba(8,33,26,.6) 48%,rgba(8,33,26,.22))}
+.hero-copy{position:relative;z-index:2;max-width:760px;padding:0 clamp(20px,6vw,88px);color:#fff}
+.hero .caps{color:var(--gold-lt);display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.hero .caps::before{content:"";width:42px;height:1px;background:var(--gold)}
+.hero h1{margin:0;font-family:"Cormorant Garamond",Georgia,serif;font-weight:300;font-size:clamp(52px,9vw,124px);line-height:.94;letter-spacing:-.01em}
+.hero h1 em{display:block;font-style:italic;font-weight:400;color:var(--gold-lt)}
+.hero p{max-width:460px;margin:30px 0 40px;color:rgba(255,255,255,.72);font-size:15px;line-height:2;font-weight:200}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:0 34px;overflow:hidden;cursor:pointer;
+  font-size:10px;font-weight:400;letter-spacing:.28em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold-lt);background:transparent;transition:color .6s var(--ease)}
+.btn::before{content:"";position:absolute;inset:0;background:var(--gold);transform:translateY(101%);transition:transform .6s var(--ease)}
+.btn span{position:relative;z-index:1}
+.btn:hover{color:var(--green)}
+.btn:hover::before{transform:translateY(0)}
+.btn.filled{background:var(--gold);color:var(--green)}
+.btn.filled::before{background:var(--gold-lt)}
+.scroll-cue{position:absolute;z-index:2;left:50%;bottom:30px;transform:translateX(-50%);color:rgba(255,255,255,.5);font-size:9px;letter-spacing:.3em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:10px}
+.scroll-cue i{display:block;width:1px;height:44px;background:linear-gradient(180deg,var(--gold),transparent);animation:cue 2.4s ease-in-out infinite}
+@keyframes cue{0%,100%{opacity:.25;transform:scaleY(.5);transform-origin:top}50%{opacity:1;transform:scaleY(1)}}
 
-.wrap{max-width:1480px;margin:0 auto;padding:0 clamp(12px,3vw,24px)}
-.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin:clamp(44px,6vw,72px) 0 18px}
-.section-head h2{margin:0;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(30px,4.4vw,48px);color:var(--green);line-height:1.05}
-.section-head p{margin:8px 0 0;max-width:520px;color:var(--muted);font-weight:300;font-size:14px;line-height:1.65}
-.count{color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
-.tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0 26px}
-.search{flex:1;min-width:220px;max-width:340px;display:flex;align-items:center;gap:8px;background:var(--ivory);border:1px solid var(--line);border-radius:2px;padding:0 12px}
-.search input{flex:1;border:0;outline:0;background:transparent;padding:12px 0;font-size:14px;font-weight:300}
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{border:1px solid var(--line);background:transparent;color:var(--green);border-radius:999px;padding:9px 16px;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:.2s}
-.chip:hover{border-color:var(--gold)}
-.chip.on{background:var(--green);color:var(--gold-soft);border-color:var(--green)}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.reveal.in{opacity:1;transform:none}
 
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;padding-bottom:clamp(50px,7vw,84px)}
-.card{background:var(--ivory);border:1px solid var(--line);border-radius:3px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s ease,box-shadow .3s ease}
-.card:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
-.shot{position:relative;aspect-ratio:3/4;background:#ece7dd;overflow:hidden}
-.shot img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
-.card:hover .shot img{transform:scale(1.05)}
-.flag{position:absolute;left:0;bottom:12px;background:var(--green);color:var(--gold-soft);padding:6px 12px;font-size:9px;letter-spacing:.16em;text-transform:uppercase}
-.flag.sold{background:var(--red);color:#fff}
-.card.sold .shot img{filter:grayscale(1);opacity:.75}
-.add:disabled{border-color:var(--line);color:var(--muted);background:transparent;cursor:not-allowed}
-.info{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
-.name{margin:0;font-size:14px;font-weight:400;line-height:1.5;min-height:42px}
-.prices{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.now{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:700;color:var(--green)}
-.was{color:var(--muted);font-size:12px;text-decoration:line-through}
-.off{color:var(--red);font-size:11px;font-weight:600}
-.add{width:100%;min-height:42px;border:1px solid var(--green);background:transparent;color:var(--green);border-radius:2px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:.2s;margin-top:auto}
-.add:hover{background:var(--green);color:#fff}
-.add.in{background:var(--gold);border-color:var(--gold);color:var(--green)}
-.note{grid-column:1/-1;min-height:200px;display:grid;place-items:center;text-align:center;color:var(--muted);font-weight:300;background:var(--ivory);border:1px dashed var(--line);border-radius:3px;padding:32px;line-height:1.8}
+.wrap{position:relative;z-index:2;max-width:1560px;margin:0 auto;padding:0 clamp(18px,4vw,56px)}
+.head{display:grid;grid-template-columns:auto 1fr auto;align-items:end;gap:clamp(20px,4vw,50px);margin:clamp(70px,10vw,130px) 0 34px}
+.head .num{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:16px;color:var(--gold);padding-bottom:8px}
+.head h2{margin:0;font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(38px,6vw,76px);line-height:1;color:var(--green);letter-spacing:-.01em}
+.head h2 em{font-style:italic;color:var(--gold)}
+.head .side{text-align:right;color:var(--muted);font-size:11px;letter-spacing:.2em;text-transform:uppercase;padding-bottom:10px;white-space:nowrap}
+
+.tools{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:20px 0;
+  border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);margin-bottom:clamp(34px,5vw,60px)}
+.chips{display:flex;gap:clamp(14px,2vw,30px);flex-wrap:wrap}
+.chip{position:relative;border:0;background:transparent;cursor:pointer;color:var(--muted);padding:4px 0;font-size:10px;letter-spacing:.24em;text-transform:uppercase;transition:color .4s var(--ease)}
+.chip::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--gold);transition:width .5s var(--ease)}
+.chip:hover{color:var(--green)}
+.chip.on{color:var(--green)}
+.chip.on::after{width:100%}
+.search{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--hair);min-width:200px}
+.search input{border:0;outline:0;background:transparent;padding:8px 0;width:100%;font-size:13px;color:var(--ink)}
+.search input::placeholder{color:var(--muted)}
+.search span{color:var(--gold);font-size:12px}
+
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(20px,3vw,46px) clamp(16px,2.2vw,32px);padding-bottom:clamp(60px,9vw,120px)}
+.card{position:relative;display:flex;flex-direction:column}
+.shot{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--paper-2)}
+.shot img{width:100%;height:100%;object-fit:cover;transition:transform 1.4s var(--ease),filter .8s var(--ease)}
+.card:hover .shot img{transform:scale(1.06)}
+.veil{position:absolute;inset:0;display:grid;place-items:center;background:rgba(8,33,26,.28);opacity:0;transition:opacity .6s var(--ease)}
+.card:hover .veil{opacity:1}
+.veil span{border:1px solid rgba(255,255,255,.8);color:#fff;padding:12px 24px;font-size:9px;letter-spacing:.3em;text-transform:uppercase;transform:translateY(8px);transition:transform .6s var(--ease)}
+.card:hover .veil span{transform:none}
+.mark{position:absolute;top:0;left:0;background:var(--green);color:var(--gold-lt);padding:8px 14px;font-size:8px;letter-spacing:.26em;text-transform:uppercase}
+.mark.sold{background:var(--ink);color:#fff}
+.card.sold .shot img{filter:grayscale(1) contrast(.95);opacity:.72}
+.body{padding:20px 2px 0;display:flex;flex-direction:column;gap:8px;flex:1}
+.cat{color:var(--gold);font-size:9px;letter-spacing:.26em;text-transform:uppercase}
+.name{margin:0;font-family:"Cormorant Garamond",serif;font-weight:400;font-size:22px;line-height:1.25;color:var(--green)}
+.cost{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:2px}
+.now{font-size:14px;letter-spacing:.08em;color:var(--ink)}
+.was{font-size:12px;color:var(--muted);text-decoration:line-through}
+.off{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.add{margin-top:14px;align-self:flex-start;border:0;border-bottom:1px solid var(--green);background:transparent;color:var(--green);
+  padding:0 0 5px;cursor:pointer;font-size:10px;letter-spacing:.26em;text-transform:uppercase;transition:.4s var(--ease)}
+.add:hover{color:var(--gold);border-color:var(--gold)}
+.add.in{color:var(--gold);border-color:var(--gold)}
+.add:disabled{color:var(--muted);border-color:transparent;cursor:not-allowed}
+
+.note{grid-column:1/-1;padding:90px 20px;text-align:center;color:var(--muted);font-size:14px;line-height:2.1}
 .note a{color:var(--green);border-bottom:1px solid var(--gold)}
-.skel{background:var(--ivory);border:1px solid var(--line);border-radius:3px;overflow:hidden}
-.skel .shot{background:linear-gradient(100deg,#ece7dd 30%,#f6f2ea 45%,#ece7dd 60%);background-size:300% 100%;animation:sh 1.3s infinite}
+.skel .shot{background:linear-gradient(100deg,var(--paper-2) 30%,#f7f3ec 46%,var(--paper-2) 62%);background-size:300% 100%;animation:sh 1.6s infinite}
 @keyframes sh{0%{background-position:120% 0}100%{background-position:-40% 0}}
-.skel .bar{height:12px;margin:14px 16px;background:#ece7dd;border-radius:2px}
-.skel .bar.s{width:45%}
+.skel .bar{height:10px;margin-top:16px;background:var(--paper-2)}
+.skel .bar.s{width:42%;margin-top:10px}
 
-.promise{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.promise div{background:var(--cream);padding:34px 24px;text-align:center}
-.promise h3{margin:0 0 8px;font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;color:var(--green)}
-.promise p{margin:0;color:var(--muted);font-size:13px;font-weight:300;line-height:1.7}
+.atelier{display:grid;grid-template-columns:1.05fr 1fr;background:var(--green);color:var(--paper);margin-top:clamp(20px,4vw,40px)}
+.atelier .pic{background:var(--green-2) center/cover no-repeat;min-height:440px}
+.atelier .pic.plain{background:
+  radial-gradient(circle at 30% 25%,rgba(185,143,47,.16),transparent 55%),
+  linear-gradient(160deg,var(--green-2),var(--green));
+  position:relative}
+.atelier .pic.plain::after{content:"";position:absolute;inset:26px;border:1px solid rgba(185,143,47,.28)}
+.atelier .say{padding:clamp(40px,6vw,88px);display:flex;flex-direction:column;justify-content:center}
+.atelier .caps{color:var(--gold-lt);margin-bottom:22px}
+.atelier h3{margin:0 0 24px;font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(30px,3.6vw,52px);line-height:1.12}
+.atelier h3 em{font-style:italic;color:var(--gold-lt)}
+.atelier p{margin:0 0 18px;max-width:420px;color:rgba(246,242,234,.66);font-size:14px;line-height:2;font-weight:200}
+.atelier .btn{margin-top:16px;align-self:flex-start}
 
-footer{background:var(--green);color:var(--cream);padding:clamp(46px,7vw,72px) 20px 30px;text-align:center}
-footer h2{margin:0 0 6px;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:34px;color:var(--gold-soft)}
-footer p{margin:6px 0;color:rgba(247,243,236,.75);font-weight:300;font-size:14px}
-.socials{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:24px}
-.socials a{border:1px solid rgba(255,255,255,.28);border-radius:2px;padding:12px 22px;font-size:11px;letter-spacing:.16em;text-transform:uppercase}
-.socials a:hover{border-color:var(--gold);color:var(--gold-soft)}
-.credit{margin-top:36px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);color:rgba(247,243,236,.5);font-size:10px;letter-spacing:.18em;text-transform:uppercase}
-.credit a{color:var(--gold-soft)}
-.wa{position:fixed;left:18px;bottom:18px;z-index:40;width:54px;height:54px;display:grid;place-items:center;border-radius:999px;background:#25d366;box-shadow:0 12px 26px rgba(37,211,102,.4)}
-.wa svg{width:28px;height:28px;fill:#fff}
-@media (max-width:1100px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (max-width:820px){.promise{grid-template-columns:1fr}}
-@media (max-width:760px){
-  header{grid-template-columns:auto 1fr auto;padding:8px 12px;gap:8px}
-  .logo-img{height:48px}.logo-fallback{font-size:19px}
-  .nav{gap:10px}.nav a{font-size:10px;letter-spacing:.08em}
-  .nav a:nth-child(2){display:none}
-  .hero{min-height:520px}
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-  .info{padding:12px}.name{font-size:13px;min-height:38px}.now{font-size:19px}
-  .search{max-width:none}
+.promise{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(30px,5vw,70px);padding:clamp(70px,9vw,120px) 0}
+.promise article{text-align:center}
+.promise .n{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:15px;color:var(--gold)}
+.promise h4{margin:14px 0 12px;font-family:"Cormorant Garamond",serif;font-weight:400;font-size:26px;color:var(--green)}
+.promise p{margin:0 auto;max-width:280px;color:var(--muted);font-size:13px;line-height:2}
+
+footer{position:relative;z-index:2;background:var(--green);color:var(--paper);padding:clamp(64px,9vw,110px) clamp(20px,5vw,72px) 34px;text-align:center}
+footer h2{margin:0;font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(38px,6vw,72px);color:var(--paper)}
+footer h2 em{font-style:italic;color:var(--gold-lt)}
+.f-rule{width:64px;height:1px;background:var(--gold);margin:28px auto}
+footer .lines p{margin:8px 0;color:rgba(246,242,234,.6);font-size:13px;letter-spacing:.06em}
+.socials{display:flex;justify-content:center;gap:clamp(18px,3vw,40px);flex-wrap:wrap;margin-top:34px}
+.socials a{position:relative;color:rgba(246,242,234,.78);font-size:10px;letter-spacing:.26em;text-transform:uppercase;padding-bottom:5px}
+.socials a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--gold);transition:width .5s var(--ease)}
+.socials a:hover{color:var(--gold-lt)}
+.socials a:hover::after{width:100%}
+.credit{margin-top:56px;padding-top:22px;border-top:1px solid rgba(246,242,234,.12);color:rgba(246,242,234,.34);font-size:9px;letter-spacing:.24em;text-transform:uppercase}
+.credit a{color:var(--gold-lt)}
+
+.wa{position:fixed;left:22px;bottom:22px;z-index:50;width:52px;height:52px;display:grid;place-items:center;border-radius:999px;background:var(--green);border:1px solid var(--gold);transition:.5s var(--ease)}
+.wa:hover{background:var(--gold)}
+.wa svg{width:24px;height:24px;fill:var(--gold-lt);transition:fill .5s var(--ease)}
+.wa:hover svg{fill:var(--green)}
+
+@media (max-width:1240px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:960px){
+  .atelier{grid-template-columns:1fr}
+  .atelier .pic{min-height:300px}
+  .promise{grid-template-columns:1fr;gap:50px}
 }
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media (max-width:760px){
+  header{padding:12px 16px;gap:10px}
+  header.tight{padding:8px 16px}
+  .logo-img{height:50px}header.tight .logo-img{height:40px}
+  .nav{gap:14px}
+  .nav a:nth-child(2){display:none}
+  .bag .caps{display:none}
+  .hero{min-height:600px}
+  .head{grid-template-columns:1fr;gap:10px}
+  .head .num,.head .side{display:none}
+  .tools{flex-direction:column;align-items:stretch;gap:16px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 12px}
+  .name{font-size:17px}
+  .body{padding-top:14px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
 </style>
 </head>
 <body>
 <div class="strip" id="strip"></div>
 
-<header>
+<header id="hdr">
   <nav class="nav" aria-label="Primary">
-    <a href="#collection">Shop</a>
-    <a href="#collection">New in</a>
-    <a href="#collection" class="offer">Offers</a>
+    <a href="#collection">Collection</a>
+    <a href="#atelier">Atelier</a>
+    <a href="complaint.html">Contact</a>
   </nav>
   <a href="index.html" aria-label="Yashni Creations home">
     <img src="Untitled.jpg" class="logo-img" alt="Yashni Creations" onerror="this.outerHTML='<span class=&quot;logo-fallback&quot;>Yashni Creations</span>'">
   </a>
-  <nav class="nav right" aria-label="Support and cart">
-    <a href="complaint.html">Support</a>
-    <a href="cart.html" class="icon-btn" aria-label="Cart"><span aria-hidden="true">&#128717;</span><span class="badge" id="cartBadge">0</span></a>
+  <nav class="nav right" aria-label="Bag">
+    <a href="cart.html" class="bag" aria-label="Bag"><span class="caps">Bag</span><b id="cartBadge">0</b></a>
   </nav>
 </header>
-<div class="zari"></div>
 
 <main>
-  <section class="hero" id="hero">
+  <section class="hero">
+    <div class="hero-bg" id="heroBg"></div>
     <div class="hero-copy">
-      <p class="eyebrow">Luxury ethnic wear &mdash; Made to be remembered</p>
-      <h1>Woven for<br><em>your moment</em></h1>
-      <p>Handpicked lehengas, sarees and suits for weddings, festivals and the evenings in between. Every piece is checked by us before it ships.</p>
+      <p class="caps">Luxury ethnic wear</p>
+      <h1>Woven for<em>your moment</em></h1>
+      <p>Lehengas, sarees and suits chosen one at a time &mdash; for the weddings, the festivals, and the evenings in between.</p>
       <div class="hero-actions">
-        <a class="btn btn-gold" href="#collection">Shop the collection</a>
-        <a class="btn btn-ghost" id="heroWa" target="_blank" rel="noreferrer">Ask on WhatsApp</a>
+        <a class="btn filled" href="#collection"><span>View the collection</span></a>
+        <a class="btn" id="heroWa" target="_blank" rel="noreferrer"><span>Speak to us</span></a>
       </div>
+    </div>
+    <div class="scroll-cue"><span>Scroll</span><i></i></div>
+  </section>
+
+  <div class="wrap">
+    <div class="head reveal" id="collection">
+      <span class="num">01</span>
+      <h2>The <em>Collection</em></h2>
+      <span class="side" id="count"></span>
+    </div>
+
+    <div class="tools reveal">
+      <div class="chips" id="chips"></div>
+      <label class="search">
+        <span aria-hidden="true">&#9906;</span>
+        <input type="search" id="q" placeholder="Search the collection" aria-label="Search products">
+      </label>
+    </div>
+
+    <section class="grid" id="grid" aria-live="polite"></section>
+  </div>
+
+  <section class="atelier reveal" id="atelier">
+    <div class="pic" id="atelierPic"></div>
+    <div class="say">
+      <p class="caps">The atelier</p>
+      <h3>Every piece is<br><em>seen before it ships</em></h3>
+      <p>We do not run a warehouse. Each lehenga, saree and suit is picked, checked for its stitching, its fall and its finish, and only then does it leave for you.</p>
+      <p>Unsure of a size? Send us your measurements. We will tell you exactly what to order &mdash; before you pay a rupee.</p>
+      <a class="btn" id="atelierWa" target="_blank" rel="noreferrer"><span>Message the atelier</span></a>
     </div>
   </section>
 
   <div class="wrap">
-    <div class="section-head" id="collection">
-      <div>
-        <h2>The latest collection</h2>
-        <p>Fresh from the studio. Tap any piece for fabric, fit and sizing details.</p>
-      </div>
-      <span class="count" id="count"></span>
+    <div class="promise">
+      <article class="reveal"><span class="n">i</span><h4>Checked by hand</h4><p>Stitching, fall and finish inspected before every dispatch.</p></article>
+      <article class="reveal"><span class="n">ii</span><h4>Sizing, settled first</h4><p>Send your measurements on WhatsApp and we confirm the fit.</p></article>
+      <article class="reveal"><span class="n">iii</span><h4>Easy exchange</h4><p>Not right? Tell us within three days of delivery and we fix it.</p></article>
     </div>
-    <div class="tools">
-      <label class="search"><span aria-hidden="true">&#128269;</span><input type="search" id="q" placeholder="Search lehenga, saree, suit..." aria-label="Search products"></label>
-      <div class="chips" id="chips"></div>
-    </div>
-    <section class="grid" id="grid" aria-live="polite"></section>
   </div>
-
-  <section class="promise">
-    <div><h3>Checked by hand</h3><p>Every order is inspected for stitching, fall and finish before dispatch.</p></div>
-    <div><h3>Sizing help on WhatsApp</h3><p>Send us your measurements and we will tell you exactly what to order.</p></div>
-    <div><h3>Easy exchange</h3><p>Size not right? Message us within 3 days of delivery and we will fix it.</p></div>
-  </section>
 </main>
 
 <footer>
-  <h2>Yashni Creations</h2>
-  <p id="fEmail"></p>
-  <p id="fPhone"></p>
+  <h2>Yashni <em>Creations</em></h2>
+  <div class="f-rule"></div>
+  <div class="lines">
+    <p id="fEmail"></p>
+    <p id="fPhone"></p>
+  </div>
   <div class="socials">
     <a id="fWa" target="_blank" rel="noreferrer">WhatsApp</a>
     <a id="fIg" target="_blank" rel="noreferrer">Instagram</a>
     <a href="complaint.html">Support</a>
   </div>
-  <div class="credit">Designed by <a href="https://skywebsolutions.in/" target="_blank" rel="noreferrer">SkyWeb Solutions</a> | <a href="admin.html">Admin portal &#128274;</a></div>
+  <div class="credit">Designed by <a href="https://skywebsolutions.in/" target="_blank" rel="noreferrer">SkyWeb Solutions</a> &nbsp;&middot;&nbsp; <a href="admin.html">Admin</a></div>
 </footer>
 
 <a class="wa" id="floatWa" target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp">
@@ -190,42 +287,63 @@ let ALL=[],cat="All",query="";
 
 const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const inr=n=>"\u20B9"+Number(n||0).toLocaleString("en-IN");
-const wasOf=p=>inr(Math.round(Number(p)/(1-CONFIG.DISCOUNT_PERCENT/100)));
+const DISC=Number(CONFIG.DISCOUNT_PERCENT)||0;
+const TAG=(CONFIG.OFFER_TAG||"").trim();
+const wasOf=p=>DISC>0?inr(Math.round(Number(p)/(1-DISC/100))):"";
 const getCart=()=>{try{return JSON.parse(localStorage.getItem(CART_KEY))||[]}catch{return[]}};
 const setCart=c=>{localStorage.setItem(CART_KEY,JSON.stringify(c));badge()};
 const badge=()=>{document.getElementById("cartBadge").textContent=getCart().reduce((s,i)=>s+(i.quantity||1),0)};
 
-/* config-driven bits */
 const wa="https://wa.me/"+CONFIG.WHATSAPP;
-document.getElementById("strip").textContent=CONFIG.ANNOUNCEMENT;
-document.getElementById("heroWa").href=wa;
-document.getElementById("floatWa").href=wa;
-document.getElementById("fWa").href=wa;
+const strip=document.getElementById("strip");
+if(CONFIG.ANNOUNCEMENT&&CONFIG.ANNOUNCEMENT.trim()){strip.textContent=CONFIG.ANNOUNCEMENT}else{strip.remove()}
+["heroWa","atelierWa","floatWa","fWa"].forEach(id=>document.getElementById(id).href=wa);
 document.getElementById("fIg").href=CONFIG.INSTAGRAM;
 document.getElementById("fEmail").textContent=CONFIG.EMAIL;
 document.getElementById("fPhone").textContent=CONFIG.PHONE_DISPLAY;
 badge();
 
-grid.innerHTML=Array.from({length:8}).map(()=>'<div class="skel"><div class="shot"></div><div class="bar"></div><div class="bar s"></div></div>').join("");
+/* banner images come from config.js only — never from the product catalogue */
+const heroImg=(CONFIG.HERO_IMAGE||"").trim();
+if(heroImg)document.getElementById("heroBg").style.backgroundImage=`url("${heroImg}")`;
+
+const atelierImg=(CONFIG.ATELIER_IMAGE||"").trim();
+const atelierPic=document.getElementById("atelierPic");
+if(atelierImg)atelierPic.style.backgroundImage=`url("${atelierImg}")`;
+else atelierPic.classList.add("plain");
+
+const hdr=document.getElementById("hdr");
+addEventListener("scroll",()=>hdr.classList.toggle("tight",scrollY>60),{passive:true});
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.12});
+const watch=()=>document.querySelectorAll(".reveal:not(.in)").forEach(el=>io.observe(el));
+watch();
+
+grid.innerHTML=Array.from({length:8}).map(()=>'<div class="card skel"><div class="shot"></div><div class="bar"></div><div class="bar s"></div></div>').join("");
 
 function card(p){
   const inCart=getCart().some(i=>String(i.id)===String(p.id));
-  const img=p.image_url||"https://placehold.co/600x800/ece7dd/09261d?text=Yashni";
+  const img=p.image_url||"https://placehold.co/800x1000/efe9de/08211a?text=Yashni";
   const sold=p.in_stock===false;
-  return `<article class="card ${sold?"sold":""}">
-    <a href="product.html?id=${encodeURIComponent(p.id)}" aria-label="View ${esc(p.title)}">
-      <div class="shot"><img src="${esc(img)}" alt="${esc(p.title)}" loading="lazy"><span class="flag ${sold?"sold":""}">${sold?"Sold out":"Buy 2 get 1 free"}</span></div>
+  const link=`product.html?id=${encodeURIComponent(p.id)}`;
+  return `<article class="card reveal ${sold?"sold":""}">
+    <a href="${link}" aria-label="View ${esc(p.title)}">
+      <div class="shot">
+        <img src="${esc(img)}" alt="${esc(p.title)}" loading="lazy">
+        ${sold?'<span class="mark sold">Sold out</span>':(TAG?`<span class="mark">${esc(TAG)}</span>`:"")}
+        <span class="veil"><span>View piece</span></span>
+      </div>
     </a>
-    <div class="info">
-      <a href="product.html?id=${encodeURIComponent(p.id)}"><h3 class="name">${esc(p.title)}</h3></a>
-      <div class="prices">
+    <div class="body">
+      ${p.category?`<span class="cat">${esc(p.category)}</span>`:""}
+      <a href="${link}"><h3 class="name">${esc(p.title)}</h3></a>
+      <div class="cost">
         <span class="now">${inr(p.price)}</span>
-        <span class="was">${wasOf(p.price)}</span>
-        <span class="off">${CONFIG.DISCOUNT_PERCENT}% off</span>
+        ${DISC>0?`<span class="was">${wasOf(p.price)}</span><span class="off">${DISC}% off</span>`:""}
       </div>
       ${sold
         ? `<button class="add" type="button" disabled>Sold out</button>`
-        : `<button class="add ${inCart?"in":""}" type="button" data-id="${esc(p.id)}">${inCart?"Go to cart":"Add to cart"}</button>`}
+        : `<button class="add ${inCart?"in":""}" type="button" data-id="${esc(p.id)}">${inCart?"In your bag \u2014 view":"Add to bag"}</button>`}
     </div>
   </article>`;
 }
@@ -238,17 +356,18 @@ function render(){
   });
   document.getElementById("count").textContent=list.length+(list.length===1?" piece":" pieces");
   if(!list.length){
-    grid.innerHTML=`<div class="note">Nothing matches that yet.<br>Try another word, or <a href="${wa}" target="_blank" rel="noreferrer">ask us on WhatsApp</a> &mdash; we may have it in store.</div>`;
+    grid.innerHTML=`<div class="note">Nothing here matches that search.<br>Try another word, or <a href="${wa}" target="_blank" rel="noreferrer">ask us directly</a> &mdash; it may still be in the studio.</div>`;
     return;
   }
   grid.innerHTML=list.map(card).join("");
-  grid.querySelectorAll(".add").forEach(b=>b.addEventListener("click",()=>{
+  watch();
+  grid.querySelectorAll(".add[data-id]").forEach(b=>b.addEventListener("click",()=>{
     if(b.classList.contains("in")){location.href="cart.html";return}
     const p=ALL.find(x=>String(x.id)===b.dataset.id);
     const c=getCart();
     c.push({id:p.id,title:p.title,price:p.price,image:p.image_url,size:"",quantity:1});
     setCart(c);
-    b.textContent="Go to cart";b.classList.add("in");
+    b.textContent="In your bag \u2014 view";b.classList.add("in");
   }));
 }
 
@@ -270,15 +389,15 @@ document.getElementById("q").addEventListener("input",e=>{query=e.target.value.t
   }
   const db=supabase.createClient(CONFIG.SUPABASE_URL,CONFIG.SUPABASE_ANON_KEY);
   const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
-  if(error){grid.innerHTML='<div class="note">The catalogue could not load right now. Please refresh in a moment.</div>';return}
+  if(error){grid.innerHTML='<div class="note">The collection could not load right now. Please refresh in a moment.</div>';return}
+
   ALL=(data||[]).sort((a,b)=>(a.in_stock===false)-(b.in_stock===false));
-  if(!ALL.length){grid.innerHTML='<div class="note">No products are live yet.<br>Add your first piece from the <a href="admin.html">admin portal</a>.</div>';return}
-  chips();render();
-  const heroPick=ALL.find(p=>p.in_stock!==false&&p.image_url)||ALL[0];
-  if(heroPick&&heroPick.image_url){
-    document.getElementById("hero").style.backgroundImage=
-      `linear-gradient(88deg,rgba(9,38,29,.92),rgba(9,38,29,.55) 52%,rgba(9,38,29,.2)),url("${heroPick.image_url}")`;
+  if(!ALL.length){
+    grid.innerHTML='<div class="note">No pieces are live yet.<br>Add the first one from the <a href="admin.html">admin portal</a>.</div>';
+    return;
   }
+  chips();render();
+
 })();
 </script>
 </body>
