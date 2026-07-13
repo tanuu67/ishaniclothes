@@ -13,13 +13,11 @@
 body{margin:0;min-height:100vh;background:var(--cream);color:var(--ink);font-family:"Jost",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 button,input,textarea,select{font:inherit}
 h1,h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;margin:0}
-
 #lock{position:fixed;inset:0;z-index:99;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 30% 20%,#12382c,#061a13)}
 .lock-box{width:100%;max-width:420px;background:var(--ivory);border-radius:4px;box-shadow:var(--shadow);padding:36px}
 .lock-box h1{color:var(--green);font-size:32px;text-align:center}
 .zari{height:2px;margin:10px auto 20px;width:70px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 .lock-box .hint{margin:0 0 22px;color:var(--muted);font-size:13px;font-weight:300;line-height:1.7;text-align:center}
-
 #app{display:none;width:min(1180px,100% - 28px);margin:0 auto;padding:32px 0 60px}
 .top{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:26px;flex-wrap:wrap}
 .top h1{color:var(--green);font-size:clamp(30px,4.6vw,46px)}
@@ -28,12 +26,10 @@ h1,h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;margin:0}
 .ghost{border:1px solid var(--line);background:var(--ivory);color:var(--green);border-radius:2px;padding:11px 16px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
 .ghost:hover{border-color:var(--gold)}
 .ghost.danger:hover{border-color:var(--red);color:var(--red)}
-
 .cols{display:grid;grid-template-columns:minmax(320px,.85fr) minmax(0,1fr);gap:22px;align-items:start}
 .card{background:var(--ivory);border:1px solid var(--line);border-radius:4px;padding:clamp(20px,3vw,30px);box-shadow:0 10px 26px rgba(9,38,29,.05)}
 .card>h2{color:var(--green);font-size:26px}
 .card>.hint{margin:6px 0 22px;color:var(--muted);font-size:13px;font-weight:300;line-height:1.6}
-
 .f{margin-bottom:16px}
 label{display:block;margin-bottom:7px;color:var(--green);font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase}
 input,textarea,select{width:100%;border:1px solid var(--line);border-radius:2px;background:#fff;color:var(--ink);padding:12px;outline:0;font-weight:300}
@@ -43,13 +39,12 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
 .rupee{position:relative}
 .rupee input{padding-left:30px}
 .rupee::before{content:"\20B9";position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px}
-
 .drop{display:block;border:1px dashed var(--line);border-radius:3px;background:#fff;padding:18px;text-align:center;cursor:pointer;transition:.2s}
 .drop:hover{border-color:var(--gold)}
 .drop input{display:none}
 .drop span{display:block;color:var(--muted);font-size:13px;font-weight:300}
-.drop img{display:none;width:110px;aspect-ratio:3/4;object-fit:cover;border-radius:2px;margin:0 auto 10px}
-
+.preview-grid{display:flex;gap:8px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
+.preview-grid img{width:70px;aspect-ratio:3/4;object-fit:cover;border-radius:2px}
 .solid{width:100%;min-height:48px;border:0;border-radius:2px;background:var(--green);color:#fff;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:.2s}
 .solid:hover{background:var(--gold);color:var(--green)}
 .solid:disabled{background:#cfcbc3;color:#6d6d6d;cursor:not-allowed}
@@ -57,11 +52,9 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
 .msg.on{display:block}
 .msg.ok{color:var(--ok)}
 .msg.bad{color:var(--red)}
-
 .search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:2px;background:#fff;padding:0 12px;margin-bottom:6px}
 .search input{border:0;padding:11px 0}
 .search input:focus{box-shadow:none}
-
 .item{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
 .item:last-child{border-bottom:0}
 .thumb{width:64px;aspect-ratio:3/4;object-fit:cover;border-radius:2px;background:#ece7dd}
@@ -69,6 +62,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
 .pmeta{display:block;margin-top:4px;color:var(--muted);font-size:12px;font-weight:300}
 .tagcat{display:inline-block;margin-left:6px;background:#eef1ec;color:var(--green);padding:2px 7px;border-radius:2px;font-size:9px;letter-spacing:.1em;text-transform:uppercase}
 .tagout{display:inline-block;margin-left:6px;background:#fbe8ee;color:var(--red);padding:2px 7px;border-radius:2px;font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+.tagoffer{display:inline-block;margin-left:6px;background:#fff8e6;color:var(--gold);padding:2px 7px;border-radius:2px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--gold-soft)}
 .item.off .thumb{filter:grayscale(1);opacity:.55}
 .mini.stock{color:var(--muted)}
 .mini.stock.on{color:var(--green);border-color:rgba(9,38,29,.35)}
@@ -78,7 +72,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
 .mini.del{color:var(--red);border-color:rgba(179,18,63,.35)}
 .mini.del:hover{background:var(--red);color:#fff;border-color:var(--red)}
 .empty{padding:30px 0;text-align:center;color:var(--muted);font-size:13px;font-weight:300;line-height:1.8}
-
 .sheet{position:fixed;inset:0;z-index:80;display:none;place-items:center;padding:20px;background:rgba(9,38,29,.72)}
 .sheet.on{display:grid}
 .sheet .card{width:100%;max-width:470px;max-height:90vh;overflow:auto}
@@ -96,7 +89,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
 </style>
 </head>
 <body>
-
 <div id="lock">
   <div class="lock-box">
     <h1>Yashni Creations</h1>
@@ -125,300 +117,22 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
     <section class="card">
       <h2>Add a product</h2>
       <p class="hint">It goes live on the website the moment you publish it.</p>
-
+      
       <div class="f"><label for="title">Product name</label><input type="text" id="title" placeholder="Royal Emerald Lehenga"></div>
+      
       <div class="two">
         <div class="f"><label for="price">Price</label><div class="rupee"><input type="number" id="price" inputmode="numeric" placeholder="4500" min="0"></div></div>
+        <div class="f"><label for="offer">Offer Tag (optional)</label><input type="text" id="offer" placeholder="e.g. 10% OFF, Festive"></div>
+      </div>
+      
+      <div class="two">
         <div class="f"><label for="cat">Category</label><select id="cat"></select></div>
+        <div class="f"><label for="stock">Availability</label>
+          <select id="stock">
+            <option value="in">In stock</option>
+            <option value="out">Out of stock</option>
+          </select>
+        </div>
       </div>
-      <div class="f"><label for="stock">Availability</label>
-        <select id="stock">
-          <option value="in">In stock</option>
-          <option value="out">Out of stock</option>
-        </select>
-      </div>
+      
       <div class="f"><label for="desc">Description</label><textarea id="desc" placeholder="Fabric, work, fit and care details"></textarea></div>
-      <div class="f">
-        <label for="file">Photo</label>
-        <label class="drop" for="file">
-          <img id="preview" alt="">
-          <span id="dropText">Tap to choose a photo (portrait works best)</span>
-          <input type="file" id="file" accept="image/*">
-        </label>
-      </div>
-      <button class="solid" type="button" id="publish">Publish product</button>
-      <p class="msg" id="status"></p>
-    </section>
-
-    <section class="card">
-      <h2>Live products</h2>
-      <p class="hint" id="liveCount">Everything currently on the website.</p>
-      <div class="search"><span aria-hidden="true">&#128269;</span><input type="text" id="find" placeholder="Search by name"></div>
-      <div id="list"><p class="empty">Loading products...</p></div>
-    </section>
-  </div>
-</main>
-
-<div class="sheet" id="sheet">
-  <div class="card">
-    <h2>Edit product</h2>
-    <p class="hint">The website updates the moment you save.</p>
-    <div class="f"><label for="eTitle">Product name</label><input type="text" id="eTitle"></div>
-    <div class="two">
-      <div class="f"><label for="ePrice">Price</label><div class="rupee"><input type="number" id="ePrice" min="0"></div></div>
-      <div class="f"><label for="eCat">Category</label><select id="eCat"></select></div>
-    </div>
-    <div class="f"><label for="eStock">Availability</label>
-      <select id="eStock">
-        <option value="in">In stock</option>
-        <option value="out">Out of stock</option>
-      </select>
-    </div>
-    <div class="f"><label for="eDesc">Description</label><textarea id="eDesc"></textarea></div>
-    <div class="f">
-      <label for="eFile">Replace photo (optional)</label>
-      <label class="drop" for="eFile">
-        <img id="ePreview" alt="">
-        <span id="eDropText">Tap to choose a new photo</span>
-        <input type="file" id="eFile" accept="image/*">
-      </label>
-    </div>
-    <div class="row">
-      <button class="solid" type="button" id="saveEdit">Save changes</button>
-      <button class="ghost" type="button" id="cancelEdit">Cancel</button>
-    </div>
-    <p class="msg" id="editMsg"></p>
-  </div>
-</div>
-
-<script src="config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const $=id=>document.getElementById(id);
-const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const inr=n=>"\u20B9"+Number(n||0).toLocaleString("en-IN");
-const say=(el,t,k)=>{el.textContent=t;el.className="msg on "+(k||"")};
-const hide=el=>{el.className="msg"};
-
-if(!CONFIG.SUPABASE_URL.startsWith("http")){
-  document.body.innerHTML='<div class="setup"><b>Setup is not finished.</b><br>Open <code>config.js</code> and paste your Supabase <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code>. The steps are in <code>SETUP.md</code>.</div>';
-  throw new Error("config missing");
-}
-
-const db=supabase.createClient(CONFIG.SUPABASE_URL,CONFIG.SUPABASE_ANON_KEY);
-const BUCKET="product-images";
-let ROWS=[],editing=null;
-
-/* categories dropdowns */
-const catOptions=CONFIG.CATEGORIES.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");
-$("cat").innerHTML=catOptions;
-$("eCat").innerHTML=catOptions;
-
-/* ---------- login ---------- */
-async function boot(){
-  const {data}=await db.auth.getSession();
-  const on=Boolean(data.session);
-  $("lock").style.display=on?"none":"grid";
-  $("app").style.display=on?"block":"none";
-  if(on){
-    $("who").textContent="Logged in as "+data.session.user.email;
-    load();
-  }
-}
-$("loginBtn").addEventListener("click",async()=>{
-  const btn=$("loginBtn"),msg=$("lockMsg");
-  const email=$("email").value.trim(),password=$("pass").value;
-  if(!email||!password){say(msg,"Enter both your email and password.","bad");return}
-  btn.disabled=true;btn.textContent="Logging in...";
-  const {error}=await db.auth.signInWithPassword({email,password});
-  btn.disabled=false;btn.textContent="Log in";
-  if(error){say(msg,"That email or password is not correct.","bad");return}
-  hide(msg);boot();
-});
-$("pass").addEventListener("keydown",e=>{if(e.key==="Enter")$("loginBtn").click()});
-$("logout").addEventListener("click",async()=>{await db.auth.signOut();location.reload()});
-
-/* ---------- photo: preview + compress ---------- */
-function preview(fileInput,imgEl,textEl){
-  fileInput.addEventListener("change",e=>{
-    const f=e.target.files[0];if(!f)return;
-    imgEl.src=URL.createObjectURL(f);imgEl.style.display="block";
-    textEl.textContent=f.name;
-  });
-}
-preview($("file"),$("preview"),$("dropText"));
-preview($("eFile"),$("ePreview"),$("eDropText"));
-
-function shrink(file,maxW=1200,quality=.82){
-  return new Promise((resolve,reject)=>{
-    const img=new Image();
-    img.onload=()=>{
-      const scale=Math.min(1,maxW/img.width);
-      const c=document.createElement("canvas");
-      c.width=Math.round(img.width*scale);
-      c.height=Math.round(img.height*scale);
-      c.getContext("2d").drawImage(img,0,0,c.width,c.height);
-      c.toBlob(b=>b?resolve(b):reject(new Error("The photo could not be processed. Try another image.")),"image/jpeg",quality);
-    };
-    img.onerror=()=>reject(new Error("That file is not an image."));
-    img.src=URL.createObjectURL(file);
-  });
-}
-
-async function putImage(file){
-  const blob=await shrink(file);
-  const path=`${Date.now()}-${Math.random().toString(36).slice(2,8)}.jpg`;
-  const {error}=await db.storage.from(BUCKET).upload(path,blob,{contentType:"image/jpeg",cacheControl:"31536000"});
-  if(error)throw new Error("The photo could not be uploaded: "+error.message);
-  const {data}=db.storage.from(BUCKET).getPublicUrl(path);
-  return {image_url:data.publicUrl,image_path:path};
-}
-
-/* ---------- list ---------- */
-async function load(){
-  const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
-  if(error){$("list").innerHTML=`<p class="empty">Products could not load.<br>${esc(error.message)}</p>`;return}
-  ROWS=data||[];paint();
-}
-function paint(){
-  const q=$("find").value.trim().toLowerCase();
-  const rows=ROWS.filter(r=>String(r.title||"").toLowerCase().includes(q));
-  $("liveCount").textContent=`${ROWS.length} product${ROWS.length===1?"":"s"} on the website.`;
-  const list=$("list");
-  if(!ROWS.length){list.innerHTML='<p class="empty">No products yet.<br>Add your first piece using the form on the left.</p>';return}
-  if(!rows.length){list.innerHTML='<p class="empty">No product matches that name.</p>';return}
-
-  list.innerHTML=rows.map(r=>{
-    const live=r.in_stock!==false;
-    return `
-    <div class="item ${live?"":"off"}">
-      <img class="thumb" src="${esc(r.image_url||"https://placehold.co/160x210/ece7dd/09261d?text=Yashni")}" alt="${esc(r.title)}" loading="lazy">
-      <div>
-        <span class="pname">${esc(r.title)}${r.category?`<span class="tagcat">${esc(r.category)}</span>`:""}${live?"":'<span class="tagout">Out of stock</span>'}</span>
-        <span class="pmeta">${inr(r.price)}</span>
-      </div>
-      <div class="acts">
-        <button class="mini stock ${live?"on":""}" type="button" data-stock="${esc(r.id)}">${live?"In stock":"Out of stock"}</button>
-        <button class="mini" type="button" data-edit="${esc(r.id)}">Edit</button>
-        <button class="mini del" type="button" data-del="${esc(r.id)}">Delete</button>
-      </div>
-    </div>`;
-  }).join("");
-
-  list.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>openEdit(b.dataset.edit)));
-  list.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>remove(b.dataset.del,b)));
-  list.querySelectorAll("[data-stock]").forEach(b=>b.addEventListener("click",()=>toggleStock(b.dataset.stock,b)));
-}
-$("find").addEventListener("input",paint);
-
-/* ---------- publish ---------- */
-$("publish").addEventListener("click",async()=>{
-  const btn=$("publish"),msg=$("status");
-  const title=$("title").value.trim();
-  const price=parseInt($("price").value,10);
-  const description=$("desc").value.trim();
-  const category=$("cat").value;
-  const file=$("file").files[0];
-
-  if(!title||!Number.isFinite(price)||price<=0||!file){say(msg,"Add a product name, a price and a photo.","bad");return}
-
-  btn.disabled=true;btn.textContent="Publishing...";
-  try{
-    say(msg,"Uploading the photo...","");
-    const img=await putImage(file);
-
-    say(msg,"Publishing the product...","");
-    const in_stock=$("stock").value==="in";
-    const {error}=await db.from("products").insert({title,price,description:description||null,category,in_stock,...img});
-    if(error)throw new Error(error.message);
-
-    say(msg,"Published. It is live on the website now.","ok");
-    $("title").value="";$("price").value="";$("desc").value="";$("file").value="";$("stock").value="in";
-    $("preview").style.display="none";$("dropText").textContent="Tap to choose a photo (portrait works best)";
-    load();
-  }catch(e){
-    say(msg,e.message||"Something went wrong. Please try again.","bad");
-  }finally{
-    btn.disabled=false;btn.textContent="Publish product";
-  }
-});
-
-/* ---------- edit ---------- */
-function openEdit(id){
-  const r=ROWS.find(x=>String(x.id)===String(id));
-  if(!r)return;
-  editing=r;
-  $("eTitle").value=r.title||"";
-  $("ePrice").value=r.price||"";
-  $("eCat").value=r.category||CONFIG.CATEGORIES[0];
-  $("eStock").value=(r.in_stock===false)?"out":"in";
-  $("eDesc").value=r.description||"";
-  $("eFile").value="";
-  $("ePreview").src=r.image_url||"";
-  $("ePreview").style.display=r.image_url?"block":"none";
-  $("eDropText").textContent="Tap to choose a new photo";
-  hide($("editMsg"));
-  $("sheet").classList.add("on");
-}
-$("cancelEdit").addEventListener("click",()=>$("sheet").classList.remove("on"));
-$("sheet").addEventListener("click",e=>{if(e.target===$("sheet"))$("sheet").classList.remove("on")});
-
-$("saveEdit").addEventListener("click",async()=>{
-  const btn=$("saveEdit"),msg=$("editMsg");
-  const title=$("eTitle").value.trim();
-  const price=parseInt($("ePrice").value,10);
-  if(!title||!Number.isFinite(price)||price<=0){say(msg,"Enter a valid product name and price.","bad");return}
-
-  btn.disabled=true;btn.textContent="Saving...";
-  try{
-    const patch={title,price,description:$("eDesc").value.trim()||null,category:$("eCat").value,in_stock:$("eStock").value==="in"};
-    const newFile=$("eFile").files[0];
-    let oldPath=null;
-    if(newFile){
-      say(msg,"Uploading the new photo...","");
-      const img=await putImage(newFile);
-      Object.assign(patch,img);
-      oldPath=editing.image_path;
-    }
-    const {error}=await db.from("products").update(patch).eq("id",editing.id);
-    if(error)throw new Error(error.message);
-    if(oldPath)await db.storage.from(BUCKET).remove([oldPath]);
-
-    say(msg,"Saved. The website is updated.","ok");
-    await load();
-    setTimeout(()=>$("sheet").classList.remove("on"),700);
-  }catch(e){
-    say(msg,e.message||"Could not save. Please try again.","bad");
-  }finally{
-    btn.disabled=false;btn.textContent="Save changes";
-  }
-});
-
-/* ---------- in stock / out of stock ---------- */
-async function toggleStock(id,btn){
-  const r=ROWS.find(x=>String(x.id)===String(id));
-  if(!r)return;
-  const next=!(r.in_stock!==false);
-  btn.disabled=true;btn.textContent="Saving...";
-  const {error}=await db.from("products").update({in_stock:next}).eq("id",id);
-  if(error){alert("Could not update stock: "+error.message);btn.disabled=false;return}
-  r.in_stock=next;
-  paint();
-}
-
-/* ---------- delete ---------- */
-async function remove(id,btn){
-  const r=ROWS.find(x=>String(x.id)===String(id));
-  if(!confirm("Remove this product from the website?"))return;
-  btn.disabled=true;btn.textContent="Removing";
-  const {error}=await db.from("products").delete().eq("id",id);
-  if(error){alert("Could not remove the product: "+error.message);btn.disabled=false;btn.textContent="Delete";return}
-  if(r&&r.image_path)await db.storage.from(BUCKET).remove([r.image_path]);
-  ROWS=ROWS.filter(x=>String(x.id)!==String(id));
-  paint();
-}
-
-boot();
-</script>
-</body>
-</html>
