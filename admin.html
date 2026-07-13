@@ -1,12 +1,3 @@
-Main samajh sakta hoon ki bina kisi error message ke jab button kaam nahi karta toh bahut confusion hoti hai.
-
-Agar button click par kuch nahi ho raha hai, toh iska sabse bada reason yeh hota hai ki aapki `admin.html` file aapki `config.js` file ko sahi se "read" (link) nahi kar pa rahi hai, jiski wajah se code pehle hi crash ho jata hai.
-
-Is problem ko hamesha ke liye khatam karne ke liye, **hum `config.js` file ka use hi hata dete hain.** Maine aapki saari details (URL, Key, Categories) directly is naye `admin.html` code ke andar hi daal di hain. Ab link fail hone ka koi chance hi nahi bachega.
-
-### Is code ko copy karein aur apni `admin.html` mein paste kar dein (Puraana sab hata dein):
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
