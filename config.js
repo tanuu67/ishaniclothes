@@ -5,8 +5,8 @@
 
 const CONFIG = {
   // Supabase → Project Settings → API
-  SUPABASE_URL: "PASTE_YOUR_PROJECT_URL_HERE",       // e.g. https://abcdxyz.supabase.co
-  SUPABASE_ANON_KEY: "PASTE_YOUR_ANON_PUBLIC_KEY",   // the "anon public" key (safe to publish)
+ SUPABASE_URL: "https://uhjebqveujolmorsxcvq.supabase.co",
+ SUPABASE_ANON_KEY: "sb_publishable_VhlesphpBgbikJmdn-T_cg_CefF3w7z",
 
   // Shop details
   WHATSAPP: "919779997768",                          // country code + number, no + or spaces
