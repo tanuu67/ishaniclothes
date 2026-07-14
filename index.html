@@ -177,10 +177,31 @@ header.tight .logo-img{height:48px}
 
 .atelier{display:grid;grid-template-columns:1fr 1fr;background:var(--green);color:var(--paper);margin-top:clamp(40px,6vw,80px)}
 .atelier .pic{background:var(--green-2) center/cover no-repeat;min-height:560px; position:relative}
-.atelier .pic::before{content:""; position:absolute; inset:20px; border:1px solid rgba(212,175,55,.25); pointer-events:none}
-.atelier .pic.plain{background:
-  radial-gradient(circle at 30% 25%,rgba(212,175,55,.12),transparent 55%),
-  linear-gradient(160deg,var(--green-2),var(--green));}
+.atelier .pic::before{content:""; position:absolute; inset:20px; border:1px solid rgba(212,175,55,.25); pointer-events:none; z-index: 5;}
+
+/* =========================================
+   YAHAN WATERMARK/MANDALA DESIGN ADD KIYA HAI 
+   ========================================= */
+.atelier .pic.plain {
+  background:
+    url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%23d4af37' fill='none' stroke-width='1.5' opacity='0.2'%3E%3Ccircle cx='200' cy='200' r='140'/%3E%3Ccircle cx='200' cy='200' r='155' stroke-dasharray='4 8'/%3E%3Cpath d='M200,30 Q260,120 370,200 Q260,280 200,370 Q140,280 30,200 Q140,120 200,30 Z'/%3E%3Cpath d='M200,80 Q230,140 320,200 Q230,260 200,320 Q170,260 80,200 Q170,140 200,80 Z' opacity='0.6'/%3E%3C/g%3E%3C/svg%3E") center / 80% no-repeat,
+    radial-gradient(circle at 50% 50%, rgba(212,175,55,.12), transparent 60%),
+    linear-gradient(160deg, var(--green-2), var(--green));
+}
+.atelier .pic.plain::after {
+  content: "Yashni";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(212,175,55,0.45);
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(38px, 6vw, 64px);
+  font-style: italic;
+  letter-spacing: 0.15em;
+  pointer-events: none;
+}
+
 .atelier .say{padding:clamp(60px,8vw,140px);display:flex;flex-direction:column;justify-content:center}
 .atelier .caps{color:var(--gold-lt);margin-bottom:28px}
 .atelier h3{margin:0 0 32px;font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(36px,4.5vw,64px);line-height:1.15; letter-spacing:-.01em}
@@ -362,8 +383,6 @@ document.getElementById("fIg").href=CONFIG.INSTAGRAM;
 document.getElementById("fEmail").textContent=CONFIG.EMAIL;
 document.getElementById("fPhone").textContent=CONFIG.PHONE_DISPLAY;
 badge();
-
-// Removed external HERO_IMAGE loading logic as the SVG design is built-in now
 
 const atelierImg=(CONFIG.ATELIER_IMAGE||"").trim();
 const atelierPic=document.getElementById("atelierPic");
