@@ -32,7 +32,7 @@ img{display:block}
 ::selection{background:var(--gold-lt);color:var(--green)}
 
 /* Subtle paper grain texture overlay */
-body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.03;
+body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.04;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
 .caps{font-size:10px;font-weight:400;letter-spacing:.35em;text-transform:uppercase}
@@ -54,14 +54,23 @@ header.tight .logo-img{height:48px}
 .bag b{font-weight:400;color:var(--gold)}
 
 .hero{position:relative;min-height:clamp(560px,90vh,920px);display:grid;align-items:center;overflow:hidden;background:var(--green)}
-.hero-bg{position:absolute;inset:0;transform:scale(1.05);animation:drift 30s ease-in-out infinite alternate;
+
+/* YAHAN WOH DESIGN PAINT KIYA GAYA HAI JO AAPNE BHEJA THA */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  transform: scale(1.05);
+  animation: drift 30s ease-in-out infinite alternate;
   background:
-    radial-gradient(circle at 20% 30%,rgba(212,175,55,.15),transparent 55%),
-    radial-gradient(circle at 80% 70%,rgba(243,229,171,.1),transparent 50%),
-    linear-gradient(160deg,var(--green-2),var(--green) 65%);
-  background-size:cover;background-position:center;background-repeat:no-repeat}
+    url("data:image/svg+xml,%3Csvg width='350' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%23d4af37' stroke-width='1.2' fill='none' opacity='0.5' stroke-linecap='round'%3E%3Cpath d='M10,-10 C50,150 150,400 30,600' /%3E%3Cpath d='M25,80 C150,120 250,200 280,350' /%3E%3Cpath d='M45,150 C180,200 300,300 330,480' /%3E%3Cpath d='M65,240 C200,300 280,450 250,600' /%3E%3Cpath d='M70,350 C150,420 180,520 150,650' /%3E%3Cpath d='M15,80 C-20,150 0,300 0,300' /%3E%3Cpath d='M30,170 C-10,250 -20,400 -20,400' /%3E%3Cpath d='M25,80 C120,130 200,220 220,340' /%3E%3Cpath d='M45,150 C150,210 240,320 260,460' /%3E%3C/g%3E%3C/svg%3E") left top / auto no-repeat,
+    url("data:image/svg+xml,%3Csvg width='800' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%23d4af37' stroke-width='1.2' fill='none' opacity='0.4'%3E%3Cpath d='M-100,-100 C 100,100 300,-50 600,150 S 900,100 1000,300' /%3E%3Cpath d='M-50,-150 C 200,100 400,-100 700,100 S 900,50 1100,200' /%3E%3C/g%3E%3C/svg%3E") right top / auto no-repeat,
+    radial-gradient(circle at 20% 30%,rgba(212,175,55,.15),transparent 55%) center / cover no-repeat,
+    radial-gradient(circle at 80% 70%,rgba(243,229,171,.1),transparent 50%) center / cover no-repeat,
+    linear-gradient(160deg,var(--green-2),var(--green) 65%) center / cover no-repeat;
+}
+
 @keyframes drift{to{transform:scale(1.1) translate3d(-1%,-1%,0)}}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(4,21,16,.95),rgba(4,21,16,.5) 50%,rgba(4,21,16,.15))}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(4,21,16,.92),rgba(4,21,16,.45) 50%,rgba(4,21,16,.15))}
 .hero-copy{position:relative;z-index:2;max-width:800px;padding:0 clamp(24px,6vw,88px);color:#fff}
 .hero .caps{color:var(--gold-lt);display:flex;align-items:center;gap:16px;margin-bottom:30px}
 .hero .caps::before{content:"";width:50px;height:1px;background:var(--gold)}
@@ -111,7 +120,6 @@ header.tight .logo-img{height:48px}
 .card{position:relative;display:flex;flex-direction:column; background:transparent;}
 
 .shot{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--paper-2); border-radius:2px;}
-/* cinematic smooth zoom */
 .shot img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:transform 2.5s var(--ease), opacity 1.2s var(--ease)}
 .shot img.second-img{opacity:0; z-index:1}
 .card:hover .shot img.first-img{transform:scale(1.05)}
@@ -123,7 +131,6 @@ header.tight .logo-img{height:48px}
 .veil span:hover{background:var(--gold); color:#fff;}
 .card:hover .veil span{transform:none}
 
-/* Premium Tags */
 .mark{position:absolute;top:12px;left:12px;background:rgba(251,251,249,.95); border:1px solid rgba(212,175,55,.5); color:var(--gold);padding:6px 14px;font-size:8px;letter-spacing:.3em;text-transform:uppercase; z-index:2; font-weight:500; backdrop-filter:blur(4px); border-radius:2px;}
 .mark.sold{background:var(--ink);color:#fff; border-color:var(--ink)}
 .card.sold .shot img{filter:grayscale(1) contrast(.9);opacity:.6}
@@ -134,7 +141,6 @@ header.tight .logo-img{height:48px}
 .cost{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:4px}
 .now{font-size:15px;letter-spacing:.1em;color:var(--ink); font-weight:400}
 
-/* Invisible sleek dropdown */
 .size-wrap {margin-top:12px; position:relative;}
 .size-drop {
   width:100%; border:none; border-bottom:1px solid var(--hair); background:transparent; 
@@ -354,8 +360,7 @@ document.getElementById("fEmail").textContent=CONFIG.EMAIL;
 document.getElementById("fPhone").textContent=CONFIG.PHONE_DISPLAY;
 badge();
 
-const heroImg=(CONFIG.HERO_IMAGE||"").trim();
-if(heroImg)document.getElementById("heroBg").style.backgroundImage=`url("${heroImg}")`;
+// Removed external HERO_IMAGE loading logic as the SVG design is built-in now
 
 const atelierImg=(CONFIG.ATELIER_IMAGE||"").trim();
 const atelierPic=document.getElementById("atelierPic");
@@ -477,7 +482,7 @@ document.getElementById("q").addEventListener("input",e=>{query=e.target.value.t
 
 (async()=>{
   if(!CONFIG.SUPABASE_URL.startsWith("http")){
-    grid.innerHTML='<div class="note">Setup is not finished. Add your Supabase URL and key in config.js.</div>';return;
+    grid.innerHTML='<div class="note">Setup is not finished. Please configure Supabase keys.</div>';return;
   }
   const db=supabase.createClient(CONFIG.SUPABASE_URL,CONFIG.SUPABASE_ANON_KEY);
   const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
