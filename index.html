@@ -73,7 +73,7 @@ body.no-scroll { overflow: hidden; height: 100vh; }
   color: var(--gold);
   font-weight: 400;
   font-style: italic;
-  animation: splashSlideRight 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards; /* Slight delay for staggered effect */
+  animation: splashSlideRight 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards;
 }
 
 @keyframes splashSlideLeft {
@@ -100,7 +100,7 @@ header.tight{padding:14px clamp(20px,5vw,72px);border-bottom-color:var(--hair);b
 .nav{display:flex;align-items:center;gap:clamp(18px,2.8vw,40px)}
 .nav.right{justify-content:flex-end}
 .nav a{position:relative;font-size:10px;font-weight:400;letter-spacing:.28em;text-transform:uppercase;color:var(--green);padding:4px 0}
-.nav a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--gold);transition:width .6s var(--ease)}
+.nav a::after{content:"absolute";left:0;bottom:0;width:0;height:1px;background:var(--gold);transition:width .6s var(--ease)}
 .nav a:hover::after{width:100%}
 .logo-img{height:72px;width:auto;mix-blend-mode:multiply;transition:height .6s var(--ease)}
 header.tight .logo-img{height:48px}
@@ -110,21 +110,50 @@ header.tight .logo-img{height:48px}
 
 .hero{position:relative;min-height:clamp(560px,90vh,920px);display:grid;align-items:center;overflow:hidden;background:var(--green)}
 
+/* --- GIANT GOLDEN MANDALA ON THE RIGHT --- */
+.hero-mandala {
+  position: absolute;
+  right: -15vw; 
+  top: 50%;
+  width: 900px;
+  height: 900px;
+  margin-top: -450px;
+  /* Complex Vector Mandala drawn purely with CSS SVG */
+  background: url("data:image/svg+xml,%3Csvg width='900' height='900' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%23d4af37' fill='none' stroke-width='1.5' opacity='0.3'%3E%3Ccircle cx='400' cy='400' r='350' /%3E%3Ccircle cx='400' cy='400' r='330' stroke-dasharray='5 15' stroke-width='3' /%3E%3Ccircle cx='400' cy='400' r='310' /%3E%3Cpath d='M400,90 Q480,240 400,400 Q320,240 400,90 Z' /%3E%3Cpath d='M400,710 Q480,560 400,400 Q320,560 400,710 Z' /%3E%3Cpath d='M90,400 Q240,480 400,400 Q240,320 90,400 Z' /%3E%3Cpath d='M710,400 Q560,480 400,400 Q560,320 710,400 Z' /%3E%3Cpath d='M180,180 Q300,300 400,400 Q260,340 180,180 Z' /%3E%3Cpath d='M620,620 Q500,500 400,400 Q540,460 620,620 Z' /%3E%3Cpath d='M620,180 Q500,300 400,400 Q540,260 620,180 Z' /%3E%3Cpath d='M180,620 Q300,500 400,400 Q260,460 180,620 Z' /%3E%3Ccircle cx='400' cy='400' r='140' /%3E%3Ccircle cx='400' cy='400' r='120' stroke-dasharray='4 8' /%3E%3Cpath d='M400,280 L425,375 L520,400 L425,425 L400,520 L375,425 L280,400 L375,375 Z' fill='rgba(212,175,55,0.08)' /%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
+  z-index: 1;
+  opacity: 0; /* Starts hidden, fades in after splash screen */
+  animation: 
+    mandalaFadeIn 3s ease forwards 2.4s, /* Fades in perfectly timed after splash */
+    slowSpin 70s linear infinite; /* Keeps rotating slowly forever */
+  pointer-events: none;
+}
+
+@keyframes mandalaFadeIn {
+  to { opacity: 0.9; }
+}
+@keyframes slowSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 960px) {
+  .hero-mandala { right: -40vw; width: 600px; height: 600px; margin-top: -300px; opacity: 0.4; }
+}
+/* -------------------------------------- */
+
 .hero-bg {
   position: absolute;
   inset: 0;
   transform: scale(1.05);
   animation: drift 30s ease-in-out infinite alternate;
   background:
-    url("data:image/svg+xml,%3Csvg width='350' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%23d4af37' stroke-width='1.2' fill='none' opacity='0.5' stroke-linecap='round'%3E%3Cpath d='M10,-10 C50,150 150,400 30,600' /%3E%3Cpath d='M25,80 C150,120 250,200 280,350' /%3E%3Cpath d='M45,150 C180,200 300,300 330,480' /%3E%3Cpath d='M65,240 C200,300 280,450 250,600' /%3E%3Cpath d='M70,350 C150,420 180,520 150,650' /%3E%3Cpath d='M15,80 C-20,150 0,300 0,300' /%3E%3Cpath d='M30,170 C-10,250 -20,400 -20,400' /%3E%3Cpath d='M25,80 C120,130 200,220 220,340' /%3E%3Cpath d='M45,150 C150,210 240,320 260,460' /%3E%3C/g%3E%3C/svg%3E") left top / auto no-repeat,
-    url("data:image/svg+xml,%3Csvg width='800' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%23d4af37' stroke-width='1.2' fill='none' opacity='0.4'%3E%3Cpath d='M-100,-100 C 100,100 300,-50 600,150 S 900,100 1000,300' /%3E%3Cpath d='M-50,-150 C 200,100 400,-100 700,100 S 900,50 1100,200' /%3E%3C/g%3E%3C/svg%3E") right top / auto no-repeat,
-    radial-gradient(circle at 20% 30%,rgba(212,175,55,.15),transparent 55%) center / cover no-repeat,
-    radial-gradient(circle at 80% 70%,rgba(243,229,171,.1),transparent 50%) center / cover no-repeat,
+    url("data:image/svg+xml,%3Csvg width='350' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%23d4af37' stroke-width='1.2' fill='none' opacity='0.3' stroke-linecap='round'%3E%3Cpath d='M10,-10 C50,150 150,400 30,600' /%3E%3Cpath d='M25,80 C150,120 250,200 280,350' /%3E%3Cpath d='M45,150 C180,200 300,300 330,480' /%3E%3C/g%3E%3C/svg%3E") left top / auto no-repeat,
+    radial-gradient(circle at 20% 30%,rgba(212,175,55,.12),transparent 55%) center / cover no-repeat,
     linear-gradient(160deg,var(--green-2),var(--green) 65%) center / cover no-repeat;
 }
 
 @keyframes drift{to{transform:scale(1.1) translate3d(-1%,-1%,0)}}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(4,21,16,.92),rgba(4,21,16,.45) 50%,rgba(4,21,16,.15))}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(4,21,16,.92),rgba(4,21,16,.5) 50%,rgba(4,21,16,.15))}
 .hero-copy{position:relative;z-index:2;max-width:800px;padding:0 clamp(24px,6vw,88px);color:#fff}
 .hero .caps{color:var(--gold-lt);display:flex;align-items:center;gap:16px;margin-bottom:30px}
 .hero .caps::before{content:"";width:50px;height:1px;background:var(--gold)}
@@ -305,8 +334,8 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
   .wa{left:20px;bottom:20px;width:50px;height:50px}
   .wa svg{width:22px;height:22px}
   
-  /* Adjust splash text for mobile */
   .splash-text { font-size: clamp(32px, 10vw, 50px); }
+  .hero-mandala { right: -40vw; width: 600px; height: 600px; margin-top: -300px; opacity: 0.4; }
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
 :focus-visible{outline:1px solid var(--gold);outline-offset:4px}
@@ -341,6 +370,9 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
 <main>
   <section class="hero">
     <div class="hero-bg" id="heroBg"></div>
+    <!-- GIANT GOLDEN MANDALA -->
+    <div class="hero-mandala"></div>
+    
     <div class="hero-copy">
       <p class="caps">Luxury ethnic wear</p>
       <h1>Woven for<em>your moment</em></h1>
@@ -434,9 +466,9 @@ window.addEventListener("load", () => {
       setTimeout(() => {
         splash.remove();
         document.body.classList.remove("no-scroll");
-      }, 1000); // Wait for the fade out to finish before removing
+      }, 1000); 
     }
-  }, 2200); // Show animation for 2.2 seconds
+  }, 2200); 
 });
 
 const CART_KEY="yashni_cart";
@@ -457,6 +489,11 @@ document.getElementById("fIg").href=CONFIG.INSTAGRAM;
 document.getElementById("fEmail").textContent=CONFIG.EMAIL;
 document.getElementById("fPhone").textContent=CONFIG.PHONE_DISPLAY;
 badge();
+
+const atelierImg=(CONFIG.ATELIER_IMAGE||"").trim();
+const atelierPic=document.getElementById("atelierPic");
+if(atelierImg)atelierPic.style.backgroundImage=`url("${atelierImg}")`;
+else atelierPic.classList.add("plain");
 
 const hdr=document.getElementById("hdr");
 addEventListener("scroll",()=>hdr.classList.toggle("tight",scrollY>60),{passive:true});
