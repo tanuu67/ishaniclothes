@@ -31,6 +31,61 @@ button,input,select{font:inherit}
 img{display:block}
 ::selection{background:var(--gold-lt);color:var(--green)}
 
+/* --- SPLASH SCREEN ANIMATION --- */
+body.no-scroll { overflow: hidden; height: 100vh; }
+#splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 1s var(--ease), visibility 1s var(--ease);
+}
+#splash-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(212,175,55,.15), transparent 65%);
+}
+.splash-content {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  padding: 20px;
+}
+.splash-text {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(40px, 7vw, 90px);
+  line-height: 1;
+  opacity: 0;
+  letter-spacing: 0.05em;
+}
+.splash-yashni {
+  color: var(--paper);
+  font-weight: 300;
+  animation: splashSlideLeft 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.splash-creations {
+  color: var(--gold);
+  font-weight: 400;
+  font-style: italic;
+  animation: splashSlideRight 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards; /* Slight delay for staggered effect */
+}
+
+@keyframes splashSlideLeft {
+  0% { transform: translateX(-80px); opacity: 0; filter: blur(8px); }
+  100% { transform: translateX(0); opacity: 1; filter: blur(0); }
+}
+@keyframes splashSlideRight {
+  0% { transform: translateX(80px); opacity: 0; filter: blur(8px); }
+  100% { transform: translateX(0); opacity: 1; filter: blur(0); }
+}
+/* ------------------------------- */
+
 /* Subtle paper grain texture overlay */
 body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.03;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
@@ -55,7 +110,6 @@ header.tight .logo-img{height:48px}
 
 .hero{position:relative;min-height:clamp(560px,90vh,920px);display:grid;align-items:center;overflow:hidden;background:var(--green)}
 
-/* DRAWN VECTOR BACKGROUND */
 .hero-bg {
   position: absolute;
   inset: 0;
@@ -120,7 +174,6 @@ header.tight .logo-img{height:48px}
 .card{position:relative;display:flex;flex-direction:column; background:transparent;}
 
 .shot{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--paper-2); border-radius:2px;}
-/* cinematic smooth zoom */
 .shot img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:transform 2.5s var(--ease), opacity 1.2s var(--ease)}
 .shot img.second-img{opacity:0; z-index:1}
 .card:hover .shot img.first-img{transform:scale(1.05)}
@@ -132,7 +185,6 @@ header.tight .logo-img{height:48px}
 .veil span:hover{background:var(--gold); color:#fff;}
 .card:hover .veil span{transform:none}
 
-/* Premium Tags */
 .mark{position:absolute;top:12px;left:12px;background:rgba(251,251,249,.95); border:1px solid rgba(212,175,55,.5); color:var(--gold);padding:6px 14px;font-size:8px;letter-spacing:.3em;text-transform:uppercase; z-index:2; font-weight:500; backdrop-filter:blur(4px); border-radius:2px;}
 .mark.sold{background:var(--ink);color:#fff; border-color:var(--ink)}
 .card.sold .shot img{filter:grayscale(1) contrast(.9);opacity:.6}
@@ -143,7 +195,6 @@ header.tight .logo-img{height:48px}
 .cost{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:4px}
 .now{font-size:15px;letter-spacing:.1em;color:var(--ink); font-weight:400}
 
-/* Invisible sleek dropdown */
 .size-wrap {margin-top:12px; position:relative;}
 .size-drop {
   width:100%; border:none; border-bottom:1px solid var(--hair); background:transparent; 
@@ -179,9 +230,6 @@ header.tight .logo-img{height:48px}
 .atelier .pic{background:var(--green-2) center/cover no-repeat;min-height:560px; position:relative}
 .atelier .pic::before{content:""; position:absolute; inset:20px; border:1px solid rgba(212,175,55,.25); pointer-events:none; z-index: 5;}
 
-/* =========================================
-   YAHAN WATERMARK/MANDALA DESIGN ADD KIYA HAI 
-   ========================================= */
 .atelier .pic.plain {
   background:
     url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%23d4af37' fill='none' stroke-width='1.5' opacity='0.2'%3E%3Ccircle cx='200' cy='200' r='140'/%3E%3Ccircle cx='200' cy='200' r='155' stroke-dasharray='4 8'/%3E%3Cpath d='M200,30 Q260,120 370,200 Q260,280 200,370 Q140,280 30,200 Q140,120 200,30 Z'/%3E%3Cpath d='M200,80 Q230,140 320,200 Q230,260 200,320 Q170,260 80,200 Q170,140 200,80 Z' opacity='0.6'/%3E%3C/g%3E%3C/svg%3E") center / 80% no-repeat,
@@ -256,12 +304,24 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
   .body{padding-top:18px}
   .wa{left:20px;bottom:20px;width:50px;height:50px}
   .wa svg{width:22px;height:22px}
+  
+  /* Adjust splash text for mobile */
+  .splash-text { font-size: clamp(32px, 10vw, 50px); }
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
 :focus-visible{outline:1px solid var(--gold);outline-offset:4px}
 </style>
 </head>
-<body>
+<body class="no-scroll">
+
+<!-- SPLASH SCREEN OVERLAY -->
+<div id="splash-screen">
+  <div class="splash-content">
+    <span class="splash-text splash-yashni">Yashni</span>
+    <span class="splash-text splash-creations">Creations</span>
+  </div>
+</div>
+
 <div class="strip" id="strip"></div>
 
 <header id="hdr">
@@ -312,7 +372,7 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
   </div>
 
   <section class="atelier reveal" id="atelier">
-    <div class="pic" id="atelierPic"></div>
+    <div class="pic plain" id="atelierPic"></div>
     <div class="say">
       <p class="caps">The atelier</p>
       <h3>Every piece is<br><em>seen before it ships</em></h3>
@@ -365,6 +425,20 @@ const CONFIG = {
   ANNOUNCEMENT: ""
 };
 
+// SPLASH SCREEN REMOVAL LOGIC
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    const splash = document.getElementById("splash-screen");
+    if(splash) {
+      splash.style.opacity = "0";
+      setTimeout(() => {
+        splash.remove();
+        document.body.classList.remove("no-scroll");
+      }, 1000); // Wait for the fade out to finish before removing
+    }
+  }, 2200); // Show animation for 2.2 seconds
+});
+
 const CART_KEY="yashni_cart";
 const grid=document.getElementById("grid");
 let ALL=[],cat="All",query="";
@@ -383,11 +457,6 @@ document.getElementById("fIg").href=CONFIG.INSTAGRAM;
 document.getElementById("fEmail").textContent=CONFIG.EMAIL;
 document.getElementById("fPhone").textContent=CONFIG.PHONE_DISPLAY;
 badge();
-
-const atelierImg=(CONFIG.ATELIER_IMAGE||"").trim();
-const atelierPic=document.getElementById("atelierPic");
-if(atelierImg)atelierPic.style.backgroundImage=`url("${atelierImg}")`;
-else atelierPic.classList.add("plain");
 
 const hdr=document.getElementById("hdr");
 addEventListener("scroll",()=>hdr.classList.toggle("tight",scrollY>60),{passive:true});
