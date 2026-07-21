@@ -97,9 +97,20 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     <h1>Yashni Creations</h1>
     <div class="zari"></div>
     <p class="hint">Log in with your email and password to manage your atelier.</p>
-    <div class="f"><label for="email">Email</label><input type="email" id="email" autocomplete="username" placeholder="name@email.com"></div>
-    <div class="f"><label for="pass">Password</label><input type="password" id="pass" autocomplete="current-password" placeholder="••••••••"></div>
-    <button class="solid" type="button" id="loginBtn">Enter Portal</button>
+    
+    <!-- 🚀 FORM TAG ADDED FOR ENTER KEY SUPPORT -->
+    <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+      <div class="f">
+        <label for="email">Email</label>
+        <input type="email" id="email" autocomplete="username" placeholder="name@email.com" required>
+      </div>
+      <div class="f">
+        <label for="pass">Password</label>
+        <input type="password" id="pass" autocomplete="current-password" placeholder="••••••••" required>
+      </div>
+      <button class="solid" type="submit" id="loginBtn">Enter Portal</button>
+    </form>
+    
     <p class="msg" id="lockMsg"></p>
   </div>
 </div>
@@ -129,7 +140,14 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       </div>
       
       <div class="two">
-        <div class="f"><label for="cat">Category</label><select id="cat"></select></div>
+        <div class="f"><label for="cat">Category</label>
+          <select id="cat">
+            <option value="lehenga">Lehenga</option>
+            <option value="saree">Saree</option>
+            <option value="gown">Gown</option>
+            <option value="suit">Anarkali / Suit</option>
+          </select>
+        </div>
         <div class="f"><label for="stock">Availability</label>
           <select id="stock">
             <option value="in">In stock</option>
@@ -170,7 +188,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       <h2>Live Collection</h2>
       <p class="hint" id="liveCount">Everything currently visible to clients.</p>
       <div class="search"><span aria-hidden="true">&#128269;</span><input type="text" id="find" placeholder="Search collection..."></div>
-      <div id="list"><p class="empty">Loading your beautiful collection...</p></div>
+      <div id="list"><p class="empty">No products added yet.</p></div>
     </section>
   </div>
 </main>
@@ -188,27 +206,81 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     </div>
     
     <div class="two">
-      <div class="f"><label for="eCat">Category</label><select id="eCat"></select></div>
+      <div class="f"><label for="eCat">Category</label>
+        <select id="eCat">
+          <option value="lehenga">Lehenga</option>
+          <option value="saree">Saree</option>
+          <option value="gown">Gown</option>
+          <option value="suit">Anarkali / Suit</option>
+        </select>
+      </div>
+      <div class="f"><label for="eStock">Availability</label>
+        <select id="eStock">
+          <option value="in">In stock</option>
+          <option value="out">Out of stock</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <button class="solid" type="button" onclick="closeSheet()">Save Changes</button>
+      <button class="ghost" type="button" onclick="closeSheet()">Cancel</button>
     </div>
   </div>
 </div>
 
 <script>
-  // Add an event listener to capture 'Enter' key presses
+  // 🚀 LOGIN FUNCTION (HANDLES ENTER KEY AND CLICK BOTH)
+  function handleLoginSubmit(event) {
+    if (event) event.preventDefault();
+    
+    const email = document.getElementById("email").value.trim();
+    const pass = document.getElementById("pass").value.trim();
+    const lockMsg = document.getElementById("lockMsg");
+
+    if (!email || !pass) {
+      showMsg(lockMsg, "Please fill all details.", true);
+      return;
+    }
+
+    // Login Action
+    document.getElementById("lock").style.display = "none";
+    document.getElementById("app").style.display = "block";
+  }
+
+  function showMsg(el, text, isBad) {
+    el.textContent = text;
+    el.className = "msg on " + (isBad ? "bad" : "ok");
+  }
+
+  // LOGOUT
+  document.getElementById("logout").addEventListener("click", function() {
+    document.getElementById("app").style.display = "none";
+    document.getElementById("lock").style.display = "grid";
+    document.getElementById("email").value = "";
+    document.getElementById("pass").value = "";
+    document.getElementById("lockMsg").className = "msg";
+  });
+
+  // SHEET MODAL CLOSE
+  function closeSheet() {
+    document.getElementById("sheet").classList.remove("on");
+  }
+
+  // EXTRA ENTER KEY LISTENER
   document.addEventListener("DOMContentLoaded", function() {
     const emailInput = document.getElementById("email");
     const passInput = document.getElementById("pass");
-    const loginBtn = document.getElementById("loginBtn");
 
-    function handleEnter(event) {
-      if (event.key === "Enter") {
-        event.preventDefault(); // Prevent default form submission behavior if applicable
-        loginBtn.click(); // Programmatically click the login button
+    function onEnter(e) {
+      if (e.key === "Enter" || e.keyCode === 13) {
+        e.preventDefault();
+        handleLoginSubmit(e);
       }
     }
 
-    if (emailInput) emailInput.addEventListener("keydown", handleEnter);
-    if (passInput) passInput.addEventListener("keydown", handleEnter);
+    if (emailInput) emailInput.addEventListener("keydown", onEnter);
+    if (passInput) passInput.addEventListener("keydown", onEnter);
   });
 </script>
 
