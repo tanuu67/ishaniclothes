@@ -100,18 +100,18 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
   <div class="lock-box">
     <h1>Yashni Creations</h1>
     <div class="zari"></div>
-    <p class="hint">Log in with your email and password to manage your atelier.</p>
+    <p class="hint">Log in with your official Admin email and password.</p>
     
     <form id="loginForm" onsubmit="handleLoginSubmit(event)">
       <div class="f">
-        <label for="email">Email</label>
-        <input type="email" id="email" autocomplete="username" placeholder="name@email.com" required>
+        <label for="email">Admin Email</label>
+        <input type="email" id="email" autocomplete="username" placeholder="admin@email.com" required>
       </div>
       <div class="f">
         <label for="pass">Password</label>
         <input type="password" id="pass" autocomplete="current-password" placeholder="••••••••" required>
       </div>
-      <button class="solid" type="submit" id="loginBtn">Enter Portal</button>
+      <button class="solid" type="submit" id="loginBtn">Secure Login</button>
     </form>
     
     <p class="msg" id="lockMsg"></p>
@@ -122,11 +122,11 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
   <div class="top">
     <div>
       <h1>Atelier Portal</h1>
-      <p id="who">Add new pieces, update pricing, or manage your inventory.</p>
+      <p id="who">Logged in as Admin. Adding/Editing is now completely secure.</p>
     </div>
     <div class="links">
       <a class="ghost" href="index.html" target="_blank" rel="noreferrer">View Live Site</a>
-      <button class="ghost danger" type="button" id="logout">Log Out</button>
+      <button class="ghost danger" type="button" id="logoutBtn">Log Out</button>
     </div>
   </div>
 
@@ -237,7 +237,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       </div>
     </div>
 
-    <!-- NEW FIELDS IN EDIT MODAL -->
+    <!-- SIZES & DESC IN EDIT MODAL -->
     <div class="f">
       <label>Available Sizes</label>
       <div class="checks" id="eSizes">
@@ -277,11 +277,9 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
 
   let products = [];
   let currentEditId = null;
-  
-  let selectedImages = []; // Array for NEW product
-  let editSelectedImages = []; // Array for EDIT product
+  let selectedImages = [];
+  let editSelectedImages = [];
 
-  // Helper to compress images so database queries are fast
   function compressImage(base64Str, maxWidth = 600) {
     return new Promise((resolve) => {
       let img = new Image();
@@ -299,13 +297,72 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     });
   }
 
+  function showMsg(el, text, isBad) {
+    el.textContent = text;
+    el.className = "msg on " + (isBad ? "bad" : "ok");
+    setTimeout(() => { el.className = "msg"; }, 4000);
+  }
+
+  // --- 🔒 SESSION CHECKER ON PAGE LOAD ---
+  window.addEventListener('DOMContentLoaded', async () => {
+    const { data: { session } } = await db.auth.getSession();
+    if (session) {
+      document.getElementById("lock").style.display = "none";
+      document.getElementById("app").style.display = "block";
+      fetchProductsFromDB();
+    }
+  });
+
+  // --- 🔒 REAL SECURE LOGIN LOGIC ---
+  async function handleLoginSubmit(event) {
+    if (event) event.preventDefault();
+    const email = document.getElementById("email").value.trim();
+    const pass = document.getElementById("pass").value.trim();
+    const lockMsg = document.getElementById("lockMsg");
+    const loginBtn = document.getElementById("loginBtn");
+
+    if (!email || !pass) {
+      showMsg(lockMsg, "Please fill all details.", true);
+      return;
+    }
+    
+    loginBtn.textContent = "Verifying...";
+    loginBtn.disabled = true;
+
+    // Contacting Supabase to verify credentials
+    const { data, error } = await db.auth.signInWithPassword({
+      email: email,
+      password: pass
+    });
+
+    loginBtn.textContent = "Secure Login";
+    loginBtn.disabled = false;
+
+    if (error) {
+      showMsg(lockMsg, "Invalid login credentials! Please check your email and password.", true);
+    } else {
+      document.getElementById("lock").style.display = "none";
+      document.getElementById("app").style.display = "block";
+      fetchProductsFromDB();
+    }
+  }
+
+  // --- 🔒 SECURE LOGOUT LOGIC ---
+  document.getElementById("logoutBtn").addEventListener("click", async function() {
+    await db.auth.signOut();
+    document.getElementById("app").style.display = "none";
+    document.getElementById("lock").style.display = "grid";
+    document.getElementById("email").value = "";
+    document.getElementById("pass").value = "";
+  });
+
   // Fetch from database
   async function fetchProductsFromDB() {
     document.getElementById('listLoader').style.display = 'grid';
     const { data, error } = await db.from("products").select("*").order("created_at", { ascending: false });
     
     if (error) {
-      alert("Error loading data: " + error.message);
+      alert("Error loading data. Security policy issue or internet problem: " + error.message);
     } else {
       products = data || [];
       renderList();
@@ -313,41 +370,10 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     document.getElementById('listLoader').style.display = 'none';
   }
 
-  // --- LOGIN LOGIC ---
-  function handleLoginSubmit(event) {
-    if (event) event.preventDefault();
-    const email = document.getElementById("email").value.trim();
-    const pass = document.getElementById("pass").value.trim();
-    const lockMsg = document.getElementById("lockMsg");
-
-    if (!email || !pass) {
-      showMsg(lockMsg, "Please fill all details.", true);
-      return;
-    }
-    
-    document.getElementById("lock").style.display = "none";
-    document.getElementById("app").style.display = "block";
-    fetchProductsFromDB();
-  }
-
-  function showMsg(el, text, isBad) {
-    el.textContent = text;
-    el.className = "msg on " + (isBad ? "bad" : "ok");
-    setTimeout(() => { el.className = "msg"; }, 3000);
-  }
-
-  document.getElementById("logout").addEventListener("click", function() {
-    document.getElementById("app").style.display = "none";
-    document.getElementById("lock").style.display = "grid";
-    document.getElementById("email").value = "";
-    document.getElementById("pass").value = "";
-  });
-
-  // --- 📸 IMAGE UPLOAD LOGIC (ADD NEW) ---
+  // UPLOAD LOGIC (NEW)
   document.getElementById('file').addEventListener('change', async function(e) {
     const previewContainer = document.getElementById('previewContainer');
     const dropText = document.getElementById('dropText');
-    
     const files = Array.from(e.target.files).slice(0, 4); 
     selectedImages = [];
     previewContainer.innerHTML = '';
@@ -365,7 +391,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       for (let i = 0; i < rawResults.length; i++) {
         const compressedBase64 = await compressImage(rawResults[i]);
         selectedImages.push(compressedBase64);
-        
         const wrap = document.createElement('div');
         wrap.className = 'img-wrap';
         wrap.innerHTML = `<div class="img-num">${i + 1}</div><img src="${compressedBase64}">`;
@@ -376,13 +401,11 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     }
   });
 
-  // --- 📸 IMAGE UPLOAD LOGIC (EDIT MODE) ---
+  // UPLOAD LOGIC (EDIT)
   document.getElementById('eFile').addEventListener('change', async function(e) {
     const previewContainer = document.getElementById('ePreviewContainer');
     const dropText = document.getElementById('eDropText');
-    
     const files = Array.from(e.target.files).slice(0, 4); 
-    // Clear existing images array when new ones are uploaded
     editSelectedImages = []; 
     previewContainer.innerHTML = '';
 
@@ -398,8 +421,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       const rawResults = await Promise.all(promises);
       for (let i = 0; i < rawResults.length; i++) {
         const compressedBase64 = await compressImage(rawResults[i]);
-        editSelectedImages.push(compressedBase64); // Push to EDIT array
-        
+        editSelectedImages.push(compressedBase64); 
         const wrap = document.createElement('div');
         wrap.className = 'img-wrap';
         wrap.innerHTML = `<div class="img-num">${i + 1}</div><img src="${compressedBase64}">`;
@@ -410,7 +432,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     }
   });
 
-  // --- PUBLISH PRODUCT TO DATABASE ---
+  // PUBLISH PRODUCT
   document.getElementById('publish').addEventListener('click', async function() {
     const title = document.getElementById('title').value.trim();
     const price = document.getElementById('price').value.trim();
@@ -428,15 +450,16 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
 
     const sizeCheckboxes = document.querySelectorAll('#sizes input:checked');
     let selectedSizes = Array.from(sizeCheckboxes).map(cb => cb.value);
-
     let mainImageUrl = selectedImages.length > 0 ? selectedImages[0] : "";
     let imagesArray = selectedImages.map(imgStr => ({ url: imgStr }));
 
     loader.style.display = 'grid';
+    const parsedPrice = parseFloat(price);
 
+    // This insert will now ONLY work if you are logged in
     const { data, error } = await db.from('products').insert([{
       title: title,
-      price: price,
+      price: parsedPrice,
       offer_tag: offer,
       category: cat,
       in_stock: (stock === 'in'),
@@ -454,7 +477,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       showMsg(statusMsg, "Published to live website successfully!", false);
       fetchProductsFromDB();
       
-      // Clear form
       document.getElementById('title').value = '';
       document.getElementById('price').value = '';
       document.getElementById('offer').value = '';
@@ -467,7 +489,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     }
   });
 
-  // --- RENDER LIVE COLLECTION ---
+  // RENDER LIVE LIST
   function renderList(searchQuery = "") {
     const list = document.getElementById('list');
     list.innerHTML = "";
@@ -513,13 +535,13 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     renderList(e.target.value);
   });
 
-  // --- EDIT LOGIC ---
+  // OPEN EDIT SHEET
   function openEdit(id) {
     const product = products.find(p => String(p.id) === String(id));
     if (!product) return;
-    currentEditId = id;
     
-    // Fill basic details
+    currentEditId = product.id; 
+    
     document.getElementById('eTitle').value = product.title || '';
     document.getElementById('ePrice').value = product.price || '';
     document.getElementById('eOffer').value = product.offer_tag || '';
@@ -533,7 +555,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     }
     document.getElementById('eStock').value = product.in_stock === false ? 'out' : 'in';
 
-    // Fill Sizes
     document.querySelectorAll('#eSizes input').forEach(cb => cb.checked = false);
     if (product.sizes && Array.isArray(product.sizes)) {
       product.sizes.forEach(size => {
@@ -542,17 +563,16 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       });
     }
 
-    // Fill existing Images
     editSelectedImages = [];
     const previewContainer = document.getElementById('ePreviewContainer');
     const dropText = document.getElementById('eDropText');
     previewContainer.innerHTML = '';
-    document.getElementById('eFile').value = ''; // Reset file input
+    document.getElementById('eFile').value = ''; 
 
     if (product.images && product.images.length > 0) {
       dropText.style.display = 'none';
       product.images.forEach((imgObj, i) => {
-        editSelectedImages.push(imgObj.url); // Preserve old images automatically
+        editSelectedImages.push(imgObj.url); 
         const wrap = document.createElement('div');
         wrap.className = 'img-wrap';
         wrap.innerHTML = `<div class="img-num">${i + 1}</div><img src="${imgObj.url}">`;
@@ -572,21 +592,21 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     document.getElementById('sheet').classList.add('on');
   }
 
+  // SAVE EDIT TO DATABASE
   async function saveEdit() {
     const loader = document.getElementById('editLoader');
     loader.style.display = 'grid';
 
-    // Get checked sizes
     const sizeCheckboxes = document.querySelectorAll('#eSizes input:checked');
     let selectedSizes = Array.from(sizeCheckboxes).map(cb => cb.value);
 
-    // Format images based on edit array (Contains old images, or replaced new images)
     let mainImageUrl = editSelectedImages.length > 0 ? editSelectedImages[0] : "";
     let imagesArray = editSelectedImages.map(imgStr => ({ url: imgStr }));
+    const updatedPrice = parseFloat(document.getElementById('ePrice').value);
 
     const updatedData = {
       title: document.getElementById('eTitle').value,
-      price: document.getElementById('ePrice').value,
+      price: updatedPrice,
       offer_tag: document.getElementById('eOffer').value,
       category: document.getElementById('eCat').value,
       in_stock: (document.getElementById('eStock').value === 'in'),
@@ -608,17 +628,20 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     }
   }
 
-  // --- DELETE LOGIC ---
+  // DELETE
   async function deleteProduct(id) {
     if(confirm("Are you sure you want to permanently delete this piece from the website?")) {
       document.getElementById('listLoader').style.display = 'grid';
-      const { error } = await db.from('products').delete().eq('id', id);
+      const productToDelete = products.find(p => String(p.id) === String(id));
       
-      if (error) {
-        alert("Error deleting: " + error.message);
-        document.getElementById('listLoader').style.display = 'none';
-      } else {
-        fetchProductsFromDB();
+      if(productToDelete) {
+        const { error } = await db.from('products').delete().eq('id', productToDelete.id);
+        if (error) {
+          alert("Error deleting: " + error.message);
+          document.getElementById('listLoader').style.display = 'none';
+        } else {
+          fetchProductsFromDB();
+        }
       }
     }
   }
