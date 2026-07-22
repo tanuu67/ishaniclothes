@@ -1,21 +1,239 @@
-<script>
-  // ==========================================
-  // 🚀 FIREBASE SETUP (Aapka config yahan daalein)
-  // ==========================================
-  const firebaseConfig = {
-      apiKey: "AIzaSyC-Ito4dNRQ45IjIOWL63Hqk9sKzbvKe-M",
-      authDomain: "cureandcare-crm.firebaseapp.com",
-      databaseURL: "https://cureandcare-crm-default-rtdb.firebaseio.com",
-      projectId: "cureandcare-crm"
-  };
-  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Portal | Yashni Creations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#041510;--green-2:#08261e;--gold:#d4af37;--paper:#fbfbf9;--ivory:#ffffff;--ink:#1a1a1a;--muted:#888888;--line:rgba(4,21,16,.1);--red:#b3123f;--ok:#0f7a4a;--shadow:0 24px 60px rgba(4,21,16,.08); --ease:cubic-bezier(0.25, 1, 0.25, 1);}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--paper);color:var(--ink);font-family:"Jost",system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-weight:300;}
+button,input,textarea,select{font:inherit}
+h1,h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;margin:0;letter-spacing:-0.01em;}
+#lock{position:fixed;inset:0;z-index:99;display:grid;place-items:center;padding:20px;background:var(--green);background-image:radial-gradient(circle at 50% 0%, var(--green-2), var(--green));}
+.lock-box{width:100%;max-width:440px;background:var(--ivory);border-radius:2px;box-shadow:var(--shadow);padding:48px 40px;}
+.lock-box h1{color:var(--green);font-size:36px;text-align:center}
+.zari{height:1px;margin:16px auto 28px;width:60px;background:var(--gold);}
+.lock-box .hint{margin:0 0 28px;color:var(--muted);font-size:14px;font-weight:300;line-height:1.6;text-align:center}
+#app{display:none;width:min(1200px,100% - 40px);margin:0 auto;padding:40px 0 80px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:32px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:24px;}
+.top h1{color:var(--green);font-size:clamp(32px,4vw,42px)}
+.top p{margin:8px 0 0;color:var(--muted);font-size:14px;}
+.links{display:flex;gap:12px;flex-wrap:wrap}
+.ghost{border:1px solid var(--line);background:transparent;color:var(--green);border-radius:2px;padding:12px 20px;font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;transition:all .4s var(--ease);}
+.ghost:hover{border-color:var(--gold);color:var(--gold);}
+.ghost.danger:hover{border-color:var(--red);color:var(--red)}
+.cols{display:grid;grid-template-columns:minmax(340px,.8fr) minmax(0,1fr);gap:32px;align-items:start}
+.card{background:var(--ivory);border:1px solid var(--line);border-radius:2px;padding:clamp(24px,4vw,40px);box-shadow:0 10px 30px rgba(0,0,0,.02)}
+.card>h2{color:var(--green);font-size:28px}
+.card>.hint{margin:8px 0 28px;color:var(--muted);font-size:14px;}
+.f{margin-bottom:20px}
+label{display:block;margin-bottom:8px;color:var(--green);font-size:10px;font-weight:500;letter-spacing:.25em;text-transform:uppercase}
+input,textarea,select{width:100%;border:1px solid var(--line);border-radius:2px;background:var(--paper);color:var(--ink);padding:14px;outline:0;transition:border .4s var(--ease), background .4s var(--ease);}
+textarea{min-height:120px;resize:vertical;line-height:1.7}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(--ivory);}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.rupee{position:relative}
+.rupee input{padding-left:32px}
+.rupee::before{content:"\20B9";position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:15px}
+.drop{display:block;border:1px dashed var(--gold);border-radius:2px;background:var(--paper);padding:24px;text-align:center;cursor:pointer;transition:all .4s var(--ease)}
+.drop:hover{background:var(--ivory);border-style:solid;}
+.drop input{display:none}
+.drop span{display:block;color:var(--muted);font-size:13px;letter-spacing:.05em;}
+.checks {display:flex; flex-wrap:wrap; gap:16px; margin-top:8px;}
+.checks label {display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--ink); cursor:pointer;}
+.checks input {width:auto; margin:0; cursor:pointer; accent-color:var(--gold);}
+.preview-grid{display:flex;gap:10px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
+.img-wrap {position:relative; display:inline-block;}
+.img-wrap img{width:76px;aspect-ratio:3/4;object-fit:cover;border-radius:2px; display:block; box-shadow:0 4px 12px rgba(0,0,0,.1);}
+.img-num {position:absolute; top:6px; left:6px; background:rgba(4,21,16,.8); backdrop-filter:blur(4px); color:var(--gold); border:1px solid var(--gold); font-size:9px; letter-spacing:.1em; padding:3px 8px; display:grid; place-items:center; border-radius:2px; font-weight:400; z-index:2;}
+.solid{width:100%;min-height:52px;border:1px solid var(--gold);border-radius:2px;background:var(--green);color:var(--gold);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .4s var(--ease)}
+.solid:hover{background:var(--gold);color:var(--green)}
+.solid:disabled{background:#e0e0e0;border-color:#e0e0e0;color:#888;cursor:not-allowed}
+.msg{display:none;margin-top:16px;text-align:center;font-size:13px;font-weight:400;letter-spacing:.05em;}
+.msg.on{display:block}
+.msg.ok{color:var(--ok)}
+.msg.bad{color:var(--red)}
+.search{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:0 4px;margin-bottom:24px; transition:border .4s var(--ease);}
+.search:focus-within{border-bottom-color:var(--gold);}
+.search input{border:0;background:transparent;padding:12px 0;}
+.search input:focus{background:transparent;}
+.search span{color:var(--gold);font-size:14px}
+.item{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:16px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.thumb{width:72px;aspect-ratio:3/4;object-fit:cover;border-radius:2px;background:var(--paper)}
+.pname{display:block;color:var(--green);font-size:15px;font-weight:400;line-height:1.4}
+.pmeta{display:block;margin-top:6px;color:var(--muted);font-size:13px;}
+.tagcat{display:inline-block;margin-left:8px;background:var(--paper);border:1px solid var(--line);color:var(--green);padding:3px 8px;border-radius:2px;font-size:9px;letter-spacing:.15em;text-transform:uppercase}
+.tagoffer{display:inline-block;margin-left:8px;background:rgba(212,175,55,.1);color:var(--gold);border:1px solid rgba(212,175,55,.3);padding:3px 8px;border-radius:2px;font-size:9px;letter-spacing:.15em;text-transform:uppercase;}
+.tagout{display:inline-block;margin-left:8px;background:rgba(179,18,63,.1);color:var(--red);padding:3px 8px;border-radius:2px;font-size:9px;letter-spacing:.15em;text-transform:uppercase;}
+.item.off .thumb{filter:grayscale(1) opacity(.6);}
+.acts{display:flex;gap:8px}
+.mini{border:1px solid var(--line);background:transparent;border-radius:2px;padding:8px 12px;font-size:9px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .4s var(--ease);}
+.mini:hover{border-color:var(--gold);color:var(--gold);}
+.mini.stock.on{color:var(--green);border-color:var(--line);}
+.mini.del:hover{color:var(--red);border-color:var(--red);}
+.empty{padding:40px 0;text-align:center;color:var(--muted);font-size:14px;letter-spacing:.05em;}
+.sheet{position:fixed;inset:0;z-index:80;display:none;place-items:center;padding:20px;background:rgba(4,21,16,.85);backdrop-filter:blur(8px);}
+.sheet.on{display:grid}
+.sheet .card{width:100%;max-width:520px;max-height:90vh;overflow:auto;}
+.row{display:flex;gap:12px;margin-top:12px}
+.row .solid{flex:1}
+@media (max-width:880px){
+  .cols{grid-template-columns:1fr}
+  .item{grid-template-columns:60px minmax(0,1fr)}
+  .thumb{width:60px}
+  .acts{grid-column:2;justify-self:start}
+}
+</style>
+</head>
+<body>
 
-  // ==========================================
-  // 🚀 1. LOGIN FUNCTIONALITY (ENTER KEY SUPPORT)
-  // ==========================================
+<div id="lock">
+  <div class="lock-box">
+    <h1>Yashni Creations</h1>
+    <div class="zari"></div>
+    <p class="hint">Log in with your email and password to manage your atelier.</p>
+    
+    <!-- 🚀 FORM TAG ADDED FOR ENTER KEY SUPPORT -->
+    <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+      <div class="f">
+        <label for="email">Email</label>
+        <input type="email" id="email" autocomplete="username" placeholder="name@email.com" required>
+      </div>
+      <div class="f">
+        <label for="pass">Password</label>
+        <input type="password" id="pass" autocomplete="current-password" placeholder="••••••••" required>
+      </div>
+      <button class="solid" type="submit" id="loginBtn">Enter Portal</button>
+    </form>
+    
+    <p class="msg" id="lockMsg"></p>
+  </div>
+</div>
+
+<main id="app">
+  <div class="top">
+    <div>
+      <h1>Atelier Portal</h1>
+      <p id="who">Add new pieces, update pricing, or manage your inventory.</p>
+    </div>
+    <div class="links">
+      <a class="ghost" href="index.html" target="_blank" rel="noreferrer">View Live Site</a>
+      <button class="ghost danger" type="button" id="logout">Log Out</button>
+    </div>
+  </div>
+
+  <div class="cols">
+    <section class="card">
+      <h2>Add a product</h2>
+      <p class="hint">It goes live on the website the moment you publish it.</p>
+      
+      <div class="f"><label for="title">Product Name</label><input type="text" id="title" placeholder="e.g. Royal Emerald Lehenga"></div>
+      
+      <div class="two">
+        <div class="f"><label for="price">Price (INR)</label><div class="rupee"><input type="number" id="price" inputmode="numeric" placeholder="4500" min="0"></div></div>
+        <div class="f"><label for="offer">Offer Tag (optional)</label><input type="text" id="offer" placeholder="e.g. Festive Special"></div>
+      </div>
+      
+      <div class="two">
+        <div class="f"><label for="cat">Category</label>
+          <select id="cat">
+            <option value="lehenga">Lehenga</option>
+            <option value="saree">Saree</option>
+            <option value="gown">Gown</option>
+            <option value="suit">Anarkali / Suit</option>
+          </select>
+        </div>
+        <div class="f"><label for="stock">Availability</label>
+          <select id="stock">
+            <option value="in">In stock</option>
+            <option value="out">Out of stock</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="f">
+        <label>Available Sizes</label>
+        <div class="checks" id="sizes">
+          <label><input type="checkbox" value="XS"> XS</label>
+          <label><input type="checkbox" value="S"> S</label>
+          <label><input type="checkbox" value="M"> M</label>
+          <label><input type="checkbox" value="L"> L</label>
+          <label><input type="checkbox" value="XL"> XL</label>
+          <label><input type="checkbox" value="XXL"> XXL</label>
+          <label><input type="checkbox" value="Custom"> Custom</label>
+        </div>
+      </div>
+      
+      <div class="f"><label for="desc">Description</label><textarea id="desc" placeholder="Details about fabric, handwork, fit, and care..."></textarea></div>
+      
+      <div class="f">
+        <label for="file">Photographs (1 to 4)</label>
+        <label class="drop" for="file">
+          <div class="preview-grid" id="previewContainer"></div>
+          <span id="dropText">Click to browse luxury imagery</span>
+          <input type="file" id="file" accept="image/*" multiple>
+        </label>
+      </div>
+      
+      <button class="solid" type="button" id="publish">Publish to Collection</button>
+      <p class="msg" id="status"></p>
+    </section>
+
+    <section class="card">
+      <h2>Live Collection</h2>
+      <p class="hint" id="liveCount">Everything currently visible to clients.</p>
+      <div class="search"><span aria-hidden="true">&#128269;</span><input type="text" id="find" placeholder="Search collection..."></div>
+      <div id="list"><p class="empty">No products added yet.</p></div>
+    </section>
+  </div>
+</main>
+
+<div class="sheet" id="sheet">
+  <div class="card">
+    <h2>Edit Piece</h2>
+    <p class="hint">The website updates instantly upon saving.</p>
+    
+    <div class="f"><label for="eTitle">Product Name</label><input type="text" id="eTitle"></div>
+    
+    <div class="two">
+      <div class="f"><label for="ePrice">Price (INR)</label><div class="rupee"><input type="number" id="ePrice" min="0"></div></div>
+      <div class="f"><label for="eOffer">Offer Tag (optional)</label><input type="text" id="eOffer"></div>
+    </div>
+    
+    <div class="two">
+      <div class="f"><label for="eCat">Category</label>
+        <select id="eCat">
+          <option value="lehenga">Lehenga</option>
+          <option value="saree">Saree</option>
+          <option value="gown">Gown</option>
+          <option value="suit">Anarkali / Suit</option>
+        </select>
+      </div>
+      <div class="f"><label for="eStock">Availability</label>
+        <select id="eStock">
+          <option value="in">In stock</option>
+          <option value="out">Out of stock</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <button class="solid" type="button" onclick="closeSheet()">Save Changes</button>
+      <button class="ghost" type="button" onclick="closeSheet()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 🚀 LOGIN FUNCTION (HANDLES ENTER KEY AND CLICK BOTH)
   function handleLoginSubmit(event) {
     if (event) event.preventDefault();
+    
     const email = document.getElementById("email").value.trim();
     const pass = document.getElementById("pass").value.trim();
     const lockMsg = document.getElementById("lockMsg");
@@ -24,217 +242,47 @@
       showMsg(lockMsg, "Please fill all details.", true);
       return;
     }
-    // Simple mock login for UI
+
+    // Login Action
     document.getElementById("lock").style.display = "none";
     document.getElementById("app").style.display = "block";
-    loadProducts(); // Load products when logged in
   }
 
   function showMsg(el, text, isBad) {
     el.textContent = text;
     el.className = "msg on " + (isBad ? "bad" : "ok");
-    setTimeout(() => { el.classList.remove("on"); }, 4000);
   }
 
+  // LOGOUT
   document.getElementById("logout").addEventListener("click", function() {
     document.getElementById("app").style.display = "none";
     document.getElementById("lock").style.display = "grid";
+    document.getElementById("email").value = "";
+    document.getElementById("pass").value = "";
+    document.getElementById("lockMsg").className = "msg";
   });
 
-  // ==========================================
-  // 🚀 2. IMAGE UPLOAD & PREVIEW SYSTEM
-  // ==========================================
-  const fileInput = document.getElementById('file');
-  const previewContainer = document.getElementById('previewContainer');
-  const dropText = document.getElementById('dropText');
-  let selectedImagesBase64 = []; 
-
-  fileInput.addEventListener('change', function(e) {
-    const files = Array.from(e.target.files).slice(0, 4); // Max 4 images
-    previewContainer.innerHTML = '';
-    selectedImagesBase64 = [];
-
-    if(files.length > 0) {
-        dropText.style.display = 'none';
-    } else {
-        dropText.style.display = 'block';
-    }
-
-    files.forEach((file, index) => {
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const base64String = event.target.result;
-        selectedImagesBase64.push(base64String);
-        
-        // Preview on screen
-        const imgWrap = document.createElement('div');
-        imgWrap.className = 'img-wrap';
-        imgWrap.innerHTML = `
-            <div class="img-num">${index + 1}</div>
-            <img src="${base64String}" alt="Upload Preview">
-        `;
-        previewContainer.appendChild(imgWrap);
-      };
-      reader.readAsDataURL(file);
-    });
-  });
-
-  // ==========================================
-  // 🚀 3. PUBLISH NEW PRODUCT TO FIREBASE
-  // ==========================================
-  document.getElementById('publish').addEventListener('click', function() {
-    const btn = this;
-    const title = document.getElementById('title').value.trim();
-    const price = document.getElementById('price').value.trim();
-    const offer = document.getElementById('offer').value.trim();
-    const cat = document.getElementById('cat').value;
-    const stock = document.getElementById('stock').value;
-    const desc = document.getElementById('desc').value.trim();
-    
-    // Get Checked Sizes
-    const sizes = [];
-    document.querySelectorAll('#sizes input[type="checkbox"]:checked').forEach(cb => {
-        sizes.push(cb.value);
-    });
-
-    if(!title || !price || selectedImagesBase64.length === 0) {
-        showMsg(document.getElementById('status'), "Please add Name, Price and at least 1 Photo.", true);
-        return;
-    }
-
-    btn.textContent = "Publishing...";
-    btn.disabled = true;
-
-    const productData = {
-        title: title,
-        price: price,
-        offer: offer,
-        category: cat,
-        stock: stock,
-        sizes: sizes,
-        description: desc,
-        images: selectedImagesBase64,
-        timestamp: Date.now()
-    };
-
-    database.ref('yashni_products').push(productData).then(() => {
-        showMsg(document.getElementById('status'), "Piece Published to Collection! ✨", false);
-        // Reset Form
-        document.getElementById('title').value = '';
-        document.getElementById('price').value = '';
-        document.getElementById('offer').value = '';
-        document.getElementById('desc').value = '';
-        document.querySelectorAll('#sizes input').forEach(cb => cb.checked = false);
-        selectedImagesBase64 = [];
-        previewContainer.innerHTML = '';
-        dropText.style.display = 'block';
-    }).catch((err) => {
-        showMsg(document.getElementById('status'), "Error publishing: " + err.message, true);
-    }).finally(() => {
-        btn.textContent = "Publish to Collection";
-        btn.disabled = false;
-    });
-  });
-
-  // ==========================================
-  // 🚀 4. LOAD LIVE COLLECTION FROM FIREBASE
-  // ==========================================
-  let allProducts = {};
-
-  function loadProducts() {
-    database.ref('yashni_products').on('value', snap => {
-        const list = document.getElementById('list');
-        const liveCount = document.getElementById('liveCount');
-        list.innerHTML = '';
-        
-        if (snap.exists()) {
-            allProducts = snap.val();
-            let count = 0;
-            
-            // Loop through products and reverse them (newest first)
-            Object.keys(allProducts).reverse().forEach(key => {
-                count++;
-                let p = allProducts[key];
-                let mainImage = p.images && p.images.length > 0 ? p.images[0] : '';
-                
-                let tagsHtml = `<span class="tagcat">${p.category}</span>`;
-                if(p.offer) tagsHtml += `<span class="tagoffer">${p.offer}</span>`;
-                if(p.stock === 'out') tagsHtml += `<span class="tagout">Out of Stock</span>`;
-
-                list.innerHTML += `
-                    <div class="item ${p.stock === 'out' ? 'off' : ''}">
-                        <img src="${mainImage}" class="thumb" alt="${p.title}">
-                        <div>
-                            <span class="pname">${p.title} ${tagsHtml}</span>
-                            <span class="pmeta">₹${p.price} • ${p.sizes ? p.sizes.join(', ') : 'Free Size'}</span>
-                        </div>
-                        <div class="acts">
-                            <button class="mini" onclick="openEditSheet('${key}')">Edit Price/Info</button>
-                            <button class="mini del" onclick="deleteProduct('${key}')">Remove</button>
-                        </div>
-                    </div>
-                `;
-            });
-            liveCount.textContent = `${count} pieces currently visible to clients.`;
-        } else {
-            list.innerHTML = '<p class="empty">No pieces added yet. Start by publishing above.</p>';
-            liveCount.textContent = `0 pieces currently visible.`;
-        }
-    });
-  }
-
-  // ==========================================
-  // 🚀 5. EDIT PRODUCT SYSTEM (CHANGING PRICE)
-  // ==========================================
-  let currentEditId = null;
-
-  function openEditSheet(id) {
-    currentEditId = id;
-    const p = allProducts[id];
-    
-    // Populate Data into Modal
-    document.getElementById('eTitle').value = p.title || '';
-    document.getElementById('ePrice').value = p.price || '';
-    document.getElementById('eOffer').value = p.offer || '';
-    document.getElementById('eCat').value = p.category || 'lehenga';
-    document.getElementById('eStock').value = p.stock || 'in';
-    
-    document.getElementById('sheet').classList.add('on');
-  }
-
+  // SHEET MODAL CLOSE
   function closeSheet() {
-    document.getElementById('sheet').classList.remove('on');
-    currentEditId = null;
+    document.getElementById("sheet").classList.remove("on");
   }
 
-  function saveEditChanges() {
-    if(!currentEditId) return;
-    
-    const newTitle = document.getElementById('eTitle').value.trim();
-    const newPrice = document.getElementById('ePrice').value.trim();
-    
-    if(!newTitle || !newPrice) {
-        alert("Name and Price cannot be empty!");
-        return;
+  // EXTRA ENTER KEY LISTENER
+  document.addEventListener("DOMContentLoaded", function() {
+    const emailInput = document.getElementById("email");
+    const passInput = document.getElementById("pass");
+
+    function onEnter(e) {
+      if (e.key === "Enter" || e.keyCode === 13) {
+        e.preventDefault();
+        handleLoginSubmit(e);
+      }
     }
 
-    const updates = {
-        title: newTitle,
-        price: newPrice,
-        offer: document.getElementById('eOffer').value.trim(),
-        category: document.getElementById('eCat').value,
-        stock: document.getElementById('eStock').value
-    };
-
-    database.ref('yashni_products/' + currentEditId).update(updates).then(() => {
-        closeSheet();
-    });
-  }
-
-  function deleteProduct(id) {
-      if(confirm("Are you sure you want to permanently delete this piece from the website?")) {
-          database.ref('yashni_products/' + id).remove();
-      }
-  }
-
+    if (emailInput) emailInput.addEventListener("keydown", onEnter);
+    if (passInput) passInput.addEventListener("keydown", onEnter);
+  });
 </script>
+
+</body>
+</html>
