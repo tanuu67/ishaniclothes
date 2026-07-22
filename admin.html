@@ -174,7 +174,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
         <label for="file">Photographs (1 to 4)</label>
         <label class="drop" for="file">
           <div class="preview-grid" id="previewContainer"></div>
-          <span id="dropText">Click to browse luxury imagery</span>
+          <span id="dropText">Click to browse up to 4 images</span>
           <input type="file" id="file" accept="image/*" multiple>
         </label>
       </div>
@@ -222,7 +222,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     </div>
 
     <div class="row">
-      <!-- Changed from onclick="closeSheet()" to onclick="saveEdit()" -->
       <button class="solid" type="button" onclick="saveEdit()">Save Changes</button>
       <button class="ghost" type="button" onclick="closeSheet()">Cancel</button>
     </div>
@@ -230,15 +229,14 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
 </div>
 
 <script>
-  // Global arrays to store data in memory (for frontend preview)
+  // In-memory data store
   let products = [];
   let currentEditId = null;
-  let selectedImages = [];
+  let selectedImages = []; // Array of up to 4 images
 
-  // --- LOGIN FUNCTIONALITY ---
+  // --- LOGIN LOGIC ---
   function handleLoginSubmit(event) {
     if (event) event.preventDefault();
-    
     const email = document.getElementById("email").value.trim();
     const pass = document.getElementById("pass").value.trim();
     const lockMsg = document.getElementById("lockMsg");
@@ -247,7 +245,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       showMsg(lockMsg, "Please fill all details.", true);
       return;
     }
-
     document.getElementById("lock").style.display = "none";
     document.getElementById("app").style.display = "block";
   }
@@ -266,33 +263,43 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     document.getElementById("lockMsg").className = "msg";
   });
 
-  // --- IMAGE PREVIEW LOGIC ---
-  document.getElementById('file').addEventListener('change', function(e) {
+  // --- 📸 IMAGE UPLOAD LOGIC (FIXED FOR ORDER 1-4) ---
+  document.getElementById('file').addEventListener('change', async function(e) {
     const previewContainer = document.getElementById('previewContainer');
     const dropText = document.getElementById('dropText');
     
-    // Store files locally to attach them to the product
-    const files = Array.from(e.target.files).slice(0, 4); // Max 4
+    // Sirf pehli 4 files lena
+    const files = Array.from(e.target.files).slice(0, 4); 
     selectedImages = [];
     previewContainer.innerHTML = '';
 
     if (files.length > 0) {
       dropText.style.display = 'none';
-      files.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          selectedImages.push(event.target.result);
-          
-          const wrap = document.createElement('div');
-          wrap.className = 'img-wrap';
-          wrap.innerHTML = `
-            <div class="img-num">${index + 1}</div>
-            <img src="${event.target.result}" alt="Preview">
-          `;
-          previewContainer.appendChild(wrap);
-        }
-        reader.readAsDataURL(file);
+      
+      // Promise.all use karke saari images ka wait karenge
+      // taaki order kharab na ho aur 1, 2, 3, 4 theek se aaye
+      const promises = files.map(file => {
+        return new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = e => resolve(e.target.result);
+          reader.readAsDataURL(file);
+        });
       });
+
+      const results = await Promise.all(promises);
+      
+      results.forEach((base64String, index) => {
+        selectedImages.push(base64String); // Order maintained perfectly
+        
+        const wrap = document.createElement('div');
+        wrap.className = 'img-wrap';
+        wrap.innerHTML = `
+          <div class="img-num">${index + 1}</div>
+          <img src="${base64String}" alt="Preview ${index + 1}">
+        `;
+        previewContainer.appendChild(wrap);
+      });
+      
     } else {
       dropText.style.display = 'block';
     }
@@ -312,22 +319,22 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       return;
     }
 
-    // Create a new product object
     const newProduct = {
-      id: Date.now(), // Generate a unique ID
+      id: Date.now(),
       title,
       price,
       offer,
       cat,
       stock,
-      image: selectedImages.length > 0 ? selectedImages[0] : null // Use first image as thumbnail
+      // selectedImages[0] automatically 1st waali image uthayega website ke liye
+      image: selectedImages.length > 0 ? selectedImages[0] : null 
     };
 
     products.push(newProduct);
     renderList();
     showMsg(statusMsg, "Published successfully!", false);
 
-    // Clear form after publishing
+    // Form clear karna publish hone ke baad
     document.getElementById('title').value = '';
     document.getElementById('price').value = '';
     document.getElementById('offer').value = '';
@@ -352,7 +359,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       return;
     }
 
-    // Build the HTML for each product
     filteredProducts.forEach(p => {
       const item = document.createElement('div');
       item.className = `item ${p.stock === 'out' ? 'off' : ''}`;
@@ -391,7 +397,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
 
     currentEditId = id;
     
-    // Populate modal inputs with existing data
     document.getElementById('eTitle').value = product.title;
     document.getElementById('ePrice').value = product.price;
     document.getElementById('eOffer').value = product.offer;
@@ -404,14 +409,13 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
   function saveEdit() {
     const product = products.find(p => p.id === currentEditId);
     if (product) {
-      // Update values
       product.title = document.getElementById('eTitle').value;
       product.price = document.getElementById('ePrice').value;
       product.offer = document.getElementById('eOffer').value;
       product.cat = document.getElementById('eCat').value;
       product.stock = document.getElementById('eStock').value;
       
-      renderList(document.getElementById('find').value); // Refresh List
+      renderList(document.getElementById('find').value);
       closeSheet();
     }
   }
