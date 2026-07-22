@@ -98,7 +98,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     <div class="zari"></div>
     <p class="hint">Log in with your email and password to manage your atelier.</p>
     
-    <!-- 🚀 FORM TAG ADDED FOR ENTER KEY SUPPORT -->
     <form id="loginForm" onsubmit="handleLoginSubmit(event)">
       <div class="f">
         <label for="email">Email</label>
@@ -223,14 +222,20 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     </div>
 
     <div class="row">
-      <button class="solid" type="button" onclick="closeSheet()">Save Changes</button>
+      <!-- Changed from onclick="closeSheet()" to onclick="saveEdit()" -->
+      <button class="solid" type="button" onclick="saveEdit()">Save Changes</button>
       <button class="ghost" type="button" onclick="closeSheet()">Cancel</button>
     </div>
   </div>
 </div>
 
 <script>
-  // 🚀 LOGIN FUNCTION (HANDLES ENTER KEY AND CLICK BOTH)
+  // Global arrays to store data in memory (for frontend preview)
+  let products = [];
+  let currentEditId = null;
+  let selectedImages = [];
+
+  // --- LOGIN FUNCTIONALITY ---
   function handleLoginSubmit(event) {
     if (event) event.preventDefault();
     
@@ -243,7 +248,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       return;
     }
 
-    // Login Action
     document.getElementById("lock").style.display = "none";
     document.getElementById("app").style.display = "block";
   }
@@ -251,9 +255,9 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
   function showMsg(el, text, isBad) {
     el.textContent = text;
     el.className = "msg on " + (isBad ? "bad" : "ok");
+    setTimeout(() => { el.className = "msg"; }, 3000);
   }
 
-  // LOGOUT
   document.getElementById("logout").addEventListener("click", function() {
     document.getElementById("app").style.display = "none";
     document.getElementById("lock").style.display = "grid";
@@ -262,26 +266,167 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     document.getElementById("lockMsg").className = "msg";
   });
 
-  // SHEET MODAL CLOSE
-  function closeSheet() {
-    document.getElementById("sheet").classList.remove("on");
-  }
+  // --- IMAGE PREVIEW LOGIC ---
+  document.getElementById('file').addEventListener('change', function(e) {
+    const previewContainer = document.getElementById('previewContainer');
+    const dropText = document.getElementById('dropText');
+    
+    // Store files locally to attach them to the product
+    const files = Array.from(e.target.files).slice(0, 4); // Max 4
+    selectedImages = [];
+    previewContainer.innerHTML = '';
 
-  // EXTRA ENTER KEY LISTENER
-  document.addEventListener("DOMContentLoaded", function() {
-    const emailInput = document.getElementById("email");
-    const passInput = document.getElementById("pass");
+    if (files.length > 0) {
+      dropText.style.display = 'none';
+      files.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          selectedImages.push(event.target.result);
+          
+          const wrap = document.createElement('div');
+          wrap.className = 'img-wrap';
+          wrap.innerHTML = `
+            <div class="img-num">${index + 1}</div>
+            <img src="${event.target.result}" alt="Preview">
+          `;
+          previewContainer.appendChild(wrap);
+        }
+        reader.readAsDataURL(file);
+      });
+    } else {
+      dropText.style.display = 'block';
+    }
+  });
 
-    function onEnter(e) {
-      if (e.key === "Enter" || e.keyCode === 13) {
-        e.preventDefault();
-        handleLoginSubmit(e);
-      }
+  // --- PUBLISH PRODUCT LOGIC ---
+  document.getElementById('publish').addEventListener('click', function() {
+    const title = document.getElementById('title').value.trim();
+    const price = document.getElementById('price').value.trim();
+    const offer = document.getElementById('offer').value.trim();
+    const cat = document.getElementById('cat').value;
+    const stock = document.getElementById('stock').value;
+    const statusMsg = document.getElementById('status');
+
+    if (!title || !price) {
+      showMsg(statusMsg, "Product Name and Price are required.", true);
+      return;
     }
 
-    if (emailInput) emailInput.addEventListener("keydown", onEnter);
-    if (passInput) passInput.addEventListener("keydown", onEnter);
+    // Create a new product object
+    const newProduct = {
+      id: Date.now(), // Generate a unique ID
+      title,
+      price,
+      offer,
+      cat,
+      stock,
+      image: selectedImages.length > 0 ? selectedImages[0] : null // Use first image as thumbnail
+    };
+
+    products.push(newProduct);
+    renderList();
+    showMsg(statusMsg, "Published successfully!", false);
+
+    // Clear form after publishing
+    document.getElementById('title').value = '';
+    document.getElementById('price').value = '';
+    document.getElementById('offer').value = '';
+    document.getElementById('desc').value = '';
+    document.getElementById('previewContainer').innerHTML = '';
+    document.getElementById('dropText').style.display = 'block';
+    document.getElementById('file').value = '';
+    selectedImages = [];
   });
+
+  // --- RENDER LIVE COLLECTION ---
+  function renderList(searchQuery = "") {
+    const list = document.getElementById('list');
+    list.innerHTML = "";
+
+    const filteredProducts = products.filter(p => 
+      p.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    if (filteredProducts.length === 0) {
+      list.innerHTML = `<p class="empty">${searchQuery ? 'No products match your search.' : 'No products added yet.'}</p>`;
+      return;
+    }
+
+    // Build the HTML for each product
+    filteredProducts.forEach(p => {
+      const item = document.createElement('div');
+      item.className = `item ${p.stock === 'out' ? 'off' : ''}`;
+      
+      const thumbSrc = p.image ? p.image : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="72" height="96" fill="%23eee"><rect width="100%" height="100%"/></svg>';
+      
+      item.innerHTML = `
+        <img src="${thumbSrc}" class="thumb">
+        <div>
+          <span class="pname">
+            ${p.title} 
+            <span class="tagcat">${p.cat}</span> 
+            ${p.offer ? `<span class="tagoffer">${p.offer}</span>` : ''} 
+            ${p.stock === 'out' ? `<span class="tagout">Out</span>` : ''}
+          </span>
+          <span class="pmeta">₹${p.price}</span>
+        </div>
+        <div class="acts">
+          <button class="mini" onclick="openEdit(${p.id})">Edit</button>
+          <button class="mini del" onclick="deleteProduct(${p.id})">Delete</button>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+  }
+
+  // --- SEARCH LOGIC ---
+  document.getElementById('find').addEventListener('input', function(e) {
+    renderList(e.target.value);
+  });
+
+  // --- EDIT & DELETE LOGIC ---
+  function openEdit(id) {
+    const product = products.find(p => p.id === id);
+    if (!product) return;
+
+    currentEditId = id;
+    
+    // Populate modal inputs with existing data
+    document.getElementById('eTitle').value = product.title;
+    document.getElementById('ePrice').value = product.price;
+    document.getElementById('eOffer').value = product.offer;
+    document.getElementById('eCat').value = product.cat;
+    document.getElementById('eStock').value = product.stock;
+
+    document.getElementById('sheet').classList.add('on');
+  }
+
+  function saveEdit() {
+    const product = products.find(p => p.id === currentEditId);
+    if (product) {
+      // Update values
+      product.title = document.getElementById('eTitle').value;
+      product.price = document.getElementById('ePrice').value;
+      product.offer = document.getElementById('eOffer').value;
+      product.cat = document.getElementById('eCat').value;
+      product.stock = document.getElementById('eStock').value;
+      
+      renderList(document.getElementById('find').value); // Refresh List
+      closeSheet();
+    }
+  }
+
+  function deleteProduct(id) {
+    if(confirm("Are you sure you want to delete this piece?")) {
+      products = products.filter(p => p.id !== id);
+      renderList(document.getElementById('find').value);
+    }
+  }
+
+  function closeSheet() {
+    document.getElementById("sheet").classList.remove("on");
+    currentEditId = null;
+  }
 </script>
 
 </body>
