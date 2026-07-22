@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<!-- Supabase SDK Added Here -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--green:#041510;--green-2:#08261e;--gold:#d4af37;--paper:#fbfbf9;--ivory:#ffffff;--ink:#1a1a1a;--muted:#888888;--line:rgba(4,21,16,.1);--red:#b3123f;--ok:#0f7a4a;--shadow:0 24px 60px rgba(4,21,16,.08); --ease:cubic-bezier(0.25, 1, 0.25, 1);}
 *{box-sizing:border-box}
@@ -88,6 +90,8 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
   .thumb{width:60px}
   .acts{grid-column:2;justify-self:start}
 }
+.loading-overlay {position:absolute; inset:0; background:rgba(255,255,255,0.8); display:none; place-items:center; z-index:10; font-size:13px; font-weight:500; color:var(--green);}
+.card {position:relative;}
 </style>
 </head>
 <body>
@@ -123,12 +127,13 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     <div class="links">
       <a class="ghost" href="index.html" target="_blank" rel="noreferrer">View Live Site</a>
       <button class="ghost danger" type="button" id="logout">Log Out</button>
-      <button class="ghost danger" type="button" id="clearAll" style="border-color:var(--red); color:var(--red);">Clear All Data</button>
     </div>
   </div>
 
   <div class="cols">
+    <!-- ADD PRODUCT SECTION -->
     <section class="card">
+      <div class="loading-overlay" id="addLoader">Saving to Live Website...</div>
       <h2>Add a product</h2>
       <p class="hint">It goes live on the website the moment you publish it.</p>
       
@@ -142,10 +147,13 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       <div class="two">
         <div class="f"><label for="cat">Category</label>
           <select id="cat">
-            <option value="lehenga">Lehenga</option>
-            <option value="saree">Saree</option>
-            <option value="gown">Gown</option>
-            <option value="suit">Anarkali / Suit</option>
+            <option value="Lehenga">Lehenga</option>
+            <option value="Saree">Saree</option>
+            <option value="Gown">Gown</option>
+            <option value="Suit">Anarkali / Suit</option>
+            <option value="Kurti">Kurti</option>
+            <option value="Sharara">Sharara</option>
+            <option value="Other">Other</option>
           </select>
         </div>
         <div class="f"><label for="stock">Availability</label>
@@ -184,7 +192,9 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       <p class="msg" id="status"></p>
     </section>
 
+    <!-- LIVE COLLECTION SECTION -->
     <section class="card">
+      <div class="loading-overlay" id="listLoader" style="display:grid;">Loading Database...</div>
       <h2>Live Collection</h2>
       <p class="hint" id="liveCount">Everything currently visible to clients.</p>
       <div class="search"><span aria-hidden="true">&#128269;</span><input type="text" id="find" placeholder="Search collection..."></div>
@@ -193,8 +203,10 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
   </div>
 </main>
 
+<!-- EDIT MODAL SHEET -->
 <div class="sheet" id="sheet">
   <div class="card">
+    <div class="loading-overlay" id="editLoader">Updating Data...</div>
     <h2>Edit Piece</h2>
     <p class="hint">The website updates instantly upon saving.</p>
     
@@ -208,10 +220,13 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     <div class="two">
       <div class="f"><label for="eCat">Category</label>
         <select id="eCat">
-          <option value="lehenga">Lehenga</option>
-          <option value="saree">Saree</option>
-          <option value="gown">Gown</option>
-          <option value="suit">Anarkali / Suit</option>
+          <option value="Lehenga">Lehenga</option>
+          <option value="Saree">Saree</option>
+          <option value="Gown">Gown</option>
+          <option value="Suit">Anarkali / Suit</option>
+          <option value="Kurti">Kurti</option>
+          <option value="Sharara">Sharara</option>
+          <option value="Other">Other</option>
         </select>
       </div>
       <div class="f"><label for="eStock">Availability</label>
@@ -222,6 +237,31 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       </div>
     </div>
 
+    <!-- NEW FIELDS IN EDIT MODAL -->
+    <div class="f">
+      <label>Available Sizes</label>
+      <div class="checks" id="eSizes">
+        <label><input type="checkbox" value="XS"> XS</label>
+        <label><input type="checkbox" value="S"> S</label>
+        <label><input type="checkbox" value="M"> M</label>
+        <label><input type="checkbox" value="L"> L</label>
+        <label><input type="checkbox" value="XL"> XL</label>
+        <label><input type="checkbox" value="XXL"> XXL</label>
+        <label><input type="checkbox" value="Custom"> Custom</label>
+      </div>
+    </div>
+    
+    <div class="f"><label for="eDesc">Description</label><textarea id="eDesc" placeholder="Details about fabric, handwork, fit, and care..."></textarea></div>
+
+    <div class="f">
+      <label for="eFile">Change Photographs (Optional)</label>
+      <label class="drop" for="eFile">
+        <div class="preview-grid" id="ePreviewContainer"></div>
+        <span id="eDropText">Click to select new images (Old images will be replaced)</span>
+        <input type="file" id="eFile" accept="image/*" multiple>
+      </label>
+    </div>
+
     <div class="row">
       <button class="solid" type="button" onclick="saveEdit()">Save Changes</button>
       <button class="ghost" type="button" onclick="closeSheet()">Cancel</button>
@@ -230,37 +270,47 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
 </div>
 
 <script>
-  let products = JSON.parse(localStorage.getItem('yashni_products')) || [];
+  // --- SUPABASE CONFIGURATION ---
+  const SUPABASE_URL = "https://uhjebqveujolmorsxcvq.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_VhlesphpBgbikJmdn-T_cg_CefF3w7z";
+  const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  let products = [];
   let currentEditId = null;
-  let selectedImages = [];
+  
+  let selectedImages = []; // Array for NEW product
+  let editSelectedImages = []; // Array for EDIT product
 
-  // Function to safely save data and show error if storage gets completely full
-  function saveProductsToStorage() {
-    try {
-      localStorage.setItem('yashni_products', JSON.stringify(products));
-    } catch (e) {
-      alert("Storage limit reached! Please delete some old products to add new ones, or use 'Clear All Data' button at the top.");
-    }
-  }
-
-  // Helper to compress images so they fit in local storage easily
-  function compressImage(base64Str, maxWidth = 300) {
+  // Helper to compress images so database queries are fast
+  function compressImage(base64Str, maxWidth = 600) {
     return new Promise((resolve) => {
       let img = new Image();
       img.src = base64Str;
       img.onload = () => {
         let canvas = document.createElement('canvas');
         let scaleSize = maxWidth / img.width;
-        // Don't upscale small images
         if (scaleSize > 1) { scaleSize = 1; }
         canvas.width = maxWidth * scaleSize;
         canvas.height = img.height * scaleSize;
         let ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        // Reduce quality to 70% to save maximum space
-        resolve(canvas.toDataURL('image/jpeg', 0.7)); 
+        resolve(canvas.toDataURL('image/jpeg', 0.8)); 
       };
     });
+  }
+
+  // Fetch from database
+  async function fetchProductsFromDB() {
+    document.getElementById('listLoader').style.display = 'grid';
+    const { data, error } = await db.from("products").select("*").order("created_at", { ascending: false });
+    
+    if (error) {
+      alert("Error loading data: " + error.message);
+    } else {
+      products = data || [];
+      renderList();
+    }
+    document.getElementById('listLoader').style.display = 'none';
   }
 
   // --- LOGIN LOGIC ---
@@ -277,7 +327,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     
     document.getElementById("lock").style.display = "none";
     document.getElementById("app").style.display = "block";
-    renderList(); // Render old items immediately on login
+    fetchProductsFromDB();
   }
 
   function showMsg(el, text, isBad) {
@@ -291,23 +341,12 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     document.getElementById("lock").style.display = "grid";
     document.getElementById("email").value = "";
     document.getElementById("pass").value = "";
-    document.getElementById("lockMsg").className = "msg";
   });
 
-  // Just in case storage gets totally messed up, an emergency clear button
-  document.getElementById("clearAll").addEventListener("click", function() {
-    if(confirm("Are you sure? This will delete ALL products!")) {
-      localStorage.removeItem("yashni_products");
-      products = [];
-      renderList();
-    }
-  });
-
-  // --- 📸 IMAGE UPLOAD LOGIC ---
+  // --- 📸 IMAGE UPLOAD LOGIC (ADD NEW) ---
   document.getElementById('file').addEventListener('change', async function(e) {
     const previewContainer = document.getElementById('previewContainer');
     const dropText = document.getElementById('dropText');
-    const statusMsg = document.getElementById('status');
     
     const files = Array.from(e.target.files).slice(0, 4); 
     selectedImages = [];
@@ -315,74 +354,117 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
 
     if (files.length > 0) {
       dropText.style.display = 'none';
-      
       const promises = files.map(file => {
         return new Promise(resolve => {
           const reader = new FileReader();
-          reader.onload = e => resolve(e.target.result);
+          reader.onload = ev => resolve(ev.target.result);
           reader.readAsDataURL(file);
         });
       });
-
       const rawResults = await Promise.all(promises);
-      
-      // Compress the images before saving to prevent Local Storage error
       for (let i = 0; i < rawResults.length; i++) {
         const compressedBase64 = await compressImage(rawResults[i]);
         selectedImages.push(compressedBase64);
         
         const wrap = document.createElement('div');
         wrap.className = 'img-wrap';
-        wrap.innerHTML = `
-          <div class="img-num">${i + 1}</div>
-          <img src="${compressedBase64}" alt="Preview ${i + 1}">
-        `;
+        wrap.innerHTML = `<div class="img-num">${i + 1}</div><img src="${compressedBase64}">`;
         previewContainer.appendChild(wrap);
       }
-      
     } else {
       dropText.style.display = 'block';
     }
   });
 
-  // --- PUBLISH PRODUCT LOGIC ---
-  document.getElementById('publish').addEventListener('click', function() {
+  // --- 📸 IMAGE UPLOAD LOGIC (EDIT MODE) ---
+  document.getElementById('eFile').addEventListener('change', async function(e) {
+    const previewContainer = document.getElementById('ePreviewContainer');
+    const dropText = document.getElementById('eDropText');
+    
+    const files = Array.from(e.target.files).slice(0, 4); 
+    // Clear existing images array when new ones are uploaded
+    editSelectedImages = []; 
+    previewContainer.innerHTML = '';
+
+    if (files.length > 0) {
+      dropText.style.display = 'none';
+      const promises = files.map(file => {
+        return new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = ev => resolve(ev.target.result);
+          reader.readAsDataURL(file);
+        });
+      });
+      const rawResults = await Promise.all(promises);
+      for (let i = 0; i < rawResults.length; i++) {
+        const compressedBase64 = await compressImage(rawResults[i]);
+        editSelectedImages.push(compressedBase64); // Push to EDIT array
+        
+        const wrap = document.createElement('div');
+        wrap.className = 'img-wrap';
+        wrap.innerHTML = `<div class="img-num">${i + 1}</div><img src="${compressedBase64}">`;
+        previewContainer.appendChild(wrap);
+      }
+    } else {
+      dropText.style.display = 'block';
+    }
+  });
+
+  // --- PUBLISH PRODUCT TO DATABASE ---
+  document.getElementById('publish').addEventListener('click', async function() {
     const title = document.getElementById('title').value.trim();
     const price = document.getElementById('price').value.trim();
     const offer = document.getElementById('offer').value.trim();
     const cat = document.getElementById('cat').value;
     const stock = document.getElementById('stock').value;
+    const desc = document.getElementById('desc').value.trim();
     const statusMsg = document.getElementById('status');
+    const loader = document.getElementById('addLoader');
 
     if (!title || !price) {
       showMsg(statusMsg, "Product Name and Price are required.", true);
       return;
     }
 
-    const newProduct = {
-      id: Date.now(),
-      title,
-      price,
-      offer,
-      cat,
-      stock,
-      image: selectedImages.length > 0 ? selectedImages[0] : null 
-    };
+    const sizeCheckboxes = document.querySelectorAll('#sizes input:checked');
+    let selectedSizes = Array.from(sizeCheckboxes).map(cb => cb.value);
 
-    products.push(newProduct);
-    saveProductsToStorage(); 
-    renderList();
-    showMsg(statusMsg, "Published successfully!", false);
+    let mainImageUrl = selectedImages.length > 0 ? selectedImages[0] : "";
+    let imagesArray = selectedImages.map(imgStr => ({ url: imgStr }));
 
-    // Form clear
-    document.getElementById('title').value = '';
-    document.getElementById('price').value = '';
-    document.getElementById('offer').value = '';
-    document.getElementById('desc').value = '';
-    document.getElementById('previewContainer').innerHTML = '';
-    document.getElementById('dropText').style.display = 'block';
-    document.getElementById('file').value = '';
-    selectedImages = [];
+    loader.style.display = 'grid';
+
+    const { data, error } = await db.from('products').insert([{
+      title: title,
+      price: price,
+      offer_tag: offer,
+      category: cat,
+      in_stock: (stock === 'in'),
+      description: desc,
+      sizes: selectedSizes,
+      image_url: mainImageUrl,
+      images: imagesArray
+    }]).select();
+
+    loader.style.display = 'none';
+
+    if (error) {
+      showMsg(statusMsg, "Error: " + error.message, true);
+    } else {
+      showMsg(statusMsg, "Published to live website successfully!", false);
+      fetchProductsFromDB();
+      
+      // Clear form
+      document.getElementById('title').value = '';
+      document.getElementById('price').value = '';
+      document.getElementById('offer').value = '';
+      document.getElementById('desc').value = '';
+      document.getElementById('previewContainer').innerHTML = '';
+      document.getElementById('dropText').style.display = 'block';
+      document.getElementById('file').value = '';
+      document.querySelectorAll('#sizes input').forEach(cb => cb.checked = false);
+      selectedImages = [];
+    }
   });
 
   // --- RENDER LIVE COLLECTION ---
@@ -394,78 +476,150 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       p.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    document.getElementById('liveCount').innerText = `Total ${products.length} items live.`;
+
     if (filteredProducts.length === 0) {
-      list.innerHTML = `<p class="empty">${searchQuery ? 'No products match your search.' : 'No products added yet.'}</p>`;
+      list.innerHTML = `<p class="empty">${searchQuery ? 'No products match your search.' : 'No products found on website.'}</p>`;
       return;
     }
 
-    [...filteredProducts].reverse().forEach(p => {
+    filteredProducts.forEach(p => {
       const item = document.createElement('div');
-      item.className = `item ${p.stock === 'out' ? 'off' : ''}`;
+      item.className = `item ${p.in_stock === false ? 'off' : ''}`;
       
-      const thumbSrc = p.image ? p.image : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="72" height="96" fill="%23eee"><rect width="100%" height="100%"/></svg>';
+      const thumbSrc = p.image_url ? p.image_url : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="72" height="96" fill="%23eee"><rect width="100%" height="100%"/></svg>';
       
       item.innerHTML = `
         <img src="${thumbSrc}" class="thumb">
         <div>
           <span class="pname">
             ${p.title} 
-            <span class="tagcat">${p.cat}</span> 
-            ${p.offer ? `<span class="tagoffer">${p.offer}</span>` : ''} 
-            ${p.stock === 'out' ? `<span class="tagout">Out</span>` : ''}
+            <span class="tagcat">${p.category || 'Other'}</span> 
+            ${p.offer_tag ? `<span class="tagoffer">${p.offer_tag}</span>` : ''} 
+            ${p.in_stock === false ? `<span class="tagout">Out</span>` : ''}
           </span>
           <span class="pmeta">₹${p.price}</span>
         </div>
         <div class="acts">
-          <button class="mini" onclick="openEdit(${p.id})">Edit</button>
-          <button class="mini del" onclick="deleteProduct(${p.id})">Delete</button>
+          <button class="mini" onclick="openEdit('${p.id}')">Edit</button>
+          <button class="mini del" onclick="deleteProduct('${p.id}')">Delete</button>
         </div>
       `;
       list.appendChild(item);
     });
   }
 
-  // --- SEARCH LOGIC ---
   document.getElementById('find').addEventListener('input', function(e) {
     renderList(e.target.value);
   });
 
-  // --- EDIT & DELETE LOGIC ---
+  // --- EDIT LOGIC ---
   function openEdit(id) {
-    const product = products.find(p => p.id === id);
+    const product = products.find(p => String(p.id) === String(id));
     if (!product) return;
-
     currentEditId = id;
     
-    document.getElementById('eTitle').value = product.title;
-    document.getElementById('ePrice').value = product.price;
-    document.getElementById('eOffer').value = product.offer;
-    document.getElementById('eCat').value = product.cat;
-    document.getElementById('eStock').value = product.stock;
+    // Fill basic details
+    document.getElementById('eTitle').value = product.title || '';
+    document.getElementById('ePrice').value = product.price || '';
+    document.getElementById('eOffer').value = product.offer_tag || '';
+    document.getElementById('eDesc').value = product.description || '';
+    
+    const catSelect = document.getElementById('eCat');
+    if(Array.from(catSelect.options).some(o => o.value === product.category)) {
+      catSelect.value = product.category;
+    } else {
+      catSelect.value = "Other";
+    }
+    document.getElementById('eStock').value = product.in_stock === false ? 'out' : 'in';
+
+    // Fill Sizes
+    document.querySelectorAll('#eSizes input').forEach(cb => cb.checked = false);
+    if (product.sizes && Array.isArray(product.sizes)) {
+      product.sizes.forEach(size => {
+        const cb = document.querySelector(`#eSizes input[value="${size}"]`);
+        if (cb) cb.checked = true;
+      });
+    }
+
+    // Fill existing Images
+    editSelectedImages = [];
+    const previewContainer = document.getElementById('ePreviewContainer');
+    const dropText = document.getElementById('eDropText');
+    previewContainer.innerHTML = '';
+    document.getElementById('eFile').value = ''; // Reset file input
+
+    if (product.images && product.images.length > 0) {
+      dropText.style.display = 'none';
+      product.images.forEach((imgObj, i) => {
+        editSelectedImages.push(imgObj.url); // Preserve old images automatically
+        const wrap = document.createElement('div');
+        wrap.className = 'img-wrap';
+        wrap.innerHTML = `<div class="img-num">${i + 1}</div><img src="${imgObj.url}">`;
+        previewContainer.appendChild(wrap);
+      });
+    } else if (product.image_url) {
+      dropText.style.display = 'none';
+      editSelectedImages.push(product.image_url);
+      const wrap = document.createElement('div');
+      wrap.className = 'img-wrap';
+      wrap.innerHTML = `<div class="img-num">1</div><img src="${product.image_url}">`;
+      previewContainer.appendChild(wrap);
+    } else {
+      dropText.style.display = 'block';
+    }
 
     document.getElementById('sheet').classList.add('on');
   }
 
-  function saveEdit() {
-    const product = products.find(p => p.id === currentEditId);
-    if (product) {
-      product.title = document.getElementById('eTitle').value;
-      product.price = document.getElementById('ePrice').value;
-      product.offer = document.getElementById('eOffer').value;
-      product.cat = document.getElementById('eCat').value;
-      product.stock = document.getElementById('eStock').value;
-      
-      saveProductsToStorage(); 
-      renderList(document.getElementById('find').value);
+  async function saveEdit() {
+    const loader = document.getElementById('editLoader');
+    loader.style.display = 'grid';
+
+    // Get checked sizes
+    const sizeCheckboxes = document.querySelectorAll('#eSizes input:checked');
+    let selectedSizes = Array.from(sizeCheckboxes).map(cb => cb.value);
+
+    // Format images based on edit array (Contains old images, or replaced new images)
+    let mainImageUrl = editSelectedImages.length > 0 ? editSelectedImages[0] : "";
+    let imagesArray = editSelectedImages.map(imgStr => ({ url: imgStr }));
+
+    const updatedData = {
+      title: document.getElementById('eTitle').value,
+      price: document.getElementById('ePrice').value,
+      offer_tag: document.getElementById('eOffer').value,
+      category: document.getElementById('eCat').value,
+      in_stock: (document.getElementById('eStock').value === 'in'),
+      description: document.getElementById('eDesc').value,
+      sizes: selectedSizes,
+      image_url: mainImageUrl,
+      images: imagesArray
+    };
+
+    const { error } = await db.from('products').update(updatedData).eq('id', currentEditId);
+
+    loader.style.display = 'none';
+
+    if (error) {
+      alert("Error saving: " + error.message);
+    } else {
       closeSheet();
+      fetchProductsFromDB();
     }
   }
 
-  function deleteProduct(id) {
-    if(confirm("Are you sure you want to delete this piece?")) {
-      products = products.filter(p => p.id !== id);
-      saveProductsToStorage(); 
-      renderList(document.getElementById('find').value);
+  // --- DELETE LOGIC ---
+  async function deleteProduct(id) {
+    if(confirm("Are you sure you want to permanently delete this piece from the website?")) {
+      document.getElementById('listLoader').style.display = 'grid';
+      const { error } = await db.from('products').delete().eq('id', id);
+      
+      if (error) {
+        alert("Error deleting: " + error.message);
+        document.getElementById('listLoader').style.display = 'none';
+      } else {
+        fetchProductsFromDB();
+      }
     }
   }
 
