@@ -49,9 +49,12 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
 .checks label {display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--ink); cursor:pointer;}
 .checks input {width:auto; margin:0; cursor:pointer; accent-color:var(--gold);}
 .preview-grid{display:flex;gap:10px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
+
+/* CHANGED TO OBJECT-FIT: CONTAIN TO AVOID CROPPING FULL/FREESTYLE PICS */
 .img-wrap {position:relative; display:inline-block;}
-.img-wrap img{width:76px;aspect-ratio:3/4;object-fit:cover;border-radius:2px; display:block; box-shadow:0 4px 12px rgba(0,0,0,.1);}
+.img-wrap img{width:76px;height:100px;object-fit:contain;border-radius:2px; display:block; box-shadow:0 4px 12px rgba(0,0,0,.1); background: var(--paper);}
 .img-num {position:absolute; top:6px; left:6px; background:rgba(4,21,16,.8); backdrop-filter:blur(4px); color:var(--gold); border:1px solid var(--gold); font-size:9px; letter-spacing:.1em; padding:3px 8px; display:grid; place-items:center; border-radius:2px; font-weight:400; z-index:2;}
+
 .solid{width:100%;min-height:52px;border:1px solid var(--gold);border-radius:2px;background:var(--green);color:var(--gold);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .4s var(--ease)}
 .solid:hover{background:var(--gold);color:var(--green)}
 .solid:disabled{background:#e0e0e0;border-color:#e0e0e0;color:#888;cursor:not-allowed}
@@ -66,7 +69,10 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
 .search span{color:var(--gold);font-size:14px}
 .item{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:16px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
 .item:last-child{border-bottom:0}
-.thumb{width:72px;aspect-ratio:3/4;object-fit:cover;border-radius:2px;background:var(--paper)}
+
+/* CHANGED TO OBJECT-FIT: CONTAIN */
+.thumb{width:72px;height:96px;object-fit:contain;border-radius:2px;background:var(--paper)}
+
 .pname{display:block;color:var(--green);font-size:15px;font-weight:400;line-height:1.4}
 .pmeta{display:block;margin-top:6px;color:var(--muted);font-size:13px;}
 .tagcat{display:inline-block;margin-left:8px;background:var(--paper);border:1px solid var(--line);color:var(--green);padding:3px 8px;border-radius:2px;font-size:9px;letter-spacing:.15em;text-transform:uppercase}
@@ -266,6 +272,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       <button class="solid" type="button" onclick="saveEdit()">Save Changes</button>
       <button class="ghost" type="button" onclick="closeSheet()">Cancel</button>
     </div>
+    <p class="msg" id="editMsg"></p>
   </div>
 </div>
 
@@ -274,28 +281,14 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
   const SUPABASE_URL = "https://uhjebqveujolmorsxcvq.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_VhlesphpBgbikJmdn-T_cg_CefF3w7z";
   const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const BUCKET = "product-images";
 
   let products = [];
   let currentEditId = null;
-  let selectedImages = [];
-  let editSelectedImages = [];
-
-  function compressImage(base64Str, maxWidth = 600) {
-    return new Promise((resolve) => {
-      let img = new Image();
-      img.src = base64Str;
-      img.onload = () => {
-        let canvas = document.createElement('canvas');
-        let scaleSize = maxWidth / img.width;
-        if (scaleSize > 1) { scaleSize = 1; }
-        canvas.width = maxWidth * scaleSize;
-        canvas.height = img.height * scaleSize;
-        let ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL('image/jpeg', 0.8)); 
-      };
-    });
-  }
+  
+  // To store raw file objects directly instead of compressing to base64
+  let selectedFiles = [];
+  let editSelectedFiles = [];
 
   function showMsg(el, text, isBad) {
     el.textContent = text;
@@ -329,7 +322,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     loginBtn.textContent = "Verifying...";
     loginBtn.disabled = true;
 
-    // Contacting Supabase to verify credentials
     const { data, error } = await db.auth.signInWithPassword({
       email: email,
       password: pass
@@ -370,63 +362,53 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     document.getElementById('listLoader').style.display = 'none';
   }
 
-  // UPLOAD LOGIC (NEW)
-  document.getElementById('file').addEventListener('change', async function(e) {
+  // IMAGE UPLOAD TO SUPABASE STORAGE (FULL QUALITY/SIZE PRESERVED)
+  async function putImage(file) {
+    const ext = file.name.split('.').pop();
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+    const { error } = await db.storage.from(BUCKET).upload(path, file, { cacheControl: '31536000' });
+    if(error) throw new Error("Image upload failed: " + error.message);
+    const { data } = db.storage.from(BUCKET).getPublicUrl(path);
+    return { url: data.publicUrl, path: path };
+  }
+
+  // PREVIEW LOGIC (ADD) - SHOWING ORIGINAL FILES
+  document.getElementById('file').addEventListener('change', function(e) {
     const previewContainer = document.getElementById('previewContainer');
     const dropText = document.getElementById('dropText');
     const files = Array.from(e.target.files).slice(0, 4); 
-    selectedImages = [];
+    selectedFiles = files;
     previewContainer.innerHTML = '';
 
     if (files.length > 0) {
       dropText.style.display = 'none';
-      const promises = files.map(file => {
-        return new Promise(resolve => {
-          const reader = new FileReader();
-          reader.onload = ev => resolve(ev.target.result);
-          reader.readAsDataURL(file);
-        });
-      });
-      const rawResults = await Promise.all(promises);
-      for (let i = 0; i < rawResults.length; i++) {
-        const compressedBase64 = await compressImage(rawResults[i]);
-        selectedImages.push(compressedBase64);
+      files.forEach((file, i) => {
         const wrap = document.createElement('div');
         wrap.className = 'img-wrap';
-        wrap.innerHTML = `<div class="img-num">${i + 1}</div><img src="${compressedBase64}">`;
+        wrap.innerHTML = `<div class="img-num">${i + 1}</div><img src="${URL.createObjectURL(file)}">`;
         previewContainer.appendChild(wrap);
-      }
+      });
     } else {
       dropText.style.display = 'block';
     }
   });
 
-  // UPLOAD LOGIC (EDIT)
-  document.getElementById('eFile').addEventListener('change', async function(e) {
+  // PREVIEW LOGIC (EDIT)
+  document.getElementById('eFile').addEventListener('change', function(e) {
     const previewContainer = document.getElementById('ePreviewContainer');
     const dropText = document.getElementById('eDropText');
     const files = Array.from(e.target.files).slice(0, 4); 
-    editSelectedImages = []; 
+    editSelectedFiles = files; 
     previewContainer.innerHTML = '';
 
     if (files.length > 0) {
       dropText.style.display = 'none';
-      const promises = files.map(file => {
-        return new Promise(resolve => {
-          const reader = new FileReader();
-          reader.onload = ev => resolve(ev.target.result);
-          reader.readAsDataURL(file);
-        });
-      });
-      const rawResults = await Promise.all(promises);
-      for (let i = 0; i < rawResults.length; i++) {
-        const compressedBase64 = await compressImage(rawResults[i]);
-        editSelectedImages.push(compressedBase64); 
+      files.forEach((file, i) => {
         const wrap = document.createElement('div');
         wrap.className = 'img-wrap';
-        wrap.innerHTML = `<div class="img-num">${i + 1}</div><img src="${compressedBase64}">`;
+        wrap.innerHTML = `<div class="img-num">${i + 1}</div><img src="${URL.createObjectURL(file)}">`;
         previewContainer.appendChild(wrap);
-      }
+      });
     } else {
       dropText.style.display = 'block';
     }
@@ -450,42 +432,55 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
 
     const sizeCheckboxes = document.querySelectorAll('#sizes input:checked');
     let selectedSizes = Array.from(sizeCheckboxes).map(cb => cb.value);
-    let mainImageUrl = selectedImages.length > 0 ? selectedImages[0] : "";
-    let imagesArray = selectedImages.map(imgStr => ({ url: imgStr }));
 
     loader.style.display = 'grid';
-    const parsedPrice = parseFloat(price);
 
-    // This insert will now ONLY work if you are logged in
-    const { data, error } = await db.from('products').insert([{
-      title: title,
-      price: parsedPrice,
-      offer_tag: offer,
-      category: cat,
-      in_stock: (stock === 'in'),
-      description: desc,
-      sizes: selectedSizes,
-      image_url: mainImageUrl,
-      images: imagesArray
-    }]).select();
+    try {
+      // Upload Actual Original Images
+      const uploadedImages = [];
+      for(let i=0; i<selectedFiles.length; i++){
+        uploadedImages.push(await putImage(selectedFiles[i]));
+      }
 
-    loader.style.display = 'none';
+      let mainImageUrl = uploadedImages.length > 0 ? uploadedImages[0].url : "";
+      let mainImagePath = uploadedImages.length > 0 ? uploadedImages[0].path : null;
 
-    if (error) {
-      showMsg(statusMsg, "Error: " + error.message, true);
-    } else {
-      showMsg(statusMsg, "Published to live website successfully!", false);
-      fetchProductsFromDB();
-      
-      document.getElementById('title').value = '';
-      document.getElementById('price').value = '';
-      document.getElementById('offer').value = '';
-      document.getElementById('desc').value = '';
-      document.getElementById('previewContainer').innerHTML = '';
-      document.getElementById('dropText').style.display = 'block';
-      document.getElementById('file').value = '';
-      document.querySelectorAll('#sizes input').forEach(cb => cb.checked = false);
-      selectedImages = [];
+      const parsedPrice = parseFloat(price);
+
+      const { data, error } = await db.from('products').insert([{
+        title: title,
+        price: parsedPrice,
+        offer_tag: offer,
+        category: cat,
+        in_stock: (stock === 'in'),
+        description: desc,
+        sizes: selectedSizes,
+        image_url: mainImageUrl,
+        image_path: mainImagePath,
+        images: uploadedImages
+      }]).select();
+
+      loader.style.display = 'none';
+
+      if (error) {
+        showMsg(statusMsg, "Error: " + error.message, true);
+      } else {
+        showMsg(statusMsg, "Published to live website successfully!", false);
+        fetchProductsFromDB();
+        
+        document.getElementById('title').value = '';
+        document.getElementById('price').value = '';
+        document.getElementById('offer').value = '';
+        document.getElementById('desc').value = '';
+        document.getElementById('previewContainer').innerHTML = '';
+        document.getElementById('dropText').style.display = 'block';
+        document.getElementById('file').value = '';
+        document.querySelectorAll('#sizes input').forEach(cb => cb.checked = false);
+        selectedFiles = [];
+      }
+    } catch(err) {
+      loader.style.display = 'none';
+      showMsg(statusMsg, "Upload Error: " + err.message, true);
     }
   });
 
@@ -563,7 +558,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       });
     }
 
-    editSelectedImages = [];
+    editSelectedFiles = [];
     const previewContainer = document.getElementById('ePreviewContainer');
     const dropText = document.getElementById('eDropText');
     previewContainer.innerHTML = '';
@@ -572,7 +567,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
     if (product.images && product.images.length > 0) {
       dropText.style.display = 'none';
       product.images.forEach((imgObj, i) => {
-        editSelectedImages.push(imgObj.url); 
         const wrap = document.createElement('div');
         wrap.className = 'img-wrap';
         wrap.innerHTML = `<div class="img-num">${i + 1}</div><img src="${imgObj.url}">`;
@@ -580,7 +574,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       });
     } else if (product.image_url) {
       dropText.style.display = 'none';
-      editSelectedImages.push(product.image_url);
       const wrap = document.createElement('div');
       wrap.className = 'img-wrap';
       wrap.innerHTML = `<div class="img-num">1</div><img src="${product.image_url}">`;
@@ -599,9 +592,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
 
     const sizeCheckboxes = document.querySelectorAll('#eSizes input:checked');
     let selectedSizes = Array.from(sizeCheckboxes).map(cb => cb.value);
-
-    let mainImageUrl = editSelectedImages.length > 0 ? editSelectedImages[0] : "";
-    let imagesArray = editSelectedImages.map(imgStr => ({ url: imgStr }));
     const updatedPrice = parseFloat(document.getElementById('ePrice').value);
 
     const updatedData = {
@@ -611,20 +601,47 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       category: document.getElementById('eCat').value,
       in_stock: (document.getElementById('eStock').value === 'in'),
       description: document.getElementById('eDesc').value,
-      sizes: selectedSizes,
-      image_url: mainImageUrl,
-      images: imagesArray
+      sizes: selectedSizes
     };
 
-    const { error } = await db.from('products').update(updatedData).eq('id', currentEditId);
+    try {
+      let oldPaths = [];
+      const editingProduct = products.find(p => p.id === currentEditId);
 
-    loader.style.display = 'none';
+      if (editSelectedFiles.length > 0) {
+        const uploadedImages = [];
+        for(let i=0; i<editSelectedFiles.length; i++){
+          uploadedImages.push(await putImage(editSelectedFiles[i]));
+        }
+        
+        updatedData.image_url = uploadedImages[0].url;
+        updatedData.image_path = uploadedImages[0].path;
+        updatedData.images = uploadedImages;
+        
+        if (editingProduct.images && editingProduct.images.length > 0) {
+          oldPaths = editingProduct.images.map(i => i.path).filter(p => p);
+        } else if (editingProduct.image_path) {
+          oldPaths = [editingProduct.image_path];
+        }
+      }
 
-    if (error) {
-      alert("Error saving: " + error.message);
-    } else {
-      closeSheet();
-      fetchProductsFromDB();
+      const { error } = await db.from('products').update(updatedData).eq('id', currentEditId);
+
+      if (oldPaths.length > 0) {
+        await db.storage.from(BUCKET).remove(oldPaths);
+      }
+
+      loader.style.display = 'none';
+
+      if (error) {
+        alert("Error saving: " + error.message);
+      } else {
+        closeSheet();
+        fetchProductsFromDB();
+      }
+    } catch(err) {
+      loader.style.display = 'none';
+      alert("Error: " + err.message);
     }
   }
 
@@ -636,6 +653,18 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);background:var(
       
       if(productToDelete) {
         const { error } = await db.from('products').delete().eq('id', productToDelete.id);
+        
+        // Remove associated images from storage bucket
+        let pathsToDelete = [];
+        if (productToDelete.images && productToDelete.images.length > 0) {
+          pathsToDelete = productToDelete.images.map(i => i.path).filter(p => p);
+        } else if (productToDelete.image_path) {
+          pathsToDelete = [productToDelete.image_path];
+        }
+        if (pathsToDelete.length > 0) {
+          await db.storage.from(BUCKET).remove(pathsToDelete);
+        }
+
         if (error) {
           alert("Error deleting: " + error.message);
           document.getElementById('listLoader').style.display = 'none';
