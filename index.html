@@ -100,7 +100,7 @@ header.tight{padding:14px clamp(20px,5vw,72px);border-bottom-color:var(--hair);b
 .nav{display:flex;align-items:center;gap:clamp(18px,2.8vw,40px)}
 .nav.right{justify-content:flex-end}
 .nav a{position:relative;font-size:10px;font-weight:400;letter-spacing:.28em;text-transform:uppercase;color:var(--green);padding:4px 0}
-.nav a::after{content:"absolute";left:0;bottom:0;width:0;height:1px;background:var(--gold);transition:width .6s var(--ease)}
+.nav a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--gold);transition:width .6s var(--ease)}
 .nav a:hover::after{width:100%}
 .logo-img{height:72px;width:auto;mix-blend-mode:multiply;transition:height .6s var(--ease)}
 header.tight .logo-img{height:48px}
@@ -118,23 +118,15 @@ header.tight .logo-img{height:48px}
   width: 900px;
   height: 900px;
   margin-top: -450px;
-  /* Complex Vector Mandala drawn purely with CSS SVG */
   background: url("data:image/svg+xml,%3Csvg width='900' height='900' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%23d4af37' fill='none' stroke-width='1.5' opacity='0.3'%3E%3Ccircle cx='400' cy='400' r='350' /%3E%3Ccircle cx='400' cy='400' r='330' stroke-dasharray='5 15' stroke-width='3' /%3E%3Ccircle cx='400' cy='400' r='310' /%3E%3Cpath d='M400,90 Q480,240 400,400 Q320,240 400,90 Z' /%3E%3Cpath d='M400,710 Q480,560 400,400 Q320,560 400,710 Z' /%3E%3Cpath d='M90,400 Q240,480 400,400 Q240,320 90,400 Z' /%3E%3Cpath d='M710,400 Q560,480 400,400 Q560,320 710,400 Z' /%3E%3Cpath d='M180,180 Q300,300 400,400 Q260,340 180,180 Z' /%3E%3Cpath d='M620,620 Q500,500 400,400 Q540,460 620,620 Z' /%3E%3Cpath d='M620,180 Q500,300 400,400 Q540,260 620,180 Z' /%3E%3Cpath d='M180,620 Q300,500 400,400 Q260,460 180,620 Z' /%3E%3Ccircle cx='400' cy='400' r='140' /%3E%3Ccircle cx='400' cy='400' r='120' stroke-dasharray='4 8' /%3E%3Cpath d='M400,280 L425,375 L520,400 L425,425 L400,520 L375,425 L280,400 L375,375 Z' fill='rgba(212,175,55,0.08)' /%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
   z-index: 1;
-  opacity: 0; /* Starts hidden, fades in after splash screen */
-  animation: 
-    mandalaFadeIn 3s ease forwards 2.4s, /* Fades in perfectly timed after splash */
-    slowSpin 70s linear infinite; /* Keeps rotating slowly forever */
+  opacity: 0;
+  animation: mandalaFadeIn 3s ease forwards 2.4s, slowSpin 70s linear infinite;
   pointer-events: none;
 }
 
-@keyframes mandalaFadeIn {
-  to { opacity: 0.9; }
-}
-@keyframes slowSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
+@keyframes mandalaFadeIn { to { opacity: 0.9; } }
+@keyframes slowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
 @media (max-width: 960px) {
   .hero-mandala { right: -40vw; width: 600px; height: 600px; margin-top: -300px; opacity: 0.4; }
@@ -246,6 +238,40 @@ header.tight .logo-img{height:48px}
 .add:disabled{color:var(--muted);cursor:not-allowed}
 .add:disabled::after{background:transparent}
 
+/* --- EXHIBITION MASONRY GALLERY --- */
+.exhibition-gallery {
+  column-count: 3;
+  column-gap: clamp(20px, 3vw, 40px);
+  padding-bottom: clamp(60px, 9vw, 120px);
+}
+.ex-item {
+  break-inside: avoid;
+  margin-bottom: clamp(20px, 3vw, 40px);
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+  cursor: pointer;
+  background: var(--paper-2);
+}
+.ex-item img {
+  width: 100%;
+  display: block;
+  transition: transform 2.5s var(--ease), filter 1.5s var(--ease);
+  filter: brightness(0.95);
+}
+.ex-item:hover img {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+@media (max-width: 960px) {
+  .exhibition-gallery { column-count: 2; }
+}
+@media (max-width: 600px) {
+  .exhibition-gallery { column-count: 1; }
+}
+/* ---------------------------------- */
+
 .note{grid-column:1/-1;padding:120px 20px;text-align:center;color:var(--muted);font-size:15px;line-height:2.2; font-weight:300}
 .note a{color:var(--green);border-bottom:1px solid var(--gold); transition:color .4s ease}
 .note a:hover{color:var(--gold)}
@@ -322,7 +348,7 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
   header.tight{padding:12px 20px}
   .logo-img{height:44px}header.tight .logo-img{height:36px}
   .nav{gap:18px}
-  .nav a:nth-child(2){display:none}
+  .nav a:nth-child(2){display:none} /* Hides Atelier on small screens for space */
   .bag .caps{display:none}
   .hero{min-height:650px}
   .head{grid-template-columns:1fr;gap:12px; margin-top:80px}
@@ -356,7 +382,8 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
 <header id="hdr">
   <nav class="nav" aria-label="Primary">
     <a href="#collection">Collection</a>
-    <a href="#atelier">Atelier</a>
+    <!-- EXHIBITION LINK ADDED HERE -->
+    <a href="#exhibition">Exhibition</a>
     <a href="complaint.html">Contact</a>
   </nav>
   <a href="index.html" aria-label="Yashni Creations home">
@@ -385,6 +412,7 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
     <div class="scroll-cue"><span>Scroll</span><i></i></div>
   </section>
 
+  <!-- COLLECTION SECTION -->
   <div class="wrap">
     <div class="head reveal" id="collection">
       <span class="num">01</span>
@@ -402,6 +430,46 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
 
     <section class="grid" id="grid" aria-live="polite"></section>
   </div>
+
+  <!-- NEW EXHIBITION GALLERY SECTION -->
+  <div class="wrap" id="exhibition">
+    <div class="head reveal">
+      <span class="num">02</span>
+      <h2>Our <em>Exhibitions</em></h2>
+      <span class="side">Moments</span>
+    </div>
+
+    <div class="exhibition-gallery reveal">
+      
+      <!-- IMAGE 1 -->
+      <div class="ex-item">
+        <!-- 'src' mein apni photo ka naam daalein -->
+        <img src="exhibition/pic1.jpg" alt="Exhibition Moment" loading="lazy">
+      </div>
+      
+      <!-- IMAGE 2 -->
+      <div class="ex-item">
+        <img src="exhibition/pic2.jpg" alt="Exhibition Moment" loading="lazy">
+      </div>
+      
+      <!-- IMAGE 3 -->
+      <div class="ex-item">
+        <img src="exhibition/pic3.jpg" alt="Exhibition Moment" loading="lazy">
+      </div>
+      
+      <!-- IMAGE 4 -->
+      <div class="ex-item">
+        <img src="exhibition/pic4.jpg" alt="Exhibition Moment" loading="lazy">
+      </div>
+
+      <!-- IMAGE 5 (Aap aur bhi images add kar sakte hain isi tarah copy paste karke) -->
+      <div class="ex-item">
+        <img src="exhibition/pic5.jpg" alt="Exhibition Moment" loading="lazy">
+      </div>
+
+    </div>
+  </div>
+  <!-- END OF EXHIBITION SECTION -->
 
   <section class="atelier reveal" id="atelier">
     <div class="pic plain" id="atelierPic"></div>
