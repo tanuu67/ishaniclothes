@@ -216,7 +216,7 @@ header.tight .logo-img{height:48px}
 .add:hover{color:var(--gold)}
 .add:hover::after{background:var(--gold)}
 
-/* --- NEW RUNNING EXHIBITION SLIDER --- */
+/* --- RUNNING EXHIBITION SLIDER --- */
 .marquee-wrap {
   position: relative;
   overflow: hidden;
@@ -266,12 +266,10 @@ header.tight .logo-img{height:48px}
   filter: brightness(1.05);
   transform: scale(1.02);
 }
-
 @keyframes scrollMarquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(calc(-50% - (clamp(16px, 2.5vw, 30px) / 2))); }
 }
-/* -------------------------------------- */
 
 .note{grid-column:1/-1;padding:120px 20px;text-align:center;color:var(--muted);font-size:15px;line-height:2.2; font-weight:300}
 .note a{color:var(--green);border-bottom:1px solid var(--gold); transition:color .4s ease}
@@ -282,9 +280,30 @@ header.tight .logo-img{height:48px}
 .skel .bar{height:10px;margin-top:24px;background:var(--paper-2)}
 .skel .bar.s{width:42%;margin-top:12px}
 
+/* --- THE ATELIER CSS FIX --- */
 .atelier{display:grid;grid-template-columns:1fr 1fr;background:var(--green);color:var(--paper);margin-top:clamp(40px,6vw,80px)}
 .atelier .pic{background:var(--green-2) center/cover no-repeat;min-height:560px; position:relative}
-.atelier .pic::before{content:""; position:absolute; inset:20px; border:1px solid rgba(212,175,55,.25); pointer-events:none; z-index: 5;}
+.atelier .pic::before{content:""; position:absolute; inset:20px; border:1px solid rgba(212,175,55,.3); pointer-events:none; z-index: 5;}
+
+.atelier .pic.plain {
+  background-color: var(--green-2);
+  background-image: radial-gradient(circle at 50% 50%, rgba(212,175,55,.15), transparent 70%);
+}
+.atelier .pic.plain::after {
+  content: "Yashni";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(212,175,55,0.45);
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(38px, 6vw, 64px);
+  font-style: italic;
+  letter-spacing: 0.15em;
+  pointer-events: none;
+  z-index: 10;
+}
+
 .atelier .say{padding:clamp(60px,8vw,140px);display:flex;flex-direction:column;justify-content:center}
 .atelier .caps{color:var(--gold-lt);margin-bottom:28px}
 .atelier h3{margin:0 0 32px;font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(36px,4.5vw,64px);line-height:1.15; letter-spacing:-.01em}
@@ -400,7 +419,6 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
     <section class="grid" id="grid" aria-live="polite"></section>
   </div>
 
-  <!-- RUNNING EXHIBITION SLIDER SECTION -->
   <div id="exhibition" style="max-width: 100%; overflow: hidden;">
     <div class="wrap" style="padding-bottom: 20px;">
       <div class="head reveal">
@@ -409,11 +427,8 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
         <span class="side">Moments</span>
       </div>
     </div>
-
-    <!-- Marquee Wrapper -->
     <div class="marquee-wrap reveal">
       <div class="ex-track">
-        <!-- FIRST SET OF IMAGES -->
         <div class="ex-set">
           <img src="exhibition/pic1.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
           <img src="exhibition/pic2.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
@@ -427,7 +442,6 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
           <img src="exhibition/pic10.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
           <img src="exhibition/pic11.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
         </div>
-        <!-- SECOND SET OF IMAGES (For Infinite Loop effect) -->
         <div class="ex-set">
           <img src="exhibition/pic1.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
           <img src="exhibition/pic2.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
@@ -444,7 +458,6 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
       </div>
     </div>
   </div>
-  <!-- END OF EXHIBITION SLIDER SECTION -->
 
   <section class="atelier reveal" id="atelier">
     <div class="pic plain" id="atelierPic"></div>
@@ -496,7 +509,8 @@ const CONFIG = {
   INSTAGRAM: "https://www.instagram.com/yashnicreations2024?igsh=ZzdzbDQ5eTdrMjk1",
   CATEGORIES: ["Lehenga", "Saree", "Suit", "Kurti", "Gown", "Sharara", "Other"],
   HERO_IMAGE: "",
-  ATELIER_IMAGE: "",
+  /* HUMNE ATELIER WALE DIBBE MEIN AAPKI PIC-1 SET KAR DI HAI */
+  ATELIER_IMAGE: "exhibition/pic1.jpg.jpeg", 
   ANNOUNCEMENT: ""
 };
 
@@ -531,6 +545,11 @@ document.getElementById("fIg").href=CONFIG.INSTAGRAM;
 document.getElementById("fEmail").textContent=CONFIG.EMAIL;
 document.getElementById("fPhone").textContent=CONFIG.PHONE_DISPLAY;
 badge();
+
+const atelierImg=(CONFIG.ATELIER_IMAGE||"").trim();
+const atelierPic=document.getElementById("atelierPic");
+if(atelierImg)atelierPic.style.backgroundImage=`url("${atelierImg}")`;
+else atelierPic.classList.add("plain");
 
 const hdr=document.getElementById("hdr");
 addEventListener("scroll",()=>hdr.classList.toggle("tight",scrollY>60),{passive:true});
