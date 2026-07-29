@@ -341,10 +341,13 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
   .promise{grid-template-columns:1fr;gap:70px}
 }
 @media (max-width:760px){
-  header{padding:16px 20px;gap:12px}
-  header.tight{padding:12px 20px}
+  header{padding:16px 18px;gap:10px}
+  header.tight{padding:12px 18px}
   .logo-img{height:44px}header.tight .logo-img{height:36px}
-  .nav{gap:18px}
+  /* Fallback text safe rakha — agar logo image fail ho to bhi header na tote */
+  .logo-fallback{font-size:15px;letter-spacing:.05em}
+  .nav{gap:14px}
+  .nav a{font-size:9px;letter-spacing:.2em}
   .nav a:nth-child(2){display:none} 
   .bag .caps{display:none}
   .hero{min-height:650px}
@@ -353,7 +356,11 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
   .tools{flex-direction:column;align-items:stretch;gap:24px}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:34px 16px; padding-bottom: 80px;}
   .name{font-size:18px}
-  .wa{left:20px;bottom:20px;width:50px;height:50px}
+  /* Exhibition slider mobile: fade patli ki, warna photos dhak jaati thi */
+  .marquee-wrap::before, .marquee-wrap::after{width:40px}
+  .ex-set img{height:clamp(240px,38vh,340px)}
+  /* WhatsApp button ko "Speak to us" ke upar se hataya */
+  .wa{left:20px;bottom:90px;width:50px;height:50px}
   .wa svg{width:22px;height:22px}
   .splash-text { font-size: clamp(32px, 10vw, 50px); }
   .hero-mandala { right: -40vw; width: 600px; height: 600px; margin-top: -300px; opacity: 0.4; }
@@ -509,7 +516,6 @@ const CONFIG = {
   INSTAGRAM: "https://www.instagram.com/yashnicreations2024?igsh=ZzdzbDQ5eTdrMjk1",
   CATEGORIES: ["Lehenga", "Saree", "Suit", "Kurti", "Gown", "Sharara", "Other"],
   HERO_IMAGE: "",
-  /* HUMNE ATELIER WALE DIBBE MEIN AAPKI PIC-1 SET KAR DI HAI */
   ATELIER_IMAGE: "exhibition/pic1.jpg.jpeg", 
   ANNOUNCEMENT: ""
 };
