@@ -14,7 +14,7 @@
   --green:#041510; 
   --green-2:#08261e; 
   --gold:#d4af37; 
-  --gold-lt:#f3e5ab;
+  --gold-lt:#f3e5ab; 
   --paper:#fbfbf9; 
   --paper-2:#f5f4f0; 
   --ink:#1a1a1a; 
@@ -101,7 +101,6 @@ header.tight{padding:14px clamp(20px,5vw,72px);border-bottom-color:var(--hair);b
 .nav a{position:relative;font-size:10px;font-weight:400;letter-spacing:.28em;text-transform:uppercase;color:var(--green);padding:4px 0}
 .nav a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--gold);transition:width .6s var(--ease)}
 .nav a:hover::after{width:100%}
-/* Text wordmark logo — no image file needed */
 .logo-word{display:inline-flex;align-items:baseline;gap:.28em;white-space:nowrap;font-family:"Cormorant Garamond",serif;line-height:1;transition:font-size .6s var(--ease)}
 .logo-word .a{font-size:30px;font-weight:500;letter-spacing:.02em;color:var(--green)}
 .logo-word .b{font-size:30px;font-weight:400;font-style:italic;color:var(--gold)}
@@ -345,7 +344,6 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
 @media (max-width:760px){
   header{padding:16px 18px;gap:10px}
   header.tight{padding:12px 18px}
-  /* Text logo mobile pe chhota — kabhi screen se bahar nahi jayega */
   .logo-word .a,.logo-word .b{font-size:19px}
   header.tight .logo-word .a,header.tight .logo-word .b{font-size:17px}
   .nav{gap:14px}
@@ -358,10 +356,8 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
   .tools{flex-direction:column;align-items:stretch;gap:24px}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:34px 16px; padding-bottom: 80px;}
   .name{font-size:18px}
-  /* Exhibition slider mobile: fade patli ki, warna photos dhak jaati thi */
   .marquee-wrap::before, .marquee-wrap::after{width:40px}
   .ex-set img{height:clamp(240px,38vh,340px)}
-  /* WhatsApp button ko "Speak to us" ke upar se hataya */
   .wa{left:20px;bottom:90px;width:50px;height:50px}
   .wa svg{width:22px;height:22px}
   .splash-text { font-size: clamp(32px, 10vw, 50px); }
@@ -439,30 +435,30 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
     <div class="marquee-wrap reveal">
       <div class="ex-track">
         <div class="ex-set">
-          <img src="exhibition/pic1.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic2.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic3.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic4.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic5.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic6.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic7.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic8.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic9.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic10.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic11.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
+          <img src="exhibition/pic1.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic2.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic3.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic4.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic5.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic6.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic7.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic8.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic9.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic10.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic11.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
         </div>
         <div class="ex-set">
-          <img src="exhibition/pic1.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic2.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic3.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic4.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic5.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic6.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic7.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic8.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic9.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic10.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
-          <img src="exhibition/pic11.jpg.jpeg" alt="Exhibition Moment" loading="lazy">
+          <img src="exhibition/pic1.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic2.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic3.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic4.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic5.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic6.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic7.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic8.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic9.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic10.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
+          <img src="exhibition/pic11.jpg" alt="Exhibition Moment" loading="lazy" decoding="async">
         </div>
       </div>
     </div>
@@ -518,7 +514,7 @@ const CONFIG = {
   INSTAGRAM: "https://www.instagram.com/yashnicreations2024?igsh=ZzdzbDQ5eTdrMjk1",
   CATEGORIES: ["Lehenga", "Saree", "Suit", "Kurti", "Gown", "Sharara", "Other"],
   HERO_IMAGE: "",
-  ATELIER_IMAGE: "exhibition/pic1.jpg.jpeg", 
+  ATELIER_IMAGE: "exhibition/pic1.jpg", 
   ANNOUNCEMENT: ""
 };
 
@@ -588,8 +584,8 @@ function card(p){
   return `<article class="card reveal ${sold?"sold":""}">
     <a href="${link}" aria-label="View ${esc(p.title)}">
       <div class="shot">
-        <img src="${esc(img1)}" class="first-img" alt="${esc(p.title)}" loading="lazy">
-        ${img2 ? `<img src="${esc(img2)}" class="second-img" alt="${esc(p.title)} alternative" loading="lazy">` : ""}
+        <img src="${esc(img1)}" class="first-img" alt="${esc(p.title)}" loading="lazy" decoding="async">
+        ${img2 ? `<img src="${esc(img2)}" class="second-img" alt="${esc(p.title)} alternative" loading="lazy" decoding="async">` : ""}
         ${sold?'<span class="mark sold">Sold out</span>':offerHtml}
         <span class="veil"><span>View piece</span></span>
       </div>
