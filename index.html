@@ -101,9 +101,11 @@ header.tight{padding:14px clamp(20px,5vw,72px);border-bottom-color:var(--hair);b
 .nav a{position:relative;font-size:10px;font-weight:400;letter-spacing:.28em;text-transform:uppercase;color:var(--green);padding:4px 0}
 .nav a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--gold);transition:width .6s var(--ease)}
 .nav a:hover::after{width:100%}
-.logo-img{height:72px;width:auto;mix-blend-mode:multiply;transition:height .6s var(--ease)}
-header.tight .logo-img{height:48px}
-.logo-fallback{font-family:"Cormorant Garamond",serif;font-size:28px;font-weight:400;letter-spacing:.16em;text-transform:uppercase;color:var(--green);white-space:nowrap}
+/* Text wordmark logo — no image file needed */
+.logo-word{display:inline-flex;align-items:baseline;gap:.28em;white-space:nowrap;font-family:"Cormorant Garamond",serif;line-height:1;transition:font-size .6s var(--ease)}
+.logo-word .a{font-size:30px;font-weight:500;letter-spacing:.02em;color:var(--green)}
+.logo-word .b{font-size:30px;font-weight:400;font-style:italic;color:var(--gold)}
+header.tight .logo-word .a,header.tight .logo-word .b{font-size:24px}
 .bag{display:inline-flex;align-items:center;gap:10px;color:var(--green)}
 .bag b{font-weight:400;color:var(--gold)}
 
@@ -343,9 +345,9 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
 @media (max-width:760px){
   header{padding:16px 18px;gap:10px}
   header.tight{padding:12px 18px}
-  .logo-img{height:44px}header.tight .logo-img{height:36px}
-  /* Fallback text safe rakha — agar logo image fail ho to bhi header na tote */
-  .logo-fallback{font-size:15px;letter-spacing:.05em}
+  /* Text logo mobile pe chhota — kabhi screen se bahar nahi jayega */
+  .logo-word .a,.logo-word .b{font-size:19px}
+  header.tight .logo-word .a,header.tight .logo-word .b{font-size:17px}
   .nav{gap:14px}
   .nav a{font-size:9px;letter-spacing:.2em}
   .nav a:nth-child(2){display:none} 
@@ -387,7 +389,7 @@ footer .lines p{margin:12px 0;color:rgba(251,251,249,.7);font-size:14px;letter-s
     <a href="complaint.html">Contact</a>
   </nav>
   <a href="index.html" aria-label="Yashni Creations home">
-    <img src="Untitled.jpg" class="logo-img" alt="Yashni Creations" onerror="this.outerHTML='<span class=&quot;logo-fallback&quot;>Yashni Creations</span>'">
+    <span class="logo-word"><span class="a">Yashni</span><span class="b">Creations</span></span>
   </a>
   <nav class="nav right" aria-label="Bag">
     <a href="cart.html" class="bag" aria-label="Bag"><span class="caps">Bag</span><b id="cartBadge">0</b></a>
